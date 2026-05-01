@@ -13,7 +13,6 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // 確保 Tailwind 在載入後才執行設定
         window.addEventListener('DOMContentLoaded', () => {
             tailwind.config = {
                 theme: {
@@ -24,6 +23,18 @@
                     }
                 }
             }
+        });
+        
+        // Image Fallback Script for Preview Environment
+        window.addEventListener('DOMContentLoaded', () => {
+            const fallbackImage = "https://placehold.co/400x400/27272a/e50000?text=FunX+Asset";
+            const images = document.querySelectorAll("img");
+            images.forEach(img => {
+                img.onerror = function() {
+                    this.onerror = null; 
+                    this.src = fallbackImage;
+                };
+            });
         });
     </script>
 
@@ -259,10 +270,11 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: #fcfcfb; /* 頁面最底層保底白底 */
         }
     </style>
 </head>
-<body class="bg-[#fcfcfb] text-zinc-900 antialiased selection:bg-f-red selection:text-white overflow-x-hidden flex flex-col min-h-screen relative w-full">
+<body class="text-zinc-900 antialiased selection:bg-f-red selection:text-white overflow-x-hidden flex flex-col min-h-screen relative w-full">
 
     <!-- Loading Screen -->
     <div class="fixed inset-0 z-[100] flex items-center justify-center bg-[#fcfcfb] animate-fade-out pointer-events-none">
@@ -272,8 +284,14 @@
         </div>
     </div>
 
+    <!-- 
+        【核心修复：绝对强制的底层画布】
+        固定在屏幕最底层，用来播放 DarkVeil 效果。
+    -->
+    <div id="darkveil-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none;"></div>
+
     <!-- Navigation Header -->
-    <header class="staggered-menu-header" aria-label="Main navigation header">
+    <header class="staggered-menu-header" aria-label="Main navigation header" style="z-index: 60;">
         <div class="sm-logo" aria-label="Logo">
             <a href="#hero">FUNX.</a>
         </div>
@@ -293,13 +311,13 @@
         </button>
     </header>
 
-    <!-- 頂部置中 Logo (獨立於 Header，避免 mix-blend-mode 影響其顏色) -->
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 z-[65] pointer-events-none pt-[1.5rem] flex items-center h-[calc(1.5rem+24px)] md:h-[calc(1.5rem+32px)]">
+    <!-- 頂部置中 Logo -->
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 pointer-events-none pt-[1.5rem] flex items-center h-[calc(1.5rem+24px)] md:h-[calc(1.5rem+32px)]" style="z-index: 65;">
         <img src="assets/images/hero/logo.png" alt="FunX Logo" class="h-8 md:h-10 w-auto object-contain">
     </div>
 
     <!-- Staggered Menu Wrapper -->
-    <div class="staggered-menu-wrapper" data-position="right">
+    <div class="staggered-menu-wrapper" data-position="right" style="z-index: 55;">
         <div class="sm-prelayers" aria-hidden="true">
             <div class="sm-prelayer" style="background: #18181b;"></div>
             <div class="sm-prelayer" style="background: #e50000;"></div>
@@ -325,34 +343,23 @@
         </aside>
     </div>
 
-    <!-- 全新重構的 Hero Section -->
-    <section class="flex flex-col overflow-hidden min-h-[100vh] py-24 relative justify-center items-center bg-[#fcfcfb]" id="hero">
-        
-        <!-- 主要中心視覺 -->
-        <div class="flex flex-col items-center justify-center z-10 w-full px-6 relative mt-16 md:mt-24 pointer-events-none">
-            
-            <!-- 大圖片區域 -->
+    <!-- 【纸张层1：Hero Section】 -->
+    <section id="hero" class="flex flex-col overflow-hidden min-h-[100vh] py-24 justify-center items-center" style="position: relative; z-index: 10; background-color: #fcfcfb; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <div class="flex flex-col items-center justify-center w-full px-6 relative mt-16 md:mt-24 pointer-events-none">
             <div id="hero-img-wrapper" class="w-full flex justify-center perspective-container">
                 <img id="hero-main-img" src="assets/images/hero/FunxHero.png" alt="FunX Hero" class="w-full max-w-[90vw] md:max-w-[75vw] lg:max-w-[1000px] h-auto object-contain opacity-0 scale-95" style="filter: blur(12px);">
             </div>
-            
-            <!-- 標題區域 -->
             <div id="hero-text-wrapper" class="overflow-hidden mt-6 md:mt-8">
-                <!-- 統一使用全站字體，並將字號縮小至目前的 50% -->
                 <h2 id="hero-sub-text" class="text-[10px] sm:text-xs md:text-sm lg:text-lg font-bold uppercase tracking-[0.25em] text-zinc-900 opacity-0 translate-y-full">
                     Game UI/UX Design
                 </h2>
             </div>
-            
-            <!-- 底部中心 QR Code (移入常規排版流中，避免滾動與適配時造成遮擋) -->
-            <div class="mt-6 md:mt-8 z-10 overflow-hidden pointer-events-auto" id="hero-qr-wrapper">
+            <div class="mt-6 md:mt-8 overflow-hidden pointer-events-auto" id="hero-qr-wrapper">
                 <img id="hero-qr" src="assets/images/hero/sq.png" alt="QR Code" class="w-12 h-12 md:w-16 md:h-16 opacity-0 translate-y-[50px] object-contain cursor-pointer hover:opacity-80 transition-opacity">
             </div>
-            
         </div>
 
-        <!-- 底部右側 Scroll 提示 -->
-        <div class="absolute bottom-8 md:bottom-12 right-6 md:right-12 flex flex-col items-center gap-4 z-10 opacity-0" id="hero-scroll-indicator">
+        <div class="absolute bottom-8 md:bottom-12 right-6 md:right-12 flex flex-col items-center gap-4 opacity-0" id="hero-scroll-indicator">
             <span class="text-[10px] md:text-xs uppercase tracking-widest text-zinc-400 font-semibold rotate-90 origin-bottom mb-8">Scroll</span>
             <div class="w-[1.5px] h-12 bg-zinc-200 relative overflow-hidden mt-2">
                 <div class="absolute top-0 left-0 w-full h-1/2 bg-[#e50000]" style="animation: scrollLine 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;"></div>
@@ -360,172 +367,165 @@
         </div>
     </section>
 
-    <!-- Experience Section -->
-    <section id="experience" class="py-24 md:py-40 w-full relative overflow-hidden">
-        
-        <div class="absolute inset-0 z-0 pointer-events-none opacity-80 w-full h-full">
-            <div id="liquid-ether-bg" class="w-full h-full relative pointer-events-auto" style="transform: scale(1.1); touch-action: none;"></div>
-        </div>
-
+    <!-- 【镂空透视层：Experience Section】 -->
+    <section id="experience" class="w-full overflow-hidden" style="position: relative; z-index: 5; background-color: transparent; padding-top: 10rem; padding-bottom: 10rem;">
         <div class="max-w-screen-2xl mx-auto w-full px-6 relative z-10">
-            <!-- 引入全局栅格限制，两侧留白，提升桌面端大屏阅读体验 -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-6 relative z-10 pointer-events-none">
                 
-                <!-- 标题区域 -->
                 <div class="lg:col-span-10 lg:col-start-2 xl:col-span-8 xl:col-start-3 mb-16 md:mb-24 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pointer-events-auto">
-                    <h2 class="text-5xl md:text-7xl font-bold tracking-tighter uppercase leading-none text-zinc-900">
+                    <h2 class="text-5xl md:text-7xl font-bold tracking-tighter uppercase leading-none text-zinc-900 drop-shadow-sm">
                         My <br><span class="text-f-red">Experience</span>
                     </h2>
-                    <div class="text-sm font-medium uppercase tracking-wide text-zinc-500 max-w-xs md:text-right">
+                    <div class="text-sm font-medium uppercase tracking-wide text-zinc-600 max-w-xs md:text-right drop-shadow-sm">
                         <span class="block text-f-red font-bold mb-1 text-base">Game UI/UX Design Leader</span>
                         14+ Years Experience
                     </div>
                 </div>
 
-                <!-- 核心内容区域 -->
                 <div class="lg:col-span-10 lg:col-start-2 xl:col-span-8 xl:col-start-3 space-y-20 pointer-events-auto">
                     
-                    <!-- 1. 公司经历介绍 (FunPlus, NetEase & Logo Loop) -->
+                    <!-- FunPlus -->
                     <div>
-                        <!-- Experience 1: FunPlus -->
-                        <div class="group border-t border-zinc-200 pt-8">
+                        <div class="group border-t border-zinc-300 pt-8">
                             <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-8 gap-4">
                                 <div class="flex items-center gap-4">
-                                    <img loading="lazy" src="assets/images/projects/fp.webp" class="w-12 h-12 md:w-16 md:h-16 rounded-full border border-zinc-200 object-cover bg-white p-1" alt="FunPlus Logo">
-                                    <div>
-                                        <h3 class="text-4xl md:text-5xl tracking-tight font-bold text-zinc-900 group-hover:text-f-red transition-colors">FunPlus 趣加游戏</h3>
+                                    <img loading="lazy" src="assets/images/projects/fp.webp" class="w-12 h-12 md:w-16 md:h-16 rounded-full border border-zinc-200 object-cover bg-white p-1 shadow-sm" alt="FunPlus Logo">
+                                    <div class="flex-1">
+                                        <!-- 响应式自适应换行：优先单行，超出会自然折断为两行，同时字号随屏幕缩放 -->
+                                        <h3 class="flex flex-wrap items-baseline gap-x-2 gap-y-0 group-hover:text-f-red transition-colors drop-shadow-sm font-bold text-zinc-900">
+                                            <span class="whitespace-nowrap text-[clamp(1.75rem,5vw,3rem)] leading-tight tracking-tight">FunPlus</span>
+                                            <span class="whitespace-nowrap text-[clamp(1.75rem,5vw,3rem)] leading-tight tracking-tight">趣加游戏</span>
+                                        </h3>
                                     </div>
                                 </div>
-                                <span class="text-base text-zinc-400 font-medium uppercase tracking-widest px-5 py-1.5 border border-zinc-200 rounded-full shrink-0">2022.05 — Present</span>
+                                <span class="text-base text-zinc-500 font-semibold uppercase tracking-widest px-5 py-1.5 border border-zinc-200 rounded-full shrink-0 bg-white/70 backdrop-blur-md shadow-sm">2022.05 — Present</span>
                             </div>
 
-                            <div class="md:ml-20 space-y-10"> <!-- 这里去掉了 md:w-4/5，充分利用栅格舒适宽度 -->
-                                <div class="relative pl-6 border-l-2 border-zinc-100 hover:border-f-red transition-colors duration-300">
-                                    <div class="absolute w-3 h-3 bg-white border-2 border-zinc-200 rounded-full -left-[7px] top-1.5"></div>
-                                    <h4 class="text-2xl font-bold text-zinc-900 mb-4">
-                                        UI Design Expert <span class="text-base font-medium text-zinc-500 ml-2">/ 视觉设计专家</span>
+                            <div class="md:ml-20 space-y-10"> 
+                                <div class="relative pl-6 border-l-2 border-zinc-300 hover:border-f-red transition-colors duration-300">
+                                    <div class="absolute w-3 h-3 bg-white border-2 border-zinc-300 rounded-full -left-[7px] top-1.5"></div>
+                                    <h4 class="text-2xl font-bold text-zinc-900 mb-4 drop-shadow-sm">
+                                        UI Design Expert <span class="text-base font-medium text-zinc-600 ml-2">/ 视觉设计专家</span>
                                     </h4>
                                     
                                     <div class="mb-5 flex flex-wrap items-center gap-3">
-                                        <span class="text-xs font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
+                                        <span class="text-xs font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
                                             Main Project:
-                                            <!-- 占位游戏Icon，您可替换为真实的图片路径 -->
                                             <img src="assets/images/projects/ficon.webp" class="w-6 h-6 rounded object-cover shadow-sm" alt="Game Icon">
                                         </span>
-                                        <a href="https://www.foundation.game/" target="_blank" class="text-lg text-zinc-700 font-semibold hover:text-f-red transition-colors inline-flex items-center gap-1">
+                                        <a href="https://www.foundation.game/" target="_blank" class="text-lg text-zinc-800 font-semibold hover:text-f-red transition-colors inline-flex items-center gap-1 drop-shadow-sm">
                                             Foundation: Galactic Frontier 
                                             <iconify-icon icon="solar:arrow-right-up-linear" class="text-lg"></iconify-icon>
                                         </a>
                                     </div>
 
-                                    <!-- 提高了文字对比度并统一列表样式，放大字号 -->
-                                    <ul class="text-lg text-zinc-600 font-normal leading-relaxed hover:text-zinc-900 transition-colors space-y-3 list-none">
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">作为UED负责人，主导项目从0到1构建完整UX体系（Strategy → System → Implementation），支撑策略类复杂系统设计落地。</li>
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">搭建UI/UX设计管线（Design Pipeline），建立规范化与模块化设计体系，显著提升设计复用率与协作效率。</li>
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">建立跨职能协作机制（Design × Product × Engineering），减少沟通成本并提升设计决策一致性。</li>
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">负责团队从0到稳定阶段的招聘、培养与绩效管理，打造可持续交付的设计团队结构。</li>
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">主导复杂系统（策略类游戏）的信息架构与交互设计优化，改善复杂系统的理解成本与用户决策路径。</li>
+                                    <ul class="text-lg text-zinc-800 font-medium leading-relaxed transition-colors space-y-3 list-none drop-shadow-sm">
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">作为UED负责人，主导项目从0到1构建完整UX体系（Strategy → System → Implementation），支撑策略类复杂系统设计落地。</li>
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">搭建UI/UX设计管线（Design Pipeline），建立规范化与模块化设计体系，显著提升设计复用率与协作效率。</li>
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">建立跨职能协作机制（Design × Product × Engineering），减少沟通成本并提升设计决策一致性。</li>
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">负责团队从0到稳定阶段的招聘、培养与绩效管理，打造可持续交付的设计团队结构。</li>
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">主导复杂系统（策略类游戏）的信息架构与交互设计优化，改善复杂系统的理解成本与用户决策路径。</li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Experience 2: NetEase -->
-                        <div class="group border-t border-zinc-200 pt-8 mt-12">
+                        <!-- NetEase -->
+                        <div class="group border-t border-zinc-300 pt-8 mt-12">
                             <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-8 gap-4">
                                 <div class="flex items-center gap-4">
-                                    <img loading="lazy" src="assets/images/projects/netease.webp" class="w-12 h-12 md:w-16 md:h-16 rounded-full border border-zinc-200 object-cover bg-white p-1" alt="NetEase Logo">
-                                    <div>
-                                        <h3 class="text-4xl md:text-5xl tracking-tight font-bold text-zinc-900 group-hover:text-f-red transition-colors">NetEase Games 网易游戏</h3>
+                                    <img loading="lazy" src="assets/images/projects/netease.webp" class="w-12 h-12 md:w-16 md:h-16 rounded-full border border-zinc-200 object-cover bg-white p-1 shadow-sm" alt="NetEase Logo">
+                                    <div class="flex-1">
+                                        <!-- 响应式自适应换行 -->
+                                        <h3 class="flex flex-wrap items-baseline gap-x-2 gap-y-0 group-hover:text-f-red transition-colors drop-shadow-sm font-bold text-zinc-900">
+                                            <span class="whitespace-nowrap text-[clamp(1.75rem,5vw,3rem)] leading-tight tracking-tight">NetEase Games</span>
+                                            <span class="whitespace-nowrap text-[clamp(1.75rem,5vw,3rem)] leading-tight tracking-tight">网易游戏</span>
+                                        </h3>
                                     </div>
                                 </div>
-                                <span class="text-base text-zinc-400 font-medium uppercase tracking-widest px-5 py-1.5 border border-zinc-200 rounded-full shrink-0">2013 — 2022</span>
+                                <span class="text-base text-zinc-500 font-semibold uppercase tracking-widest px-5 py-1.5 border border-zinc-200 rounded-full shrink-0 bg-white/70 backdrop-blur-md shadow-sm">2013 — 2022</span>
                             </div>
                             
-                            <div class="md:ml-20 space-y-10"> <!-- 这里去掉了 md:w-4/5 -->
-                                <!-- NetEase Role 1 -->
-                                <div class="relative pl-6 border-l-2 border-zinc-100 hover:border-f-red transition-colors duration-300">
-                                    <div class="absolute w-3 h-3 bg-white border-2 border-zinc-200 rounded-full -left-[7px] top-1.5"></div>
-                                    <h4 class="text-2xl font-bold text-zinc-900 mb-5">
-                                        GUI Design Manager <span class="text-base font-medium text-zinc-500 ml-2">/ 视觉设计主管</span>
+                            <div class="md:ml-20 space-y-10"> 
+                                <div class="relative pl-6 border-l-2 border-zinc-300 hover:border-f-red transition-colors duration-300">
+                                    <div class="absolute w-3 h-3 bg-white border-2 border-zinc-300 rounded-full -left-[7px] top-1.5"></div>
+                                    <h4 class="text-2xl font-bold text-zinc-900 mb-5 drop-shadow-sm">
+                                        GUI Design Manager <span class="text-base font-medium text-zinc-600 ml-2">/ 视觉设计主管</span>
                                     </h4>
-                                    <!-- 提高了文字对比度与字号 -->
-                                    <ul class="text-lg text-zinc-600 font-normal leading-relaxed hover:text-zinc-900 transition-colors space-y-3 list-none">
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">管理50人设计团队，完成从单点支持到体系化设计组织的转型。</li>
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">主导多项目并行资源调度，建立优先级与资源分配机制，提升整体产能与交付稳定性。</li>
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">深度参与关键岗位招聘与晋升评估，构建设计人才梯队。</li>
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">推动跨项目设计规范与资产复用体系，降低重复设计成本。</li>
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">多次获得公司团队发展贡献奖。</li>
+                                    <ul class="text-lg text-zinc-800 font-medium leading-relaxed transition-colors space-y-3 list-none drop-shadow-sm">
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">管理50人设计团队，完成从单点支持到体系化设计组织的转型。</li>
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">主导多项目并行资源调度，建立优先级与资源分配机制，提升整体产能与交付稳定性。</li>
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">深度参与关键岗位招聘与晋升评估，构建设计人才梯队。</li>
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">推动跨项目设计规范与资产复用体系，降低重复设计成本。</li>
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">多次获得公司团队发展贡献奖。</li>
                                     </ul>
                                 </div>
 
-                                <!-- NetEase Role 2 -->
-                                <div class="relative pl-6 border-l-2 border-zinc-100 hover:border-f-red transition-colors duration-300">
-                                    <div class="absolute w-3 h-3 bg-white border-2 border-zinc-200 rounded-full -left-[7px] top-1.5"></div>
-                                    <h4 class="text-2xl font-bold text-zinc-900 mb-4">
-                                        GUI Design Expert <span class="text-base font-medium text-zinc-500 ml-2">/ 视觉设计专家</span>
+                                <div class="relative pl-6 border-l-2 border-zinc-300 hover:border-f-red transition-colors duration-300">
+                                    <div class="absolute w-3 h-3 bg-white border-2 border-zinc-300 rounded-full -left-[7px] top-1.5"></div>
+                                    <h4 class="text-2xl font-bold text-zinc-900 mb-4 drop-shadow-sm">
+                                        GUI Design Expert <span class="text-base font-medium text-zinc-600 ml-2">/ 视觉设计专家</span>
                                     </h4>
                                     <div class="mb-5 flex flex-wrap items-center gap-2">
-                                        <span class="text-xs font-bold text-zinc-400 uppercase tracking-widest mr-2">Projects:</span>
-                                        <span class="text-sm font-semibold text-zinc-600 bg-zinc-100 px-3.5 py-1.5 rounded-full border border-zinc-200">荒野行动</span>
-                                        <span class="text-sm font-semibold text-zinc-600 bg-zinc-100 px-3.5 py-1.5 rounded-full border border-zinc-200">命运</span>
-                                        <span class="text-sm font-semibold text-zinc-600 bg-zinc-100 px-3.5 py-1.5 rounded-full border border-zinc-200">世界之外</span>
-                                        <span class="text-sm font-semibold text-zinc-600 bg-zinc-100 px-3.5 py-1.5 rounded-full border border-zinc-200">阴阳师</span>
-                                        <span class="text-sm font-semibold text-zinc-600 bg-zinc-100 px-3.5 py-1.5 rounded-full border border-zinc-200">漫威争锋</span>
-                                        <span class="text-base font-bold text-zinc-500 ml-1">等</span>
+                                        <span class="text-xs font-bold text-zinc-500 uppercase tracking-widest mr-2">Projects:</span>
+                                        <span class="text-sm font-bold text-zinc-800 bg-white/80 px-3.5 py-1.5 rounded-full border border-zinc-300 shadow-sm backdrop-blur-md">荒野行动</span>
+                                        <span class="text-sm font-bold text-zinc-800 bg-white/80 px-3.5 py-1.5 rounded-full border border-zinc-300 shadow-sm backdrop-blur-md">命运</span>
+                                        <span class="text-sm font-bold text-zinc-800 bg-white/80 px-3.5 py-1.5 rounded-full border border-zinc-300 shadow-sm backdrop-blur-md">世界之外</span>
+                                        <span class="text-sm font-bold text-zinc-800 bg-white/80 px-3.5 py-1.5 rounded-full border border-zinc-300 shadow-sm backdrop-blur-md">阴阳师</span>
+                                        <span class="text-sm font-bold text-zinc-800 bg-white/80 px-3.5 py-1.5 rounded-full border border-zinc-300 shadow-sm backdrop-blur-md">漫威争锋</span>
+                                        <span class="text-base font-bold text-zinc-600 ml-1">等</span>
                                     </div>
-                                    <ul class="text-lg text-zinc-600 font-normal leading-relaxed hover:text-zinc-900 transition-colors space-y-3 list-none">
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">负责核心项目的UI/UX设计与体验优化，覆盖战斗、成长、商业化等关键模块。</li>
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">UX问题诊断并推动系统性优化方案落地。</li>
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">搭建校招培训体系，制定课程并培养初中级设计师。</li>
-                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-300 before:rounded-full">负责外包设计团队管理与质量把控，提升外部资源交付标准。</li>
+                                    <ul class="text-lg text-zinc-800 font-medium leading-relaxed transition-colors space-y-3 list-none drop-shadow-sm">
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">负责核心项目的UI/UX设计与体验优化，覆盖战斗、成长、商业化等关键模块。</li>
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">UX问题诊断并推动系统性优化方案落地。</li>
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">搭建校招培训体系，制定课程并培养初中级设计师。</li>
+                                        <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">负责外包设计团队管理与质量把控，提升外部资源交付标准。</li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 游戏项目 Logo Loop (从属于公司经历模块) -->
+                        <!-- 游戏项目 Logo Loop -->
                         <div class="pt-20 w-full">
-                            <h3 class="text-sm tracking-widest font-semibold text-zinc-400 uppercase mb-8">Participated Projects</h3>
-                            <div class="logoloop logoloop--horizontal logoloop--fade" style="--logoloop-gap: 36px; --logoloop-logoHeight: 48px;" id="logo-loop-container">
+                            <h3 class="text-sm tracking-widest font-bold text-zinc-500 uppercase mb-8 drop-shadow-sm">Participated Projects</h3>
+                            <div class="logoloop logoloop--horizontal logoloop--fade" style="--logoloop-gap: clamp(24px, 4vw, 48px);" id="logo-loop-container">
                                 <div class="logoloop__track" id="logoloop-track">
                                     <ul class="logoloop__list" id="logoloop-seq">
-                                        <!-- 以下为您可手动替换的游戏项目Logo占位 -->
-                                         <li class="logoloop__item w-32 h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
-                                            <img src="assets\images\projects\foundation.webp" class="w-full h-full object-contain" alt="Founadtion">
+                                         <li class="logoloop__item h-8 sm:h-10 md:h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
+                                            <img src="assets/images/projects/foundation.webp" class="h-full w-auto max-w-[150px] object-contain" alt="Foundation">
                                         </li>
-                                        <li class="logoloop__item w-36 h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
-                                            <img src="assets\images\projects\destiny.webp" class="w-full h-full object-contain" alt="Destiny">
+                                        <li class="logoloop__item h-8 sm:h-10 md:h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
+                                            <img src="assets/images/projects/destiny.webp" class="h-full w-auto max-w-[150px] object-contain" alt="Destiny">
                                         </li>
-                                        <li class="logoloop__item w-32 h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
-                                            <img src="assets\images\projects\huangyexingdong.webp" class="w-full h-full object-contain" alt="荒野行动">
+                                        <li class="logoloop__item h-8 sm:h-10 md:h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
+                                            <img src="assets/images/projects/huangyexingdong.webp" class="h-full w-auto max-w-[150px] object-contain" alt="荒野行动">
                                         </li>
-                                        <li class="logoloop__item w-22 h-8 flex justify-center items-center transition-all duration-300 cursor-pointer">
-                                            <img src="assets\images\projects\eve.webp" class="w-full h-full object-contain" alt="EVE">
+                                        <li class="logoloop__item h-8 sm:h-10 md:h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
+                                            <img src="assets/images/projects/eve.webp" class="h-full w-auto max-w-[150px] object-contain" alt="EVE">
                                         </li>
-                                        <li class="logoloop__item w-22 h-8 flex justify-center items-center transition-all duration-300 cursor-pointer">
-                                            <img src="assets\images\projects\91.webp" class="w-full h-full object-contain" alt="堡垒前线">
+                                        <li class="logoloop__item h-8 sm:h-10 md:h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
+                                            <img src="assets/images/projects/91.webp" class="h-full w-auto max-w-[150px] object-contain" alt="堡垒前线">
                                         </li>
-                                        <li class="logoloop__item w-12 h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
-                                            <img src="assets\images\projects\rising.png" class="w-full h-full object-contain" alt="命运手游">
+                                        <li class="logoloop__item h-8 sm:h-10 md:h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
+                                            <img src="assets/images/projects/rising.png" class="h-full w-auto max-w-[150px] object-contain" alt="命运手游">
                                         </li>
-                                        <li class="logoloop__item w-12 h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
-                                            <img src="assets\images\projects\yys.png" class="w-full h-full object-contain" alt="阴阳师">
+                                        <li class="logoloop__item h-8 sm:h-10 md:h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
+                                            <img src="assets/images/projects/yys.png" class="h-full w-auto max-w-[150px] object-contain" alt="阴阳师">
                                         </li>
-                                        <li class="logoloop__item w-32 h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
-                                            <img src="assets\images\projects\rivals.webp" class="w-full h-full object-contain" alt="漫威争锋">
+                                        <li class="logoloop__item h-8 sm:h-10 md:h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
+                                            <img src="assets/images/projects/rivals.webp" class="h-full w-auto max-w-[150px] object-contain" alt="漫威争锋">
                                         </li>
-                                        <li class="logoloop__item w-36 h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
-                                            <img src="assets\images\projects\disorder.webp" class="w-full h-full object-contain" alt="Disorder">
+                                        <li class="logoloop__item h-8 sm:h-10 md:h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
+                                            <img src="assets/images/projects/disorder.webp" class="h-full w-auto max-w-[150px] object-contain" alt="Disorder">
                                         </li>
-                                        <li class="logoloop__item w-22 h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
-                                            <img src="assets\images\projects\sjzw.webp" class="w-full h-full object-contain" alt="世界之外">
+                                        <li class="logoloop__item h-8 sm:h-10 md:h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
+                                            <img src="assets/images/projects/sjzw.webp" class="h-full w-auto max-w-[150px] object-contain" alt="世界之外">
                                         </li>
-                                        <li class="logoloop__item w-22 h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
-                                            <img src="assets\images\projects\paj.png" class="w-full h-full object-contain" alt="决战！平安京">
+                                        <li class="logoloop__item h-8 sm:h-10 md:h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
+                                            <img src="assets/images/projects/paj.png" class="h-full w-auto max-w-[150px] object-contain" alt="决战！平安京">
                                         </li>
-                                        <li class="logoloop__item w-22 h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
-                                            <img src="assets\images\projects\sgrl.png" class="w-full h-full object-contain" alt="三国如龙传">
+                                        <li class="logoloop__item h-8 sm:h-10 md:h-12 flex justify-center items-center transition-all duration-300 cursor-pointer">
+                                            <img src="assets/images/projects/sgrl.png" class="h-full w-auto max-w-[150px] object-contain" alt="三国如龙传">
                                         </li>
                                     </ul>
                                 </div>
@@ -534,58 +534,49 @@
                     </div>
 
                     <!-- 2. Core Skills Section -->
-                    <div class="pt-16 border-t border-zinc-200 w-full">
-                        <h3 class="text-sm tracking-widest font-semibold text-zinc-400 uppercase mb-8">Core Skills</h3>
+                    <div class="pt-16 border-t border-zinc-300 w-full">
+                        <h3 class="text-sm tracking-widest font-bold text-zinc-500 uppercase mb-8 drop-shadow-sm">Core Skills</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="p-6 border border-zinc-200 rounded-xl bg-white hover:border-f-red hover:shadow-xl transition-all duration-300 group/skill">
+                            <div class="p-6 border border-zinc-200 rounded-xl bg-white/80 backdrop-blur-md hover:border-f-red hover:shadow-xl transition-all duration-300 group/skill">
                                 <h4 class="text-lg font-bold text-zinc-900 mb-2">UX Strategy & System Design</h4>
-                                <p class="text-sm text-zinc-600 font-medium leading-relaxed">复杂系统体验设计 / 信息架构 / 设计规范</p>
+                                <p class="text-sm text-zinc-700 font-medium leading-relaxed">复杂系统体验设计 / 信息架构 / 设计规范</p>
                             </div>
-                            <div class="p-6 border border-zinc-200 rounded-xl bg-white hover:border-f-red hover:shadow-xl transition-all duration-300 group/skill">
+                            <div class="p-6 border border-zinc-200 rounded-xl bg-white/80 backdrop-blur-md hover:border-f-red hover:shadow-xl transition-all duration-300 group/skill">
                                 <h4 class="text-lg font-bold text-zinc-900 mb-2">End-to-End Production</h4>
-                                <p class="text-sm text-zinc-600 font-medium leading-relaxed">需求分析 → 原型 → 视觉 → 动效 → 引擎落地</p>
+                                <p class="text-sm text-zinc-700 font-medium leading-relaxed">需求分析 → 原型 → 视觉 → 动效 → 引擎落地</p>
                             </div>
-                            <div class="p-6 border border-zinc-200 rounded-xl bg-white hover:border-f-red hover:shadow-xl transition-all duration-300 group/skill">
+                            <div class="p-6 border border-zinc-200 rounded-xl bg-white/80 backdrop-blur-md hover:border-f-red hover:shadow-xl transition-all duration-300 group/skill">
                                 <h4 class="text-lg font-bold text-zinc-900 mb-2">Design Leadership</h4>
-                                <p class="text-sm text-zinc-600 font-medium leading-relaxed">团队管理 / 人才培养 / 组织搭建</p>
+                                <p class="text-sm text-zinc-700 font-medium leading-relaxed">团队管理 / 人才培养 / 组织搭建</p>
                             </div>
-                            <div class="p-6 border border-zinc-200 rounded-xl bg-white hover:border-f-red hover:shadow-xl transition-all duration-300 group/skill">
+                            <div class="p-6 border border-zinc-200 rounded-xl bg-white/80 backdrop-blur-md hover:border-f-red hover:shadow-xl transition-all duration-300 group/skill">
                                 <h4 class="text-lg font-bold text-zinc-900 mb-2">Cross-functional Collaboration</h4>
-                                <p class="text-sm text-zinc-600 font-medium leading-relaxed">跨职能推动与沟通</p>
+                                <p class="text-sm text-zinc-700 font-medium leading-relaxed">跨职能推动与沟通</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- 3. Software Toolkit Section -->
-                    <div class="pt-16 border-t border-zinc-200 w-full" id="toolkit-section">
-                        <h3 class="text-sm tracking-widest font-semibold text-zinc-400 uppercase mb-6">Software Toolkit</h3>
+                    <div class="pt-16 border-t border-zinc-300 w-full" id="toolkit-section">
+                        <h3 class="text-sm tracking-widest font-bold text-zinc-500 uppercase mb-6 drop-shadow-sm">Software Toolkit</h3>
                         
-                        <p class="text-base text-zinc-600 font-normal leading-relaxed mb-1 max-w-2xl">
+                        <p class="text-base text-zinc-800 font-bold leading-relaxed mb-1 max-w-2xl drop-shadow-sm">
                             熟练工具：Photoshop / Unreal Engine / Unity / Figma / Blender ...
                         </p>
-                        <!-- 蓝图能力去掉了特殊化 -->
-                        <p class="text-base text-zinc-600 font-normal leading-relaxed mb-8 max-w-2xl">
+                        <p class="text-base text-zinc-800 font-bold leading-relaxed mb-8 max-w-2xl drop-shadow-sm">
                             * 具备 Unreal Engine Blueprint 蓝图开发能力
                         </p>
 
                         <!-- 彩色原版软件Logo -->
                         <div class="flex flex-wrap items-center w-full gap-6 md:gap-8 py-4">
-                            <!-- PS -->
                             <iconify-icon icon="logos:adobe-photoshop" height="42"></iconify-icon>
-                            <!-- UNREAL -->
                             <iconify-icon icon="logos:unrealengine-icon" height="42"></iconify-icon>
-                            <!-- UNITY -->
                             <iconify-icon icon="logos:unity" height="42"></iconify-icon>
-                            <!-- FIGMA -->
                             <iconify-icon icon="logos:figma" height="42"></iconify-icon>
-                            <!-- BLENDER -->
                             <iconify-icon icon="logos:blender" height="42"></iconify-icon>
-                            <!-- AE -->
                             <iconify-icon icon="logos:adobe-after-effects" height="42"></iconify-icon>
-                            <!-- COCOS STUDIO -->
                             <iconify-icon icon="simple-icons:cocos" height="42" style="color: #050505;"></iconify-icon>
-                            <!-- 省略号 -->
-                            <iconify-icon icon="solar:menu-dots-bold" height="32" class="text-zinc-400"></iconify-icon>
+                            <iconify-icon icon="solar:menu-dots-bold" height="32" class="text-zinc-800"></iconify-icon>
                         </div>
                     </div>
 
@@ -594,17 +585,14 @@
         </div>
     </section>
 
-    <!-- About Intro -->
-    <section id="about" class="py-8 md:py-8 px-6 bg-zinc-100/50 border-y border-zinc-200">
+    <!-- 【纸张层2：About Intro】 -->
+    <section id="about" class="py-8 md:py-8 px-6 border-y border-zinc-200" style="position: relative; z-index: 10; background-color: #f4f4f5; box-shadow: 0 -10px 30px rgba(0,0,0,0.05), 0 10px 30px rgba(0,0,0,0.05);">
         <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row gap-12 md:gap-24 items-center">
             <div class="w-full md:w-1/3 relative flex justify-center items-center h-48 md:h-64">
-                <!-- 外層灰色虛線圓：低速順時針轉動 (24秒一圈) -->
                 <div class="absolute w-48 h-48 md:w-64 md:h-64 rounded-full border-2 border-dashed border-zinc-300 animate-[spin_24s_linear_infinite]"></div>
-                <!-- 內層紅色圓：保持靜止 -->
                 <div class="absolute w-32 h-32 md:w-48 md:h-48 rounded-full border border-f-red/30"></div>
-                <!-- 中心圖標：保持靜止 -->
                 <div class="relative z-10 flex items-center justify-center">
-                    <iconify-icon icon="solar:code-circle-linear" class="text-6xl text-f-red bg-[#fcfcfb] rounded-full p-2"></iconify-icon>
+                    <iconify-icon icon="solar:code-circle-linear" class="text-6xl text-f-red bg-[#f4f4f5] rounded-full p-2"></iconify-icon>
                 </div>
             </div>
             <div class="w-full md:w-2/3">
@@ -631,144 +619,145 @@
         </div>
     </section>
 
-    <!-- Works Section -->
-    <section id="works" class="py-24 md:py-40 px-6 max-w-screen-2xl mx-auto w-full">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 md:mb-24 gap-6">
-            <h2 class="text-5xl md:text-7xl font-bold tracking-tighter uppercase leading-none text-zinc-900">
-                Selected<br><span class="text-f-red">Works</span>
-            </h2>
-        </div>
-
-        <div class="columns-1 md:columns-2 lg:columns-3 gap-8 md:gap-12">
-            
-            <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('eva')">
-                <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
-                    <img loading="lazy" src="https://images.unsplash.com/photo-1618557140306-3829029a8a48?q=80&w=800&auto=format&fit=crop" alt="EVA Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
-                    <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
-                        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
-                            <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex justify-between items-start pointer-events-none">
-                    <div>
-                        <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">EVA - Evangelion UI</h3>
-                        <p class="text-sm font-medium text-zinc-500">Game UI / Fan Art</p>
-                    </div>
-                </div>
-                <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
-                    Explore
-                </figcaption>
+    <!-- 【纸张层3：Works Section】 -->
+    <section id="works" class="py-24 md:py-40 px-6 w-full" style="position: relative; z-index: 10; background-color: #fcfcfb;">
+        <div class="max-w-screen-2xl mx-auto w-full">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 md:mb-24 gap-6">
+                <h2 class="text-5xl md:text-7xl font-bold tracking-tighter uppercase leading-none text-zinc-900">
+                    Selected<br><span class="text-f-red">Works</span>
+                </h2>
             </div>
 
-            <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('fintech')">
-                <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
-                    <img loading="lazy" src="https://images.unsplash.com/photo-1618761714954-0b8cd0026356?q=80&w=800&auto=format&fit=crop" alt="Fintech App" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
-                    <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
-                        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
-                            <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+            <div class="columns-1 md:columns-2 lg:columns-3 gap-8 md:gap-12">
+                
+                <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('eva')">
+                    <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
+                        <img loading="lazy" src="https://images.unsplash.com/photo-1618557140306-3829029a8a48?q=80&w=800&auto=format&fit=crop" alt="EVA Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
+                        <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
+                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
+                                <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="flex justify-between items-start pointer-events-none">
-                    <div>
-                        <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">Fintech App</h3>
-                        <p class="text-sm font-medium text-zinc-500">UI/UX / 2022</p>
+                    <div class="flex justify-between items-start pointer-events-none">
+                        <div>
+                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">EVA - Evangelion UI</h3>
+                            <p class="text-sm font-medium text-zinc-500">Game UI / Fan Art</p>
+                        </div>
                     </div>
+                    <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
+                        Explore
+                    </figcaption>
                 </div>
-                <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
-                    Explore
-                </figcaption>
-            </div>
 
-            <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('ecommerce')">
-                <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
-                    <img loading="lazy" src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=800&auto=format&fit=crop" alt="E-commerce Platform" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
-                    <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
-                        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
-                            <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+                <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('fintech')">
+                    <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
+                        <img loading="lazy" src="https://images.unsplash.com/photo-1618761714954-0b8cd0026356?q=80&w=800&auto=format&fit=crop" alt="Fintech App" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
+                        <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
+                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
+                                <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="flex justify-between items-start pointer-events-none">
-                    <div>
-                        <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">E-commerce Platform</h3>
-                        <p class="text-sm font-medium text-zinc-500">Web Design / 2021</p>
-                    </div>
-                </div>
-                <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
-                    Explore
-                </figcaption>
-            </div>
-            
-            <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('project4')">
-                <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
-                    <img loading="lazy" src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?q=80&w=800&auto=format&fit=crop" alt="Brand Identity" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
-                    <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
-                        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
-                            <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+                    <div class="flex justify-between items-start pointer-events-none">
+                        <div>
+                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">Fintech App</h3>
+                            <p class="text-sm font-medium text-zinc-500">UI/UX / 2022</p>
                         </div>
                     </div>
+                    <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
+                        Explore
+                    </figcaption>
                 </div>
-                <div class="flex justify-between items-start pointer-events-none">
-                    <div>
-                        <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">Brand Identity</h3>
-                        <p class="text-sm font-medium text-zinc-500">Branding / 2023</p>
-                    </div>
-                </div>
-                <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
-                    Explore
-                </figcaption>
-            </div>
 
-            <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('project5')">
-                <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
-                    <img loading="lazy" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop" alt="Smart Home" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
-                    <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
-                        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
-                            <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+                <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('ecommerce')">
+                    <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
+                        <img loading="lazy" src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=800&auto=format&fit=crop" alt="E-commerce Platform" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
+                        <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
+                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
+                                <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="flex justify-between items-start pointer-events-none">
-                    <div>
-                        <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">Smart Home</h3>
-                        <p class="text-sm font-medium text-zinc-500">UI/UX / 2023</p>
-                    </div>
-                </div>
-                <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
-                    Explore
-                </figcaption>
-            </div>
-
-            <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('project6')">
-                <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
-                    <img loading="lazy" src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800&auto=format&fit=crop" alt="Travel Concept" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
-                    <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
-                        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
-                            <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+                    <div class="flex justify-between items-start pointer-events-none">
+                        <div>
+                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">E-commerce Platform</h3>
+                            <p class="text-sm font-medium text-zinc-500">Web Design / 2021</p>
                         </div>
                     </div>
+                    <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
+                        Explore
+                    </figcaption>
                 </div>
-                <div class="flex justify-between items-start pointer-events-none">
-                    <div>
-                        <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">Travel Concept</h3>
-                        <p class="text-sm font-medium text-zinc-500">App Design / 2022</p>
+                
+                <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('project4')">
+                    <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
+                        <img loading="lazy" src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?q=80&w=800&auto=format&fit=crop" alt="Brand Identity" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
+                        <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
+                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
+                                <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+                            </div>
+                        </div>
                     </div>
+                    <div class="flex justify-between items-start pointer-events-none">
+                        <div>
+                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">Brand Identity</h3>
+                            <p class="text-sm font-medium text-zinc-500">Branding / 2023</p>
+                        </div>
+                    </div>
+                    <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
+                        Explore
+                    </figcaption>
                 </div>
-                <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
-                    Explore
-                </figcaption>
-            </div>
 
+                <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('project5')">
+                    <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
+                        <img loading="lazy" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop" alt="Smart Home" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
+                        <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
+                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
+                                <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start pointer-events-none">
+                        <div>
+                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">Smart Home</h3>
+                            <p class="text-sm font-medium text-zinc-500">UI/UX / 2023</p>
+                        </div>
+                    </div>
+                    <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
+                        Explore
+                    </figcaption>
+                </div>
+
+                <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('project6')">
+                    <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
+                        <img loading="lazy" src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800&auto=format&fit=crop" alt="Travel Concept" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
+                        <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
+                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
+                                <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start pointer-events-none">
+                        <div>
+                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">Travel Concept</h3>
+                            <p class="text-sm font-medium text-zinc-500">App Design / 2022</p>
+                        </div>
+                    </div>
+                    <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
+                        Explore
+                    </figcaption>
+                </div>
+
+            </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-24 md:py-40 px-6 flex-grow flex flex-col justify-end bg-zinc-900 text-white mt-20">
+    <!-- 【纸张层4：Contact Section】 -->
+    <section id="contact" class="flex-grow flex flex-col justify-end text-white py-24 md:py-40 px-6" style="position: relative; z-index: 10; background-color: #18181b; box-shadow: 0 -10px 30px rgba(0,0,0,0.2);">
         <div class="max-w-screen-2xl mx-auto w-full">
             <div class="mb-16 md:mb-24 w-full" id="contact-animation-area">
-                <!-- Text Pressure Component -->
                 <div id="text-pressure-container" style="position: relative; width: 100%; height: 100%; background: transparent;">
                     <h2 id="text-pressure-title" class="text-pressure-flex text-white" style="font-family: 'Compressa VF', sans-serif; text-transform: uppercase; margin: 0; text-align: center; user-select: none; white-space: nowrap; font-weight: 100; width: 100%;"></h2>
                 </div>
@@ -778,13 +767,13 @@
                 <div class="flex flex-col gap-10">
                     <div class="flex gap-6">
                         <a href="https://www.behance.net/funxarts" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-full border border-zinc-700 flex items-center justify-center hover:bg-f-red hover:border-f-red transition-all duration-300 hover:-translate-y-1" aria-label="Behance">
-                            <img src="assets\images\projects\behance.webp" width="36"></img>
+                            <img src="assets/images/projects/behance.webp" width="36" />
                         </a>
                         <a href="https://www.artstation.com/funx" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-full border border-zinc-700 flex items-center justify-center hover:bg-f-red hover:border-f-red transition-all duration-300 hover:-translate-y-1" aria-label="ArtStation">
-                            <img src="assets\images\projects\artstation.webp" width="36"></img>
+                            <img src="assets/images/projects/artstation.webp" width="36" />
                         </a>
                         <a href="https://www.zcool.com.cn/u/528072" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-full border border-zinc-700 flex items-center justify-center hover:bg-f-red hover:border-f-red transition-all duration-300 hover:-translate-y-1" aria-label="Zcool">
-                            <img src="assets\images\projects\zcool.webp" width="36"></img>
+                            <img src="assets/images/projects/zcool.webp" width="36" />
                         </a>
                     </div>
                     
@@ -799,7 +788,7 @@
                         </div>
                         <div class="flex items-start gap-4 mt-2">
                             <iconify-icon icon="solar:qr-code-linear" width="24" class="text-f-red mt-1"></iconify-icon>
-                                <img loading="lazy" src="assets\images\hero\sq2.png" class="w-32 h-32 object-cover grayscale opacity-90" alt="WeChat QR">
+                                <img loading="lazy" src="assets/images/hero/sq2.png" class="w-32 h-32 object-cover grayscale opacity-90" alt="WeChat QR">
                             </div>
                         </div>
                     </div>
@@ -832,7 +821,6 @@
                     </p>
                 </div>
                 
-                <!-- 內容區塊徹底移出 Padding，消除間隙並強制圖片左右貼齊邊緣 -->
                 <div id="modal-content-area" class="w-full flex flex-col m-0 p-0 bg-transparent"></div>
                 
                 <div id="modal-nav" class="border-t border-zinc-200 grid grid-cols-2 divide-x divide-zinc-200 bg-zinc-50/50 mt-auto"></div>
@@ -883,11 +871,11 @@
                     duration: 1,
                     ease: 'power2.out'
                 }, 0.8);
-            }, 1400); // 配合 Loading 畫面淡出時間
+            }, 1400); 
         });
 
         // ==========================================
-        // Staggered Menu Logic (GSAP Optimized)
+        // Staggered Menu Logic
         // ==========================================
         const smState = { open: false, busy: false, openTl: null, closeTween: null };
         const smElements = {
@@ -1030,7 +1018,7 @@
         }
 
         // ==========================================
-        // Scroll Reveal Text Animation (GSAP) & Header Color Toggle
+        // Header Color Toggle on scroll
         // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
             if (window.gsap && window.ScrollTrigger) {
@@ -1049,503 +1037,239 @@
                         }
                     });
                 }
-
-                const revealContainer = document.getElementById('scroll-reveal-text');
-                const words = document.querySelectorAll('.reveal-word');
-
-                if (revealContainer && words.length > 0) {
-                    gsap.fromTo(revealContainer, 
-                        { rotation: 3 }, 
-                        {
-                            rotation: 0,
-                            ease: 'none',
-                            scrollTrigger: {
-                                trigger: revealContainer,
-                                start: 'top 95%',
-                                end: 'center 45%',
-                                scrub: 1
-                            }
-                        }
-                    );
-
-                    gsap.fromTo(words,
-                        { opacity: 0.1, filter: 'blur(4px)' },
-                        {
-                            opacity: 1,
-                            filter: 'blur(0px)',
-                            ease: 'none',
-                            stagger: 0.05,
-                            scrollTrigger: {
-                                trigger: revealContainer,
-                                start: 'top 90%',
-                                end: 'center 45%',
-                                scrub: 1
-                            }
-                        }
-                    );
-                }
             }
         });
 
         // ==========================================
-        // 基於滾動的視差動畫 (已加入 RequestAnimationFrame 節流優化)
+        // 全新 DarkVeil WebGL
         // ==========================================
-        let isScrolling = false;
-        window.addEventListener('scroll', function() {
-            if (!isScrolling) {
-                window.requestAnimationFrame(function() {
-                    const expSection = document.getElementById('experience');
-                    const expBg = document.getElementById('liquid-ether-bg');
-                    const scrollY = window.scrollY;
-                    const viewHeight = window.innerHeight;
+        function initDarkVeil() {
+            const container = document.getElementById('darkveil-canvas');
+            if (!container || !window.THREE) return;
 
-                    // 移除原有的 hero 滾動位移，確保 QR Code 等元素完美固定
+            const frag = `
+            precision highp float;
+            #define MAX_COLORS 5
+            #define ITERATIONS 2
 
-                    if(expSection && expBg) {
-                        const rect = expSection.getBoundingClientRect();
-                        if(rect.top <= viewHeight && rect.bottom >= 0) {
-                            const progress = (viewHeight - rect.top) / (viewHeight + rect.height);
-                            const moveAmount = progress * 30 - 15; 
-                            expBg.style.transform = `translateY(${moveAmount}%) scale(1.1)`;
-                        }
-                    }
-                    isScrolling = false;
-                });
-                isScrolling = true;
-            }
-        });
+            uniform vec2 uCanvas;
+            uniform float uTime;
+            uniform float uSpeed;
+            uniform vec2 uRot;
+            uniform vec3 uColors[MAX_COLORS];
+            uniform float uScale;
+            uniform float uFrequency;
+            uniform float uWarpStrength;
+            uniform vec2 uPointer;
+            uniform float uMouseInfluence;
+            uniform float uParallax;
+            uniform float uNoise;
+            uniform float uIntensity;
+            uniform float uBandWidth;
+            
+            // 加入缺失的 uniform 變數宣告
+            uniform float uHueShift;
+            uniform float uScan;
+            uniform float uScanFreq;
+            uniform float uWarp;
+            
+            varying vec2 vUv;
 
-        // ==========================================
-        // Liquid Ether 液體背景初始化邏輯 (Vanilla JS / WebGL) + IntersectionObserver 優化
-        // ==========================================
-        function initLiquidEther(container, props) {
-            function makePaletteTexture(stops) {
-                let arr = stops && stops.length > 0 ? stops : ['#ffffff', '#ffffff'];
-                if (arr.length === 1) arr = [arr[0], arr[0]];
-                const w = arr.length;
-                const data = new Uint8Array(w * 4);
-                for (let i = 0; i < w; i++) {
-                    const c = new THREE.Color(arr[i]);
-                    data[i * 4 + 0] = Math.round(c.r * 255);
-                    data[i * 4 + 1] = Math.round(c.g * 255);
-                    data[i * 4 + 2] = Math.round(c.b * 255);
-                    data[i * 4 + 3] = 255;
-                }
-                const tex = new THREE.DataTexture(data, w, 1, THREE.RGBAFormat);
-                tex.magFilter = THREE.LinearFilter;
-                tex.minFilter = THREE.LinearFilter;
-                tex.wrapS = THREE.ClampToEdgeWrapping;
-                tex.wrapT = THREE.ClampToEdgeWrapping;
-                tex.generateMipmaps = false;
-                tex.needsUpdate = true;
-                return tex;
+            vec4 buf[8];
+            float rand(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}
+
+            mat3 rgb2yiq=mat3(0.299,0.587,0.114,0.596,-0.274,-0.322,0.211,-0.523,0.312);
+            mat3 yiq2rgb=mat3(1.0,0.956,0.621,1.0,-0.272,-0.647,1.0,-1.106,1.703);
+
+            vec3 hueShiftRGB(vec3 col,float deg){
+                vec3 yiq=rgb2yiq*col;
+                float rad = deg * 0.01745329251;
+                float cosh=cos(rad),sinh=sin(rad);
+                vec3 yiqShift=vec3(yiq.x,yiq.y*cosh-yiq.z*sinh,yiq.y*sinh+yiq.z*cosh);
+                return clamp(yiq2rgb*yiqShift,0.0,1.0);
             }
 
-            const paletteTex = makePaletteTexture(props.colors);
-            const bgVec4 = new THREE.Vector4(0, 0, 0, 0);
+            vec4 sigmoid(vec4 x){return 1./(1.+exp(-x));}
 
-            class CommonClass {
-                constructor() {
-                    this.width = 0; this.height = 0; this.aspect = 1; this.pixelRatio = 1;
-                    this.time = 0; this.delta = 0;
-                    this.container = null; this.renderer = null; this.clock = null;
-                }
-                init(container) {
-                    this.container = container;
-                    this.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-                    this.resize();
-                    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-                    this.renderer.autoClear = false;
-                    this.renderer.setClearColor(new THREE.Color(0x000000), 0);
-                    this.renderer.setPixelRatio(this.pixelRatio);
-                    this.renderer.setSize(this.width, this.height);
-                    this.renderer.domElement.style.width = '100%';
-                    this.renderer.domElement.style.height = '100%';
-                    this.renderer.domElement.style.display = 'block';
-                    this.container.appendChild(this.renderer.domElement);
-                    this.clock = new THREE.Clock();
-                    this.clock.start();
-                }
-                resize() {
-                    if (!this.container) return;
-                    const rect = this.container.getBoundingClientRect();
-                    this.width = Math.max(1, Math.floor(rect.width));
-                    this.height = Math.max(1, Math.floor(rect.height));
-                    this.aspect = this.width / this.height;
-                    if (this.renderer) this.renderer.setSize(this.width, this.height, false);
-                }
-                update() {
-                    this.delta = this.clock.getDelta();
-                    this.time += this.delta;
-                }
-            }
-            const Common = new CommonClass();
-
-            class MouseClass {
-                constructor() {
-                    this.coords = new THREE.Vector2();
-                    this.coords_old = new THREE.Vector2();
-                    this.diff = new THREE.Vector2();
-                    this.timer = null;
-                    this.isHoverInside = false;
-                    this.hasUserControl = false;
-                    this.isAutoActive = false;
-                    this.autoIntensity = 2.0;
-                    this.takeoverActive = false;
-                    this.takeoverStartTime = 0;
-                    this.takeoverDuration = 0.25;
-                    this.takeoverFrom = new THREE.Vector2();
-                    this.takeoverTo = new THREE.Vector2();
-                    this._onMouseMove = this.onDocumentMouseMove.bind(this);
-                    this._onTouchStart = this.onDocumentTouchStart.bind(this);
-                    this._onTouchMove = this.onDocumentTouchMove.bind(this);
-                }
-                init(container) {
-                    this.container = container;
-                    window.addEventListener('mousemove', this._onMouseMove);
-                    window.addEventListener('touchstart', this._onTouchStart, { passive: true });
-                    window.addEventListener('touchmove', this._onTouchMove, { passive: true });
-                }
-                isPointInside(clientX, clientY) {
-                    if (!this.container) return false;
-                    const rect = this.container.getBoundingClientRect();
-                    return clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
-                }
-                updateHoverState(clientX, clientY) {
-                    this.isHoverInside = this.isPointInside(clientX, clientY);
-                    return this.isHoverInside;
-                }
-                setCoords(x, y) {
-                    if (!this.container) return;
-                    if (this.timer) window.clearTimeout(this.timer);
-                    const rect = this.container.getBoundingClientRect();
-                    const nx = (x - rect.left) / rect.width;
-                    const ny = (y - rect.top) / rect.height;
-                    this.coords.set(nx * 2 - 1, -(ny * 2 - 1));
-                    this.timer = window.setTimeout(() => { }, 100);
-                }
-                setNormalized(nx, ny) {
-                    this.coords.set(nx, ny);
-                }
-                onDocumentMouseMove(event) {
-                    if (!this.updateHoverState(event.clientX, event.clientY)) return;
-                    if (this.onInteract) this.onInteract();
-                    if (this.isAutoActive && !this.hasUserControl && !this.takeoverActive) {
-                        const rect = this.container.getBoundingClientRect();
-                        const nx = (event.clientX - rect.left) / rect.width;
-                        const ny = (event.clientY - rect.top) / rect.height;
-                        this.takeoverFrom.copy(this.coords);
-                        this.takeoverTo.set(nx * 2 - 1, -(ny * 2 - 1));
-                        this.takeoverStartTime = performance.now();
-                        this.takeoverActive = true;
-                        this.hasUserControl = true;
-                        this.isAutoActive = false;
-                        return;
-                    }
-                    this.setCoords(event.clientX, event.clientY);
-                    this.hasUserControl = true;
-                }
-                onDocumentTouchStart(event) {
-                    if (event.touches.length !== 1) return;
-                    const t = event.touches[0];
-                    if (!this.updateHoverState(t.clientX, t.clientY)) return;
-                    if (this.onInteract) this.onInteract();
-                    this.setCoords(t.clientX, t.clientY);
-                    this.hasUserControl = true;
-                }
-                onDocumentTouchMove(event) {
-                    if (event.touches.length !== 1) return;
-                    const t = event.touches[0];
-                    if (!this.updateHoverState(t.clientX, t.clientY)) return;
-                    if (this.onInteract) this.onInteract();
-                    this.setCoords(t.clientX, t.clientY);
-                }
-                update() {
-                    if (this.takeoverActive) {
-                        const t = (performance.now() - this.takeoverStartTime) / (this.takeoverDuration * 1000);
-                        if (t >= 1) {
-                            this.takeoverActive = false;
-                            this.coords.copy(this.takeoverTo);
-                        } else {
-                            const k = t * t * (3 - 2 * t);
-                            this.coords.copy(this.takeoverFrom).lerp(this.takeoverTo, k);
-                        }
-                    }
-                    this.diff.subVectors(this.coords, this.coords_old);
-                    this.coords_old.copy(this.coords);
-                    if (this.isAutoActive && !this.takeoverActive) this.diff.multiplyScalar(this.autoIntensity);
-                }
-            }
-            const Mouse = new MouseClass();
-
-            class AutoDriver {
-                constructor(mouse, manager, opts) {
-                    this.mouse = mouse; this.manager = manager;
-                    this.enabled = opts.enabled; this.speed = opts.speed;
-                    this.resumeDelay = opts.resumeDelay || 3000;
-                    this.rampDurationMs = (opts.rampDuration || 0) * 1000;
-                    this.active = false; this.current = new THREE.Vector2(0, 0);
-                    this.target = new THREE.Vector2(); this.lastTime = performance.now();
-                    this.activationTime = 0; this.margin = 0.2;
-                    this._tmpDir = new THREE.Vector2();
-                    this.pickNewTarget();
-                }
-                pickNewTarget() {
-                    const r = Math.random;
-                    this.target.set((r() * 2 - 1) * (1 - this.margin), (r() * 2 - 1) * (1 - this.margin));
-                }
-                forceStop() {
-                    this.active = false; this.mouse.isAutoActive = false;
-                }
-                update() {
-                    if (!this.enabled) return;
-                    const now = performance.now();
-                    const idle = now - this.manager.lastUserInteraction;
-                    if (idle < this.resumeDelay) {
-                        if (this.active) this.forceStop(); return;
-                    }
-                    if (this.mouse.isHoverInside) {
-                        if (this.active) this.forceStop(); return;
-                    }
-                    if (!this.active) {
-                        this.active = true; this.current.copy(this.mouse.coords);
-                        this.lastTime = now; this.activationTime = now;
-                    }
-                    this.mouse.isAutoActive = true;
-                    let dtSec = (now - this.lastTime) / 1000;
-                    this.lastTime = now;
-                    if (dtSec > 0.2) dtSec = 0.016;
-                    const dir = this._tmpDir.subVectors(this.target, this.current);
-                    const dist = dir.length();
-                    if (dist < 0.01) { this.pickNewTarget(); return; }
-                    dir.normalize();
-                    let ramp = 1;
-                    if (this.rampDurationMs > 0) {
-                        const t = Math.min(1, (now - this.activationTime) / this.rampDurationMs);
-                        ramp = t * t * (3 - 2 * t);
-                    }
-                    const step = this.speed * dtSec * ramp;
-                    this.current.addScaledVector(dir, Math.min(step, dist));
-                    this.mouse.setNormalized(this.current.x, this.current.y);
-                }
+            vec4 cppn_fn(vec2 coordinate,float in0,float in1,float in2){
+                buf[6]=vec4(coordinate.x,coordinate.y,0.3948333106474662+in0,0.36+in1);
+                buf[7]=vec4(0.14+in2,sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y),0.,0.);
+                buf[0]=mat4(vec4(6.5404263,-3.6126034,0.7590882,-1.13613),vec4(2.4582713,3.1660357,1.2219609,0.06276096),vec4(-5.478085,-6.159632,1.8701609,-4.7742867),vec4(6.039214,-5.542865,-0.90925294,3.251348))*buf[6]+mat4(vec4(0.8473259,-5.722911,3.975766,1.6522468),vec4(-0.24321538,0.5839259,-1.7661959,-5.350116),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(0.21808943,1.1243913,-1.7969975,5.0294676);
+                buf[1]=mat4(vec4(-3.3522482,-6.0612736,0.55641043,-4.4719114),vec4(0.8631464,1.7432913,5.643898,1.6106541),vec4(2.4941394,-3.5012043,1.7184316,6.357333),vec4(3.310376,8.209261,1.1355612,-1.165539))*buf[6]+mat4(vec4(5.24046,-13.034365,0.009859298,15.870829),vec4(2.987511,3.129433,-0.89023495,-1.6822904),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-5.9457836,-6.573602,-0.8812491,1.5436668);
+                buf[0]=sigmoid(buf[0]);buf[1]=sigmoid(buf[1]);
+                buf[2]=mat4(vec4(-15.219568,8.095543,-2.429353,-1.9381982),vec4(-5.951362,4.3115187,2.6393783,1.274315),vec4(-7.3145227,6.7297835,5.2473326,5.9411426),vec4(5.0796127,8.979051,-1.7278991,-1.158976))*buf[6]+mat4(vec4(-11.967154,-11.608155,6.1486754,11.237008),vec4(2.124141,-6.263192,-1.7050359,-0.7021966),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-4.17164,-3.2281182,-4.576417,-3.6401186);
+                buf[3]=mat4(vec4(3.1832156,-13.738922,1.879223,3.233465),vec4(0.64300746,12.768129,1.9141049,0.50990224),vec4(-0.049295485,4.4807224,1.4733979,1.801449),vec4(5.0039253,13.000481,3.3991797,-4.5561905))*buf[6]+mat4(vec4(-0.1285731,7.720628,-3.1425676,4.742367),vec4(0.6393625,3.714393,-0.8108378,-0.39174938),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-1.1811101,-21.621881,0.7851888,1.2329718);
+                buf[2]=sigmoid(buf[2]);buf[3]=sigmoid(buf[3]);
+                buf[4]=mat4(vec4(5.214916,-7.183024,2.7228765,2.6592617),vec4(-5.601878,-25.3591,4.067988,0.4602802),vec4(-10.57759,24.286327,21.102104,37.546658),vec4(4.3024497,-1.9625226,2.3458803,-1.372816))*buf[0]+mat4(vec4(-17.6526,-10.507558,2.2587414,12.462782),vec4(6.265566,-502.75443,-12.642513,0.9112289),vec4(-10.983244,20.741234,-9.701768,-0.7635988),vec4(5.383626,1.4819539,-4.1911616,-4.8444734))*buf[1]+mat4(vec4(12.785233,-16.345072,-0.39901125,1.7955981),vec4(-30.48365,-1.8345358,1.4542528,-1.1118771),vec4(19.872723,-7.337935,-42.941723,-98.52709),vec4(8.337645,-2.7312303,-2.2927687,-36.142323))*buf[2]+mat4(vec4(-16.298317,3.5471997,-0.44300047,-9.444417),vec4(57.5077,-35.609753,16.163465,-4.1534753),vec4(-0.07470326,-3.8656476,-7.0901804,3.1523974),vec4(-12.559385,-7.077619,1.490437,-0.8211543))*buf[3]+vec4(-7.67914,15.927437,1.3207729,-1.6686112);
+                buf[5]=mat4(vec4(-1.4109162,-0.372762,-3.770383,-21.367174),vec4(-6.2103205,-9.35908,0.92529047,8.82561),vec4(11.460242,-22.348068,13.625772,-18.693201),vec4(-0.3429052,-3.9905605,-2.4626114,-0.45033523))*buf[0]+mat4(vec4(7.3481627,-4.3661838,-6.3037653,-3.868115),vec4(1.5462853,6.5488915,1.9701879,-0.58291394),vec4(6.5858274,-2.2180402,3.7127688,-1.3730392),vec4(-5.7973905,10.134961,-2.3395722,-5.965605))*buf[1]+mat4(vec4(-2.5132585,-6.6685553,-1.4029363,-0.16285264),vec4(-0.37908727,0.53738135,4.389061,-1.3024765),vec4(-0.70647055,2.0111287,-5.1659346,-3.728635),vec4(-13.562562,10.487719,-0.9173751,-2.6487076))*buf[2]+mat4(vec4(-8.645013,6.5546675,-6.3944063,-5.5933375),vec4(-0.57783127,-1.077275,36.91025,5.736769),vec4(14.283112,3.7146652,7.1452246,-4.5958776),vec4(2.7192075,3.6021907,-4.366337,-2.3653464))*buf[3]+vec4(-5.9000807,-4.329569,1.2427121,8.59503);
+                buf[4]=sigmoid(buf[4]);buf[5]=sigmoid(buf[5]);
+                buf[6]=mat4(vec4(-1.61102,0.7970257,1.4675229,0.20917463),vec4(-28.793737,-7.1390953,1.5025433,4.656581),vec4(-10.94861,39.66238,0.74318546,-10.095605),vec4(-0.7229728,-1.5483948,0.7301322,2.1687684))*buf[0]+mat4(vec4(3.2547753,21.489103,-1.0194173,-3.3100595),vec4(-3.7316632,-3.3792162,-7.223193,-0.23685838),vec4(13.1804495,0.7916005,5.338587,5.687114),vec4(-4.167605,-17.798311,-6.815736,-1.6451967))*buf[1]+mat4(vec4(0.604885,-7.800309,-7.213122,-2.741014),vec4(-3.522382,-0.12359311,-0.5258442,0.43852118),vec4(9.6752825,-22.853785,2.062431,0.099892326),vec4(-4.3196306,-17.730087,2.5184598,5.30267))*buf[2]+mat4(vec4(-6.545563,-15.790176,-6.0438633,-5.415399),vec4(-43.591583,28.551912,-16.00161,18.84728),vec4(4.212382,8.394307,3.0958717,8.657522),vec4(-5.0237565,-4.450633,-4.4768,-5.5010443))*buf[3]+mat4(vec4(1.6985557,-67.05806,6.897715,1.9004834),vec4(1.8680354,2.3915145,2.5231109,4.081538),vec4(11.158006,1.7294737,2.0738268,7.386411),vec4(-4.256034,-306.24686,8.258898,-17.132736))*buf[4]+mat4(vec4(1.6889864,-4.5852966,3.8534803,-6.3482175),vec4(1.3543309,-1.2640043,9.932754,2.9079645),vec4(-5.2770967,0.07150358,-0.13962056,3.3269649),vec4(28.34703,-4.918278,6.1044083,4.085355))*buf[5]+vec4(6.6818056,12.522166,-3.7075126,-4.104386);
+                buf[7]=mat4(vec4(-8.265602,-4.7027016,5.098234,0.7509808),vec4(8.6507845,-17.15949,16.51939,-8.884479),vec4(-4.036479,-2.3946867,-2.6055532,-1.9866527),vec4(-2.2167742,-1.8135649,-5.9759874,4.8846445))*buf[0]+mat4(vec4(6.7790847,3.5076547,-2.8191125,-2.7028968),vec4(-5.743024,-0.27844876,1.4958696,-5.0517144),vec4(13.122226,15.735168,-2.9397483,-4.101023),vec4(-14.375265,-5.030483,-6.2599335,2.9848232))*buf[1]+mat4(vec4(4.0950394,-0.94011575,-5.674733,4.755022),vec4(4.3809423,4.8310084,1.7425908,-3.437416),vec4(2.117492,0.16342592,-104.56341,16.949184),vec4(-5.22543,-2.994248,3.8350096,-1.9364246))*buf[2]+mat4(vec4(-5.900337,1.7946124,-13.604192,-3.8060522),vec4(6.6583457,31.911177,25.164474,91.81147),vec4(11.840538,4.1503043,-0.7314397,6.768467),vec4(-6.3967767,4.034772,6.1714606,-0.32874924))*buf[3]+mat4(vec4(3.4992442,-196.91893,-8.923708,2.8142626),vec4(3.4806502,-3.1846354,5.1725626,5.1804223),vec4(-2.4009497,15.585794,1.2863957,2.0252278),vec4(-71.25271,-62.441242,-8.138444,0.50670296))*buf[4]+mat4(vec4(-12.291733,-11.176166,-7.3474145,4.390294),vec4(10.805477,5.6337385,-0.9385842,-4.7348723),vec4(-12.869276,-7.039391,5.3029537,7.5436664),vec4(1.4593618,8.91898,3.5101583,5.840625))*buf[5]+vec4(2.2415268,-6.705987,-0.98861027,-2.117676);
+                buf[6]=sigmoid(buf[6]);buf[7]=sigmoid(buf[7]);
+                buf[0]=mat4(vec4(1.6794263,1.3817469,2.9625452,0.),vec4(-1.8834411,-1.4806935,-3.5924516,0.),vec4(-1.3279216,-1.0918057,-2.3124623,0.),vec4(0.2662234,0.23235129,0.44178495,0.))*buf[0]+mat4(vec4(-0.6299101,-0.5945583,-0.9125601,0.),vec4(0.17828953,0.18300213,0.18182953,0.),vec4(-2.96544,-2.5819945,-4.9001055,0.),vec4(1.4195864,1.1868085,2.5176322,0.))*buf[1]+mat4(vec4(-1.2584374,-1.0552157,-2.1688404,0.),vec4(-0.7200217,-0.52666044,-1.438251,0.),vec4(0.15345335,0.15196142,0.272854,0.),vec4(0.945728,0.8861938,1.2766753,0.))*buf[2]+mat4(vec4(-2.4218085,-1.968602,-4.35166,0.),vec4(-22.683098,-18.0544,-41.954372,0.),vec4(0.63792,0.5470648,1.1078634,0.),vec4(-1.5489894,-1.3075932,-2.6444845,0.))*buf[3]+mat4(vec4(-0.49252132,-0.39877754,-0.91366625,0.),vec4(0.95609266,0.7923952,1.640221,0.),vec4(0.30616966,0.15693925,0.8639857,0.),vec4(1.1825981,0.94504964,2.176963,0.))*buf[4]+mat4(vec4(0.35446745,0.3293795,0.59547555,0.),vec4(-0.58784515,-0.48177817,-1.0614829,0.),vec4(2.5271258,1.9991658,4.6846647,0.),vec4(0.13042648,0.08864098,0.30187556,0.))*buf[5]+mat4(vec4(-1.7718065,-1.4033192,-3.3355875,0.),vec4(3.1664357,2.638297,5.378702,0.),vec4(-3.1724713,-2.6107926,-5.549295,0.),vec4(-2.851368,-2.249092,-5.3013067,0.))*buf[6]+mat4(vec4(1.5203838,1.2212278,2.8404984,0.),vec4(1.5210563,1.2651345,2.683903,0.),vec4(2.9789467,2.4364579,5.2347264,0.),vec4(2.2270417,1.8825914,3.8028636,0.))*buf[7]+vec4(-1.5468478,-3.6171484,0.24762098,0.);
+                buf[0]=sigmoid(buf[0]);
+                return vec4(buf[0].x,buf[0].y,buf[0].z,1.);
             }
 
-            const face_vert = `precision highp float; attribute vec3 position; varying vec2 uv; void main(){ uv = vec2(0.5)+(position.xy)*0.5; gl_Position = vec4(position, 1.0); }`;
-            const color_frag = `
-                precision highp float;
-                uniform sampler2D velocity; uniform sampler2D palette; uniform vec4 bgColor; varying vec2 uv;
-                void main(){
-                    vec2 vel = texture2D(velocity, uv).xy;
-                    float lenv = clamp(length(vel), 0.0, 1.0);
-                    vec3 c = texture2D(palette, vec2(lenv, 0.5)).rgb;
-                    
-                    float luma = dot(c, vec3(0.299, 0.587, 0.114));
-                    float shadowMask = smoothstep(0.98, 0.7, luma) * lenv;
-                    vec3 shadowTint = vec3(0.35, 0.15, 0.18); 
-                    c = c + (shadowTint * shadowMask * 1.5);
-                    
-                    c = clamp(c, 0.0, 1.0);
-                    
-                    gl_FragColor = vec4(mix(bgColor.rgb, c, lenv), mix(bgColor.a, 1.0, lenv));
-                }`;
-            const externalForce_frag = `
-                precision highp float;
-                uniform vec2 force; uniform vec2 center; uniform vec2 scale; varying vec2 vUv;
-                void main(){
-                    vec2 circle = (vUv - 0.5) * 2.0;
-                    float d = 1.0 - min(length(circle), 1.0);
-                    gl_FragColor = vec4(force * d * d, 0.0, 1.0);
-                }`;
-            const advection_frag = `
-                precision highp float;
-                uniform sampler2D velocity; uniform float dt; uniform vec2 fboSize; varying vec2 uv;
-                void main(){
-                    vec2 ratio = max(fboSize.x, fboSize.y) / fboSize;
-                    vec2 vel = texture2D(velocity, uv).xy;
-                    // 在此处乘以 0.98 作为能量衰减系数（Dissipation），防止灰色一直叠加
-                    gl_FragColor = vec4(texture2D(velocity, uv - vel * dt * ratio).xy * 0.98, 0.0, 0.0);
-                }`;
-            const divergence_frag = `
-                precision highp float;
-                uniform sampler2D velocity; uniform float dt; uniform vec2 px; varying vec2 uv;
-                void main(){
-                    float x0 = texture2D(velocity, uv-vec2(px.x, 0.0)).x;
-                    float x1 = texture2D(velocity, uv+vec2(px.x, 0.0)).x;
-                    float y0 = texture2D(velocity, uv-vec2(0.0, px.y)).y;
-                    float y1 = texture2D(velocity, uv+vec2(0.0, px.y)).y;
-                    gl_FragColor = vec4((x1 - x0 + y1 - y0) / 2.0 / dt);
-                }`;
-            const poisson_frag = `
-                precision highp float;
-                uniform sampler2D pressure; uniform sampler2D divergence; uniform vec2 px; varying vec2 uv;
-                void main(){
-                    float p0 = texture2D(pressure, uv + vec2(px.x * 2.0, 0.0)).r;
-                    float p1 = texture2D(pressure, uv - vec2(px.x * 2.0, 0.0)).r;
-                    float p2 = texture2D(pressure, uv + vec2(0.0, px.y * 2.0)).r;
-                    float p3 = texture2D(pressure, uv - vec2(0.0, px.y * 2.0)).r;
-                    gl_FragColor = vec4((p0 + p1 + p2 + p3) / 4.0 - texture2D(divergence, uv).r);
-                }`;
-            const pressure_frag = `
-                precision highp float;
-                uniform sampler2D pressure; uniform sampler2D velocity; uniform vec2 px; uniform float dt; varying vec2 uv;
-                void main(){
-                    float p0 = texture2D(pressure, uv + vec2(px.x, 0.0)).r;
-                    float p1 = texture2D(pressure, uv - vec2(px.x, 0.0)).r;
-                    float p2 = texture2D(pressure, uv + vec2(0.0, px.y)).r;
-                    float p3 = texture2D(pressure, uv - vec2(0.0, px.y)).r;
-                    gl_FragColor = vec4(texture2D(velocity, uv).xy - vec2(p0 - p1, p2 - p3) * 0.5 * dt, 0.0, 1.0);
-                }`;
-
-            const mouse_vert = `
-                precision highp float;
-                attribute vec3 position;
-                attribute vec2 uv;
-                uniform vec2 center;
-                uniform vec2 scale;
-                varying vec2 vUv;
-                void main(){
-                    vUv = uv;
-                    gl_Position = vec4(position.xy * scale + center, 0.0, 1.0);
-                }`;
-
-            class ShaderPass {
-                constructor(uniforms, frag, vert = face_vert) {
-                    this.scene = new THREE.Scene(); this.camera = new THREE.Camera();
-                    this.uniforms = uniforms;
-                    this.material = new THREE.RawShaderMaterial({ vertexShader: vert, fragmentShader: frag, uniforms });
-                    this.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.material));
-                }
-                update(output) {
-                    Common.renderer.setRenderTarget(output);
-                    Common.renderer.render(this.scene, this.camera);
-                    Common.renderer.setRenderTarget(null);
-                }
+            void mainImage(out vec4 fragColor,in vec2 fragCoord){
+                // 修正了 uResolution 替換為現有的 uCanvas
+                vec2 uv=fragCoord/uCanvas*2.-1.;
+                uv.y*=-1.;
+                uv+=uWarp*vec2(sin(uv.y*6.283+uTime*0.5),cos(uv.x*6.283+uTime*0.5))*0.05;
+                fragColor=cppn_fn(uv,0.1*sin(0.3*uTime),0.1*sin(0.69*uTime),0.1*sin(0.44*uTime));
             }
 
-            class Simulation {
-                constructor() {
-                    this.fboSize = new THREE.Vector2(); this.cellScale = new THREE.Vector2();
-                    this.fbos = { vel_0: null, vel_1: null, div: null, pressure_0: null, pressure_1: null };
-                    this.calcSize();
-                    
-                    const isIOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent);
-                    const fboType = isIOS ? THREE.HalfFloatType : THREE.FloatType;
-                    
-                    for (let key in this.fbos) this.fbos[key] = new THREE.WebGLRenderTarget(this.fboSize.x, this.fboSize.y, { type: fboType, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter });
-                    
-                    this.advection = new ShaderPass({ velocity: { value: this.fbos.vel_0.texture }, dt: { value: props.dt }, fboSize: { value: this.fboSize } }, advection_frag);
-                    this.externalForce = new ShaderPass({ force: { value: new THREE.Vector2() }, center: { value: new THREE.Vector2() }, scale: { value: new THREE.Vector2() } }, externalForce_frag, mouse_vert);
-                    this.divergence = new ShaderPass({ velocity: { value: this.fbos.vel_1.texture }, px: { value: this.cellScale }, dt: { value: props.dt } }, divergence_frag);
-                    this.poisson = new ShaderPass({ pressure: { value: this.fbos.pressure_0.texture }, divergence: { value: this.fbos.div.texture }, px: { value: this.cellScale } }, poisson_frag);
-                    this.pressure = new ShaderPass({ pressure: { value: this.fbos.pressure_0.texture }, velocity: { value: this.fbos.vel_1.texture }, px: { value: this.cellScale }, dt: { value: props.dt } }, pressure_frag);
-                }
-                calcSize() {
-                    this.fboSize.set(Math.max(1, Math.round(props.resolution * Common.width)), Math.max(1, Math.round(props.resolution * Common.height)));
-                    this.cellScale.set(1.0 / this.fboSize.x, 1.0 / this.fboSize.y);
-                }
-                resize() {
-                    this.calcSize();
-                    for (let key in this.fbos) this.fbos[key].setSize(this.fboSize.x, this.fboSize.y);
-                    this.advection.uniforms.fboSize.value = this.fboSize;
-                }
-                update() {
-                    this.advection.uniforms.velocity.value = this.fbos.vel_0.texture;
-                    this.advection.update(this.fbos.vel_1);
+            void main(){
+                vec4 col;
+                mainImage(col,gl_FragCoord.xy);
+                col.rgb=hueShiftRGB(col.rgb,uHueShift);
+                float scanline_val=sin(gl_FragCoord.y*uScanFreq)*0.5+0.5;
+                col.rgb*=1.-(scanline_val*scanline_val)*uScan;
+                col.rgb+=(rand(gl_FragCoord.xy+uTime)-0.5)*uNoise;
+                
+                float intensity = clamp(max(col.r, max(col.g, col.b)) * 3.0, 0.0, 1.0);
+                
+                vec3 bgColor = vec3(252.0/255.0, 252.0/255.0, 251.0/255.0);
+                
+                // 光效（线条）颜色缓慢循环：#ffeceb 到 #ffebf4
+                vec3 color1 = vec3(255.0/255.0, 236.0/255.0, 235.0/255.0); // #ffeceb
+                vec3 color2 = vec3(255.0/255.0, 235.0/255.0, 244.0/255.0); // #ffebf4
+                float colorBlend = sin(uTime * 0.3) * 0.5 + 0.5; 
+                vec3 targetColor = mix(color1, color2, colorBlend);
+                
+                vec3 shadowColor = targetColor * 0.8; 
+                vec3 lineColor = mix(targetColor, shadowColor, col.r);
+                
+                vec3 finalColor = mix(bgColor, lineColor, intensity);
+                
+                gl_FragColor=vec4(clamp(finalColor, 0.0, 1.0), 1.0);
+            }
+            `;
 
-                    const forceX = (Mouse.diff.x / 2) * props.mouseForce;
-                    const forceY = (Mouse.diff.y / 2) * props.mouseForce;
-                    this.externalForce.uniforms.force.value.set(forceX, forceY);
-                    this.externalForce.uniforms.center.value.set(Mouse.coords.x, Mouse.coords.y);
-                    this.externalForce.uniforms.scale.value.set(props.cursorSize * this.cellScale.x, props.cursorSize * this.cellScale.y);
-                    
-                    const oldMat = this.externalForce.material;
-                    oldMat.blending = THREE.AdditiveBlending; oldMat.depthWrite = false;
-                    Common.renderer.setRenderTarget(this.fbos.vel_1);
-                    Common.renderer.autoClear = false;
-                    Common.renderer.render(this.externalForce.scene, this.externalForce.camera);
-                    Common.renderer.setRenderTarget(null);
+            const vert = `
+            precision highp float;
+            attribute vec3 position;
+            attribute vec2 uv;
+            varying vec2 vUv;
+            void main() {
+              vUv = uv;
+              gl_Position = vec4(position, 1.0);
+            }
+            `;
 
-                    this.divergence.uniforms.velocity.value = this.fbos.vel_1.texture;
-                    this.divergence.update(this.fbos.div);
+            const scene = new THREE.Scene();
+            const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+            const geometry = new THREE.PlaneGeometry(2, 2);
 
-                    let p_in, p_out;
-                    for (let i = 0; i < props.iterationsPoisson; i++) {
-                        p_in = i % 2 === 0 ? this.fbos.pressure_0 : this.fbos.pressure_1;
-                        p_out = i % 2 === 0 ? this.fbos.pressure_1 : this.fbos.pressure_0;
-                        this.poisson.uniforms.pressure.value = p_in.texture;
-                        this.poisson.update(p_out);
-                    }
+            const params = {
+                speed: 0.15,
+                rotation: 45,
+                colors: ['#e50000', '#b30000', '#660000', '#220000', '#0a0a0a'],
+                scale: 1.2,
+                frequency: 1,
+                warpStrength: 1.5,
+                mouseInfluence: 1,
+                parallax: 0.5,
+                noise: 0.05,
+                intensity: 3.0,
+                bandWidth: 6
+            };
 
-                    this.pressure.uniforms.pressure.value = p_out.texture;
-                    this.pressure.uniforms.velocity.value = this.fbos.vel_1.texture;
-                    this.pressure.update(this.fbos.vel_0);
-                }
+            const uColorsArray = Array.from({ length: 5 }, () => new THREE.Vector3());
+            function toVec3(hex) {
+                let h = hex.replace('#', '').trim();
+                if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+                return new THREE.Vector3(
+                    parseInt(h.slice(0, 2), 16) / 255, 
+                    parseInt(h.slice(2, 4), 16) / 255, 
+                    parseInt(h.slice(4, 6), 16) / 255
+                );
             }
 
-            class WebGLManager {
-                constructor() {
-                    Common.init(container); Mouse.init(container);
-                    this.lastUserInteraction = performance.now();
-                    Mouse.onInteract = () => { this.lastUserInteraction = performance.now(); if (this.autoDriver) this.autoDriver.forceStop(); };
-                    this.autoDriver = new AutoDriver(Mouse, this, { enabled: props.autoDemo, speed: props.autoSpeed, resumeDelay: props.autoResumeDelay, rampDuration: props.autoRampDuration });
-                    this.simulation = new Simulation();
-                    this.scene = new THREE.Scene(); this.camera = new THREE.Camera();
-                    this.output = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.RawShaderMaterial({ vertexShader: face_vert, fragmentShader: color_frag, transparent: true, uniforms: { velocity: { value: this.simulation.fbos.vel_0.texture }, palette: { value: paletteTex }, bgColor: { value: bgVec4 } } }));
-                    this.scene.add(this.output);
-                    this.running = false;
-                    
-                    this._loop = this.loop.bind(this);
-                    
-                    const expSection = document.getElementById('experience');
-                    this.observer = new IntersectionObserver((entries) => {
-                        if (entries[0].isIntersecting) {
-                            if (!this.running) {
-                                this.running = true;
-                                Common.clock.getDelta(); 
-                                this._loop();
-                            }
-                        } else {
-                            this.running = false;
-                        }
-                    }, { threshold: 0 });
-                    this.observer.observe(expSection || container);
-                }
-                resize() { Common.resize(); this.simulation.resize(); }
-                loop() {
-                    if (!this.running) return;
-                    if (this.autoDriver) this.autoDriver.update();
-                    Mouse.update(); Common.update(); this.simulation.update();
-                    Common.renderer.setRenderTarget(null); Common.renderer.render(this.scene, this.camera);
-                    requestAnimationFrame(this._loop);
-                }
+            const validColors = params.colors.map(toVec3);
+            for(let i = 0; i < 5; i++) {
+                if (i < validColors.length) uColorsArray[i].copy(validColors[i]);
+                else uColorsArray[i].set(0, 0, 0);
             }
 
-            const manager = new WebGLManager();
-            window.addEventListener('resize', () => manager.resize());
+            const rotRad = params.rotation * Math.PI / 180;
+
+            const uniforms = {
+                uCanvas: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                uTime: { value: 0 },
+                uSpeed: { value: params.speed },
+                uRot: { value: new THREE.Vector2(Math.cos(rotRad), Math.sin(rotRad)) },
+                uColors: { value: uColorsArray },
+                uScale: { value: params.scale },
+                uFrequency: { value: params.frequency },
+                uWarpStrength: { value: params.warpStrength },
+                uPointer: { value: new THREE.Vector2(0, 0) },
+                uMouseInfluence: { value: params.mouseInfluence },
+                uParallax: { value: params.parallax },
+                uNoise: { value: params.noise },
+                uIntensity: { value: params.intensity },
+                uBandWidth: { value: params.bandWidth },
+                
+                // 補充遺漏的變數傳遞
+                uHueShift: { value: 0.0 },
+                uScan: { value: 0.0 },
+                uScanFreq: { value: 0.0 },
+                uWarp: { value: 0.0 }
+            };
+
+            const material = new THREE.RawShaderMaterial({
+                vertexShader: vert,
+                fragmentShader: frag,
+                uniforms: uniforms,
+                transparent: true,
+                premultipliedAlpha: true
+            });
+
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            renderer.setClearColor(0x000000, 0); 
+            renderer.domElement.style.width = '100%';
+            renderer.domElement.style.height = '100%';
+            container.appendChild(renderer.domElement);
+
+            function resize() {
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                renderer.setSize(w, h, false);
+                uniforms.uCanvas.value.set(w, h);
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            const pointerTarget = new THREE.Vector2(0, 0);
+            const pointerCurrent = new THREE.Vector2(0, 0);
+            
+            window.addEventListener('pointermove', e => {
+                pointerTarget.x = (e.clientX / window.innerWidth) * 2 - 1;
+                pointerTarget.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            });
+
+            const clock = new THREE.Clock();
+            
+            function loop() {
+                const elapsed = clock.getElapsedTime();
+                
+                uniforms.uTime.value = elapsed * 1.25;
+
+                renderer.render(scene, camera);
+                requestAnimationFrame(loop);
+            }
+            loop(); 
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('liquid-ether-bg');
-            if (container && window.THREE) {
-                const isMobile = window.innerWidth <= 768;
-                try {
-                    initLiquidEther(container, {
-                        colors: ['#ffadb5', '#ffd6d9', '#fff0f1'],
-                        mouseForce: 19,
-                        cursorSize: 100,
-                        iterationsPoisson: isMobile ? 12 : 26, 
-                        dt: 0.014,
-                        resolution: isMobile ? 0.35 : 0.5, 
-                        autoDemo: true,
-                        autoSpeed: 0.3,
-                        autoIntensity: 1.6,
-                        takeoverDuration: 0.25,
-                        autoResumeDelay: 3000,
-                        autoRampDuration: 0.6
-                    });
-                } catch(e) {
-                    console.error('LiquidEther Render Failed:', e);
-                }
+            try {
+                initDarkVeil();
+            } catch (e) {
+                console.error("DarkVeil CPPN 渲染失败:", e);
             }
         });
 
@@ -1659,7 +1383,7 @@
             },
             'project5': {
                 title: 'Smart Home Dashboard',
-                desc: '智能家居控制終端介面設計，強調數據可視化與操作直覺性。',
+                desc: '智能家居控制終端介面設計，強調數據可視化與操作直觉性。',
                 bgColor: '#ffffff',
                 html: `<img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop" class="w-full h-auto block m-0 p-0 align-bottom object-cover" alt="Smart Home">`
             },
@@ -2053,14 +1777,14 @@
         });
 
         // ==========================================
-        // Logo Loop Animation (Vanilla JS Port)
+        // Logo Loop Animation
         // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
             const track = document.getElementById('logoloop-track');
             const seq = document.getElementById('logoloop-seq');
             if (!track || !seq) return;
 
-            const speed = 37.5; // 速度下调至原先的75%
+            const speed = 37.5; 
             let currentTargetSpeed = speed;
             let currentSpeed = speed;
             const tau = 0.25; 
@@ -2087,10 +1811,6 @@
                     track.appendChild(clone);
                 }
             }
-
-            // 移除 hover 暂停效果，使其持续滚动
-            // track.addEventListener('mouseenter', () => { currentTargetSpeed = 0; });
-            // track.addEventListener('mouseleave', () => { currentTargetSpeed = speed; });
 
             function animate(timestamp) {
                 if (!isVisible) return;
@@ -2124,7 +1844,6 @@
                 }
             }, { threshold: 0 });
             
-            // 修正：將監聽目標從 'toolkit-section' 改為 'logo-loop-container'
             const container = document.getElementById('logo-loop-container');
             if(container) observer.observe(container);
 
@@ -2140,7 +1859,7 @@
         });
 
         // ==========================================
-        // Text Pressure Animation (Vanilla JS Port)
+        // Text Pressure Animation
         // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('text-pressure-container');
