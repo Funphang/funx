@@ -9,30 +9,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- 修復：先載入 Tailwind CDN，緊接著進行同步配置，確保 f-red 顏色生效且不閃爍 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        colors: {
-                            'f-red': '#e50000',
-                        }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'f-red': '#e50000',
                     }
                 }
             }
-        });
-        
-        window.addEventListener('DOMContentLoaded', () => {
-            const fallbackImage = "https://placehold.co/400x400/27272a/e50000?text=FunX+Asset";
-            const images = document.querySelectorAll("img");
-            images.forEach(img => {
-                img.onerror = function() {
-                    this.onerror = null; 
-                    this.src = fallbackImage;
-                };
-            });
-        });
+        };
     </script>
 
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
@@ -129,7 +117,13 @@
         .sm-socials-link:hover { color: #e50000; }
 
         .works-grid-item { perspective: 1500px; position: relative; }
-        .tilted-card-inner { transform-style: preserve-3d; will-change: transform; }
+        .tilted-card-inner { 
+            transform-style: preserve-3d; 
+            will-change: transform; 
+            /* 修復：強制在 3D 變換時保持 border-radius 圓角遮罩，防止溢出變直角 */
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+            mask-image: radial-gradient(white, black);
+        }
         .tilted-card-caption { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 50; will-change: transform, opacity; white-space: nowrap; }
 
         @media (max-width: 768px) {
@@ -138,6 +132,13 @@
             .sm-panel-item { font-size: 3rem; }
             .staggered-menu-panel { padding: 6rem 2rem 2rem; }
             .tilted-card-caption { display: none !important; }
+        }
+
+        /* 强力锁定背景滚动的 CSS 类，添加 touch-action 提升 iOS 體驗 */
+        .lock-scroll {
+            overflow: hidden !important;
+            overscroll-behavior: none !important;
+            touch-action: none !important; 
         }
 
         ::-webkit-scrollbar { width: 6px; background: #fcfcfb; }
@@ -476,10 +477,10 @@
                 </h2>
             </div>
 
-            <!-- 所有项目卡片触发 Iframe Modal 载入独立页面 (通过 openProjectModal 拦截) -->
+            <!-- 所有项目卡片触发 Iframe Modal 载入独立页面 -->
             <div class="columns-1 md:columns-2 lg:columns-3 gap-8 md:gap-12">
                 
-                <a href="projects/eva.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12" onclick="event.preventDefault(); openProjectModal(this.href)">
+                <a href="projects/eva.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="https://images.unsplash.com/photo-1618557140306-3829029a8a48?q=80&w=800&auto=format&fit=crop" alt="EVA Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -499,7 +500,7 @@
                     </figcaption>
                 </a>
 
-                <a href="projects/fintech.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12" onclick="event.preventDefault(); openProjectModal(this.href)">
+                <a href="projects/fintech.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="https://images.unsplash.com/photo-1618761714954-0b8cd0026356?q=80&w=800&auto=format&fit=crop" alt="Fintech App" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -519,7 +520,7 @@
                     </figcaption>
                 </a>
 
-                <a href="projects/ecommerce.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12" onclick="event.preventDefault(); openProjectModal(this.href)">
+                <a href="projects/ecommerce.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=800&auto=format&fit=crop" alt="E-commerce Platform" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -539,7 +540,7 @@
                     </figcaption>
                 </a>
                 
-                <a href="projects/project4.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12" onclick="event.preventDefault(); openProjectModal(this.href)">
+                <a href="projects/project4.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?q=80&w=800&auto=format&fit=crop" alt="Brand Identity" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -559,7 +560,7 @@
                     </figcaption>
                 </a>
 
-                <a href="projects/project5.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12" onclick="event.preventDefault(); openProjectModal(this.href)">
+                <a href="projects/project5.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop" alt="Smart Home" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -579,7 +580,7 @@
                     </figcaption>
                 </a>
 
-                <a href="projects/project6.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12" onclick="event.preventDefault(); openProjectModal(this.href)">
+                <a href="projects/project6.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800&auto=format&fit=crop" alt="Travel Concept" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -659,7 +660,7 @@
         <!-- 背景點擊關閉 (更深色的毛玻璃效果) -->
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md z-0 cursor-pointer" onclick="closeModal()"></div>
         
-        <!-- 右上角固定關閉按鈕 (已修正顏色，深色底色使其在白底上清晰可見) -->
+        <!-- 右上角固定關閉按鈕 -->
         <button onclick="closeModal()" aria-label="Close" class="fixed top-4 right-4 md:top-8 md:right-8 z-[110] w-10 h-10 md:w-12 md:h-12 bg-zinc-900/90 hover:bg-[#e50000] hover:scale-110 rounded-full transition-all flex items-center justify-center shadow-lg cursor-pointer border border-zinc-700/50 text-white backdrop-blur-md">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
@@ -667,9 +668,12 @@
         <!-- 容器：從畫面中間彈出並置中 -->
         <div id="modal-container" class="relative z-10 w-full max-w-[1400px] h-full bg-[#fcfcfb] rounded-xl md:rounded-2xl shadow-2xl overflow-hidden transform scale-95 translate-y-4 transition-all duration-300 flex flex-col" onclick="event.stopPropagation()">
             
-            <!-- 讀取中動畫 -->
-            <div id="modal-loader" class="absolute inset-0 flex items-center justify-center bg-[#fcfcfb] z-0">
-                <div class="w-10 h-10 border-4 border-zinc-200 border-t-[#e50000] rounded-full animate-spin"></div>
+            <!-- 讀取中動畫 (提升層級並增加 Loading 提示字樣) -->
+            <div id="modal-loader" class="absolute inset-0 flex items-center justify-center bg-[#fcfcfb] z-20 transition-opacity duration-300">
+                <div class="flex flex-col items-center gap-4">
+                    <div class="w-12 h-12 border-4 border-zinc-200 border-t-[#e50000] rounded-full animate-spin"></div>
+                    <span class="text-sm font-semibold text-zinc-500 tracking-widest uppercase animate-pulse">Loading...</span>
+                </div>
             </div>
             
             <!-- Iframe 載入專案內容 -->
@@ -703,11 +707,26 @@
         </div>
     </div>
 
+    <!-- 所有 Scripts 合併 -->
     <script>
         // ==========================================
-        // Hero Entrance Animation (GSAP)
+        // Global State & Utilities
         // ==========================================
+        window.isModalOpen = false; // 用於控制 WebGL 暫停，節省效能
+
         document.addEventListener('DOMContentLoaded', () => {
+            // 圖片錯誤回退處理
+            const fallbackImage = "https://placehold.co/400x400/27272a/e50000?text=FunX+Asset";
+            document.querySelectorAll("img").forEach(img => {
+                img.onerror = function() {
+                    this.onerror = null; 
+                    this.src = fallbackImage;
+                };
+            });
+
+            // ==========================================
+            // Hero Entrance Animation (GSAP)
+            // ==========================================
             setTimeout(() => {
                 const tl = gsap.timeline();
                 tl.to('#hero-main-img', { opacity: 1, scale: 1, duration: 1.6, ease: 'power3.out', filter: 'blur(0px)', clearProps: 'filter' }, 0)
@@ -715,112 +734,14 @@
                 .to('#hero-qr', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, 0.5)
                 .to('#hero-scroll-indicator', { opacity: 1, duration: 1, ease: 'power2.out' }, 0.8);
             }, 1400); 
-        });
 
-        // ==========================================
-        // Staggered Menu Logic
-        // ==========================================
-        const smState = { open: false, busy: false, openTl: null, closeTween: null };
-        const smElements = {
-            wrapper: document.querySelector('.staggered-menu-wrapper'),
-            panel: document.querySelector('.staggered-menu-panel'),
-            preLayers: document.querySelectorAll('.sm-prelayer'),
-            plusH: document.getElementById('sm-plus-h'),
-            plusV: document.getElementById('sm-plus-v'),
-            icon: document.getElementById('sm-icon'),
-            textInner: document.getElementById('sm-text-inner'),
-            btn: document.getElementById('sm-toggle-btn'),
-            itemEls: document.querySelectorAll('.sm-panel-itemLabel'),
-            numberEls: document.querySelectorAll('.sm-panel-item'),
-            socialTitle: document.querySelector('.sm-socials-title'),
-            socialLinks: document.querySelectorAll('.sm-socials-link'),
-            menuLinks: document.querySelectorAll('.sm-panel-item')
-        };
-
-        function initMenu() {
-            gsap.set([smElements.panel, ...Array.from(smElements.preLayers)], { x: 0, xPercent: 100, opacity: 1 });
-            gsap.set(smElements.plusH, { transformOrigin: '50% 50%', rotation: 0 });
-            gsap.set(smElements.plusV, { transformOrigin: '50% 50%', rotation: 90 });
-            gsap.set(smElements.icon, { rotation: 0, transformOrigin: '50% 50%' });
-            gsap.set(smElements.textInner, { yPercent: 0 });
-        }
-
-        function buildOpenTimeline() {
-            if (smState.openTl) smState.openTl.kill();
-            if (smState.closeTween) smState.closeTween.kill();
-
-            gsap.set(smElements.itemEls, { yPercent: 140, rotation: 10 });
-            gsap.set(smElements.numberEls, { '--sm-num-opacity': 0 });
-            gsap.set(smElements.socialTitle, { opacity: 0 });
-            gsap.set(smElements.socialLinks, { y: 25, opacity: 0 });
-
-            const tl = gsap.timeline({ paused: true });
-
-            smElements.preLayers.forEach((el, i) => {
-                tl.fromTo(el, { xPercent: 100 }, { xPercent: 0, duration: 0.5, ease: 'power4.out' }, i * 0.07);
-            });
-
-            const lastTime = smElements.preLayers.length ? (smElements.preLayers.length - 1) * 0.07 : 0;
-            const panelInsertTime = lastTime + (smElements.preLayers.length ? 0.08 : 0);
-            const panelDuration = 0.65;
-
-            tl.fromTo( smElements.panel, { xPercent: 100 }, { xPercent: 0, duration: panelDuration, ease: 'power4.out' }, panelInsertTime );
-
-            const itemsStart = panelInsertTime + panelDuration * 0.15;
-            tl.to(smElements.itemEls, { yPercent: 0, rotation: 0, duration: 1, ease: 'power4.out', stagger: { each: 0.1, from: 'start' } }, itemsStart);
-            tl.to(smElements.numberEls, { duration: 0.6, ease: 'power2.out', '--sm-num-opacity': 1, stagger: { each: 0.08, from: 'start' } }, itemsStart + 0.1);
-
-            const socialsStart = panelInsertTime + panelDuration * 0.4;
-            tl.to(smElements.socialTitle, { opacity: 1, duration: 0.5, ease: 'power2.out' }, socialsStart);
-            tl.to(smElements.socialLinks, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out', stagger: { each: 0.08, from: 'start' }, onComplete: () => { gsap.set(smElements.socialLinks, { clearProps: 'opacity' }); } }, socialsStart + 0.04);
-
-            return tl;
-        }
-
-        function toggleMenu() {
-            if (smState.busy) return;
-            smState.busy = true;
-            smState.open = !smState.open;
-            smElements.wrapper.setAttribute('data-open', smState.open);
-
-            if (smState.open) {
-                const tl = buildOpenTimeline();
-                smState.openTl = tl;
-                tl.eventCallback('onComplete', () => { smState.busy = false; });
-                tl.play(0);
-                gsap.to(smElements.icon, { rotation: 225, duration: 0.8, ease: 'power4.out', overwrite: 'auto' });
-                gsap.to(smElements.textInner, { yPercent: -75, duration: 0.5 + 4 * 0.07, ease: 'power4.out' });
-            } else {
-                if (smState.openTl) smState.openTl.kill();
-                const all = [...Array.from(smElements.preLayers), smElements.panel];
-                smState.closeTween = gsap.to(all, {
-                    xPercent: 100, duration: 0.32, ease: 'power3.in', overwrite: 'auto',
-                    onComplete: () => {
-                        gsap.set(smElements.itemEls, { yPercent: 140, rotation: 10 });
-                        gsap.set(smElements.numberEls, { '--sm-num-opacity': 0 });
-                        gsap.set(smElements.socialTitle, { opacity: 0 });
-                        gsap.set(smElements.socialLinks, { y: 25, opacity: 0 });
-                        smState.busy = false;
-                    }
-                });
-                gsap.to(smElements.icon, { rotation: 0, duration: 0.35, ease: 'power3.inOut', overwrite: 'auto' });
-                gsap.to(smElements.textInner, { yPercent: 0, duration: 0.5 + 4 * 0.07, ease: 'power4.out' });
-            }
-        }
-
-        if (smElements.btn) {
-            initMenu();
-            smElements.btn.addEventListener('click', toggleMenu);
-            smElements.menuLinks.forEach(link => { link.addEventListener('click', () => { if (smState.open) { smState.busy = false; toggleMenu(); } }); });
-            smElements.wrapper.addEventListener('click', (e) => { if (smState.open && !smElements.panel.contains(e.target)) { smState.busy = false; toggleMenu(); } });
-        }
-
-        // ==========================================
-        // Header Color Toggle on scroll
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', () => {
+            // ==========================================
+            // ScrollReveal & Header ScrollTrigger
+            // ==========================================
             if (window.gsap && window.ScrollTrigger) {
                 gsap.registerPlugin(ScrollTrigger);
+                
+                // Header Color Toggle
                 const contactSection = document.getElementById('contact');
                 if (contactSection) {
                     ScrollTrigger.create({
@@ -830,228 +751,307 @@
                         onLeaveBack: () => { gsap.to('.staggered-menu-header', { mixBlendMode: 'difference', color: '#1affff', duration: 0.1 }); }
                     });
                 }
-            }
-        });
 
-        // ==========================================
-        // 全新 DarkVeil WebGL
-        // ==========================================
-        function initDarkVeil() {
-            const container = document.getElementById('darkveil-canvas');
-            if (!container || !window.THREE) return;
-
-            const frag = `
-            precision highp float;
-            #define MAX_COLORS 5
-            #define ITERATIONS 2
-
-            uniform vec2 uCanvas;
-            uniform float uTime;
-            uniform float uSpeed;
-            uniform vec2 uRot;
-            uniform vec3 uColors[MAX_COLORS];
-            uniform float uScale;
-            uniform float uFrequency;
-            uniform float uWarpStrength;
-            uniform vec2 uPointer;
-            uniform float uMouseInfluence;
-            uniform float uParallax;
-            uniform float uNoise;
-            uniform float uIntensity;
-            uniform float uBandWidth;
-            
-            uniform float uHueShift;
-            uniform float uScan;
-            uniform float uScanFreq;
-            uniform float uWarp;
-            
-            varying vec2 vUv;
-
-            vec4 buf[8];
-            float rand(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}
-
-            mat3 rgb2yiq=mat3(0.299,0.587,0.114,0.596,-0.274,-0.322,0.211,-0.523,0.312);
-            mat3 yiq2rgb=mat3(1.0,0.956,0.621,1.0,-0.272,-0.647,1.0,-1.106,1.703);
-
-            vec3 hueShiftRGB(vec3 col,float deg){
-                vec3 yiq=rgb2yiq*col;
-                float rad = deg * 0.01745329251;
-                float cosh=cos(rad),sinh=sin(rad);
-                vec3 yiqShift=vec3(yiq.x,yiq.y*cosh-yiq.z*sinh,yiq.y*sinh+yiq.z*cosh);
-                return clamp(yiq2rgb*yiqShift,0.0,1.0);
+                // Text Reveal
+                const revealContainer = document.getElementById('scroll-reveal-text');
+                const words = document.querySelectorAll('.reveal-word');
+                if (revealContainer && words.length > 0) {
+                    gsap.fromTo(revealContainer, { rotation: 3 }, {
+                        rotation: 0, ease: 'none',
+                        scrollTrigger: { trigger: revealContainer, start: 'top 95%', end: 'center 45%', scrub: 1 }
+                    });
+                    gsap.fromTo(words, { opacity: 0.1, filter: 'blur(4px)' }, {
+                        opacity: 1, filter: 'blur(0px)', ease: 'none', stagger: 0.05,
+                        scrollTrigger: { trigger: revealContainer, start: 'top 90%', end: 'center 45%', scrub: 1 }
+                    });
+                }
             }
 
-            vec4 sigmoid(vec4 x){return 1./(1.+exp(-x));}
-
-            vec4 cppn_fn(vec2 coordinate,float in0,float in1,float in2){
-                buf[6]=vec4(coordinate.x,coordinate.y,0.3948333106474662+in0,0.36+in1);
-                buf[7]=vec4(0.14+in2,sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y),0.,0.);
-                buf[0]=mat4(vec4(6.5404263,-3.6126034,0.7590882,-1.13613),vec4(2.4582713,3.1660357,1.2219609,0.06276096),vec4(-5.478085,-6.159632,1.8701609,-4.7742867),vec4(6.039214,-5.542865,-0.90925294,3.251348))*buf[6]+mat4(vec4(0.8473259,-5.722911,3.975766,1.6522468),vec4(-0.24321538,0.5839259,-1.7661959,-5.350116),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(0.21808943,1.1243913,-1.7969975,5.0294676);
-                buf[1]=mat4(vec4(-3.3522482,-6.0612736,0.55641043,-4.4719114),vec4(0.8631464,1.7432913,5.643898,1.6106541),vec4(2.4941394,-3.5012043,1.7184316,6.357333),vec4(3.310376,8.209261,1.1355612,-1.165539))*buf[6]+mat4(vec4(5.24046,-13.034365,0.009859298,15.870829),vec4(2.987511,3.129433,-0.89023495,-1.6822904),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-5.9457836,-6.573602,-0.8812491,1.5436668);
-                buf[0]=sigmoid(buf[0]);buf[1]=sigmoid(buf[1]);
-                buf[2]=mat4(vec4(-15.219568,8.095543,-2.429353,-1.9381982),vec4(-5.951362,4.3115187,2.6393783,1.274315),vec4(-7.3145227,6.7297835,5.2473326,5.9411426),vec4(5.0796127,8.979051,-1.7278991,-1.158976))*buf[6]+mat4(vec4(-11.967154,-11.608155,6.1486754,11.237008),vec4(2.124141,-6.263192,-1.7050359,-0.7021966),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-4.17164,-3.2281182,-4.576417,-3.6401186);
-                buf[3]=mat4(vec4(3.1832156,-13.738922,1.879223,3.233465),vec4(0.64300746,12.768129,1.9141049,0.50990224),vec4(-0.049295485,4.4807224,1.4733979,1.801449),vec4(5.0039253,13.000481,3.3991797,-4.5561905))*buf[6]+mat4(vec4(-0.1285731,7.720628,-3.1425676,4.742367),vec4(0.6393625,3.714393,-0.8108378,-0.39174938),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-1.1811101,-21.621881,0.7851888,1.2329718);
-                buf[2]=sigmoid(buf[2]);buf[3]=sigmoid(buf[3]);
-                buf[4]=mat4(vec4(5.214916,-7.183024,2.7228765,2.6592617),vec4(-5.601878,-25.3591,4.067988,0.4602802),vec4(-10.57759,24.286327,21.102104,37.546658),vec4(4.3024497,-1.9625226,2.3458803,-1.372816))*buf[0]+mat4(vec4(-17.6526,-10.507558,2.2587414,12.462782),vec4(6.265566,-502.75443,-12.642513,0.9112289),vec4(-10.983244,20.741234,-9.701768,-0.7635988),vec4(5.383626,1.4819539,-4.1911616,-4.8444734))*buf[1]+mat4(vec4(12.785233,-16.345072,-0.39901125,1.7955981),vec4(-30.48365,-1.8345358,1.4542528,-1.1118771),vec4(19.872723,-7.337935,-42.941723,-98.52709),vec4(8.337645,-2.7312303,-2.2927687,-36.142323))*buf[2]+mat4(vec4(-16.298317,3.5471997,-0.44300047,-9.444417),vec4(57.5077,-35.609753,16.163465,-4.1534753),vec4(-0.07470326,-3.8656476,-7.0901804,3.1523974),vec4(-12.559385,-7.077619,1.490437,-0.8211543))*buf[3]+vec4(-7.67914,15.927437,1.3207729,-1.6686112);
-                buf[5]=mat4(vec4(-1.4109162,-0.372762,-3.770383,-21.367174),vec4(-6.2103205,-9.35908,0.92529047,8.82561),vec4(11.460242,-22.348068,13.625772,-18.693201),vec4(-0.3429052,-3.9905605,-2.4626114,-0.45033523))*buf[0]+mat4(vec4(7.3481627,-4.3661838,-6.3037653,-3.868115),vec4(1.5462853,6.5488915,1.9701879,-0.58291394),vec4(6.5858274,-2.2180402,3.7127688,-1.3730392),vec4(-5.7973905,10.134961,-2.3395722,-5.965605))*buf[1]+mat4(vec4(-2.5132585,-6.6685553,-1.4029363,-0.16285264),vec4(-0.37908727,0.53738135,4.389061,-1.3024765),vec4(-0.70647055,2.0111287,-5.1659346,-3.728635),vec4(-13.562562,10.487719,-0.9173751,-2.6487076))*buf[2]+mat4(vec4(-8.645013,6.5546675,-6.3944063,-5.5933375),vec4(-0.57783127,-1.077275,36.91025,5.736769),vec4(14.283112,3.7146652,7.1452246,-4.5958776),vec4(2.7192075,3.6021907,-4.366337,-2.3653464))*buf[3]+vec4(-5.9000807,-4.329569,1.2427121,8.59503);
-                buf[4]=sigmoid(buf[4]);buf[5]=sigmoid(buf[5]);
-                buf[6]=mat4(vec4(-1.61102,0.7970257,1.4675229,0.20917463),vec4(-28.793737,-7.1390953,1.5025433,4.656581),vec4(-10.94861,39.66238,0.74318546,-10.095605),vec4(-0.7229728,-1.5483948,0.7301322,2.1687684))*buf[0]+mat4(vec4(3.2547753,21.489103,-1.0194173,-3.3100595),vec4(-3.7316632,-3.3792162,-7.223193,-0.23685838),vec4(13.1804495,0.7916005,5.338587,5.687114),vec4(-4.167605,-17.798311,-6.815736,-1.6451967))*buf[1]+mat4(vec4(0.604885,-7.800309,-7.213122,-2.741014),vec4(-3.522382,-0.12359311,-0.5258442,0.43852118),vec4(9.6752825,-22.853785,2.062431,0.099892326),vec4(-4.3196306,-17.730087,2.5184598,5.30267))*buf[2]+mat4(vec4(-6.545563,-15.790176,-6.0438633,-5.415399),vec4(-43.591583,28.551912,-16.00161,18.84728),vec4(4.212382,8.394307,3.0958717,8.657522),vec4(-5.0237565,-4.450633,-4.4768,-5.5010443))*buf[3]+mat4(vec4(1.6985557,-67.05806,6.897715,1.9004834),vec4(1.8680354,2.3915145,2.5231109,4.081538),vec4(11.158006,1.7294737,2.0738268,7.386411),vec4(-4.256034,-306.24686,8.258898,-17.132736))*buf[4]+mat4(vec4(1.6889864,-4.5852966,3.8534803,-6.3482175),vec4(1.3543309,-1.2640043,9.932754,2.9079645),vec4(-5.2770967,0.07150358,-0.13962056,3.3269649),vec4(28.34703,-4.918278,6.1044083,4.085355))*buf[5]+vec4(6.6818056,12.522166,-3.7075126,-4.104386);
-                buf[7]=mat4(vec4(-8.265602,-4.7027016,5.098234,0.7509808),vec4(8.6507845,-17.15949,16.51939,-8.884479),vec4(-4.036479,-2.3946867,-2.6055532,-1.9866527),vec4(-2.2167742,-1.8135649,-5.9759874,4.8846445))*buf[0]+mat4(vec4(6.7790847,3.5076547,-2.8191125,-2.7028968),vec4(-5.743024,-0.27844876,1.4958696,-5.0517144),vec4(13.122226,15.735168,-2.9397483,-4.101023),vec4(-14.375265,-5.030483,-6.2599335,2.9848232))*buf[1]+mat4(vec4(4.0950394,-0.94011575,-5.674733,4.755022),vec4(4.3809423,4.8310084,1.7425908,-3.437416),vec4(2.117492,0.16342592,-104.56341,16.949184),vec4(-5.22543,-2.994248,3.8350096,-1.9364246))*buf[2]+mat4(vec4(-5.900337,1.7946124,-13.604192,-3.8060522),vec4(6.6583457,31.911177,25.164474,91.81147),vec4(11.840538,4.1503043,-0.7314397,6.768467),vec4(-6.3967767,4.034772,6.1714606,-0.32874924))*buf[3]+mat4(vec4(3.4992442,-196.91893,-8.923708,2.8142626),vec4(3.4806502,-3.1846354,5.1725626,5.1804223),vec4(-2.4009497,15.585794,1.2863957,2.0252278),vec4(-71.25271,-62.441242,-8.138444,0.50670296))*buf[4]+mat4(vec4(-12.291733,-11.176166,-7.3474145,4.390294),vec4(10.805477,5.6337385,-0.9385842,-4.7348723),vec4(-12.869276,-7.039391,5.3029537,7.5436664),vec4(1.4593618,8.91898,3.5101583,5.840625))*buf[5]+vec4(2.2415268,-6.705987,-0.98861027,-2.117676);
-                buf[6]=sigmoid(buf[6]);buf[7]=sigmoid(buf[7]);
-                buf[0]=mat4(vec4(1.6794263,1.3817469,2.9625452,0.),vec4(-1.8834411,-1.4806935,-3.5924516,0.),vec4(-1.3279216,-1.0918057,-2.3124623,0.),vec4(0.2662234,0.23235129,0.44178495,0.))*buf[0]+mat4(vec4(-0.6299101,-0.5945583,-0.9125601,0.),vec4(0.17828953,0.18300213,0.18182953,0.),vec4(-2.96544,-2.5819945,-4.9001055,0.),vec4(1.4195864,1.1868085,2.5176322,0.))*buf[1]+mat4(vec4(-1.2584374,-1.0552157,-2.1688404,0.),vec4(-0.7200217,-0.52666044,-1.438251,0.),vec4(0.15345335,0.15196142,0.272854,0.),vec4(0.945728,0.8861938,1.2766753,0.))*buf[2]+mat4(vec4(-2.4218085,-1.968602,-4.35166,0.),vec4(-22.683098,-18.0544,-41.954372,0.),vec4(0.63792,0.5470648,1.1078634,0.),vec4(-1.5489894,-1.3075932,-2.6444845,0.))*buf[3]+mat4(vec4(-0.49252132,-0.39877754,-0.91366625,0.),vec4(0.95609266,0.7923952,1.640221,0.),vec4(0.30616966,0.15693925,0.8639857,0.),vec4(1.1825981,0.94504964,2.176963,0.))*buf[4]+mat4(vec4(0.35446745,0.3293795,0.59547555,0.),vec4(-0.58784515,-0.48177817,-1.0614829,0.),vec4(2.5271258,1.9991658,4.6846647,0.),vec4(0.13042648,0.08864098,0.30187556,0.))*buf[5]+mat4(vec4(-1.7718065,-1.4033192,-3.3355875,0.),vec4(3.1664357,2.638297,5.378702,0.),vec4(-3.1724713,-2.6107926,-5.549295,0.),vec4(-2.851368,-2.249092,-5.3013067,0.))*buf[6]+mat4(vec4(1.5203838,1.2212278,2.8404984,0.),vec4(1.5210563,1.2651345,2.683903,0.),vec4(2.9789467,2.4364579,5.2347264,0.),vec4(2.2270417,1.8825914,3.8028636,0.))*buf[7]+vec4(-1.5468478,-3.6171484,0.24762098,0.);
-                buf[0]=sigmoid(buf[0]);
-                return vec4(buf[0].x,buf[0].y,buf[0].z,1.);
-            }
-
-            void mainImage(out vec4 fragColor,in vec2 fragCoord){
-                vec2 uv=fragCoord/uCanvas*2.-1.;
-                uv.y*=-1.;
-                uv+=uWarp*vec2(sin(uv.y*6.283+uTime*0.5),cos(uv.x*6.283+uTime*0.5))*0.05;
-                fragColor=cppn_fn(uv,0.1*sin(0.3*uTime),0.1*sin(0.69*uTime),0.1*sin(0.44*uTime));
-            }
-
-            void main(){
-                vec4 col;
-                mainImage(col,gl_FragCoord.xy);
-                col.rgb=hueShiftRGB(col.rgb,uHueShift);
-                float scanline_val=sin(gl_FragCoord.y*uScanFreq)*0.5+0.5;
-                col.rgb*=1.-(scanline_val*scanline_val)*uScan;
-                col.rgb+=(rand(gl_FragCoord.xy+uTime)-0.5)*uNoise;
-                
-                float intensity = clamp(max(col.r, max(col.g, col.b)) * 3.0, 0.0, 1.0);
-                
-                vec3 bgColor = vec3(252.0/255.0, 252.0/255.0, 251.0/255.0);
-                
-                vec3 color1 = vec3(255.0/255.0, 236.0/255.0, 235.0/255.0); 
-                vec3 color2 = vec3(255.0/255.0, 235.0/254.0, 244.0/255.0); 
-                float colorBlend = sin(uTime * 0.3) * 0.5 + 0.5; 
-                vec3 targetColor = mix(color1, color2, colorBlend);
-                
-                vec3 shadowColor = targetColor * 0.8; 
-                vec3 lineColor = mix(targetColor, shadowColor, col.r);
-                
-                vec3 finalColor = mix(bgColor, lineColor, intensity);
-                
-                gl_FragColor=vec4(clamp(finalColor, 0.0, 1.0), 1.0);
-            }
-            `;
-
-            const vert = `
-            precision highp float;
-            attribute vec3 position;
-            attribute vec2 uv;
-            varying vec2 vUv;
-            void main() {
-              vUv = uv;
-              gl_Position = vec4(position, 1.0);
-            }
-            `;
-
-            const scene = new THREE.Scene();
-            const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-            const geometry = new THREE.PlaneGeometry(2, 2);
-
-            const params = {
-                speed: 0.15,
-                rotation: 45,
-                colors: ['#e50000', '#b30000', '#660000', '#220000', '#0a0a0a'],
-                scale: 1.2,
-                frequency: 1,
-                warpStrength: 1.5,
-                mouseInfluence: 1,
-                parallax: 0.5,
-                noise: 0.05,
-                intensity: 3.0,
-                bandWidth: 6
+            // ==========================================
+            // Staggered Menu Logic
+            // ==========================================
+            const smState = { open: false, busy: false, openTl: null, closeTween: null };
+            const smElements = {
+                wrapper: document.querySelector('.staggered-menu-wrapper'),
+                panel: document.querySelector('.staggered-menu-panel'),
+                preLayers: document.querySelectorAll('.sm-prelayer'),
+                plusH: document.getElementById('sm-plus-h'),
+                plusV: document.getElementById('sm-plus-v'),
+                icon: document.getElementById('sm-icon'),
+                textInner: document.getElementById('sm-text-inner'),
+                btn: document.getElementById('sm-toggle-btn'),
+                itemEls: document.querySelectorAll('.sm-panel-itemLabel'),
+                numberEls: document.querySelectorAll('.sm-panel-item'),
+                socialTitle: document.querySelector('.sm-socials-title'),
+                socialLinks: document.querySelectorAll('.sm-socials-link'),
+                menuLinks: document.querySelectorAll('.sm-panel-item')
             };
 
-            const uColorsArray = Array.from({ length: 5 }, () => new THREE.Vector3());
-            function toVec3(hex) {
-                let h = hex.replace('#', '').trim();
-                if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
-                return new THREE.Vector3(
-                    parseInt(h.slice(0, 2), 16) / 255, 
-                    parseInt(h.slice(2, 4), 16) / 255, 
-                    parseInt(h.slice(4, 6), 16) / 255
-                );
+            function initMenu() {
+                gsap.set([smElements.panel, ...Array.from(smElements.preLayers)], { x: 0, xPercent: 100, opacity: 1 });
+                gsap.set(smElements.plusH, { transformOrigin: '50% 50%', rotation: 0 });
+                gsap.set(smElements.plusV, { transformOrigin: '50% 50%', rotation: 90 });
+                gsap.set(smElements.icon, { rotation: 0, transformOrigin: '50% 50%' });
+                gsap.set(smElements.textInner, { yPercent: 0 });
             }
 
-            const validColors = params.colors.map(toVec3);
-            for(let i = 0; i < 5; i++) {
-                if (i < validColors.length) uColorsArray[i].copy(validColors[i]);
-                else uColorsArray[i].set(0, 0, 0);
+            function buildOpenTimeline() {
+                if (smState.openTl) smState.openTl.kill();
+                if (smState.closeTween) smState.closeTween.kill();
+
+                gsap.set(smElements.itemEls, { yPercent: 140, rotation: 10 });
+                gsap.set(smElements.numberEls, { '--sm-num-opacity': 0 });
+                gsap.set(smElements.socialTitle, { opacity: 0 });
+                gsap.set(smElements.socialLinks, { y: 25, opacity: 0 });
+
+                const tl = gsap.timeline({ paused: true });
+
+                smElements.preLayers.forEach((el, i) => {
+                    tl.fromTo(el, { xPercent: 100 }, { xPercent: 0, duration: 0.5, ease: 'power4.out' }, i * 0.07);
+                });
+
+                const lastTime = smElements.preLayers.length ? (smElements.preLayers.length - 1) * 0.07 : 0;
+                const panelInsertTime = lastTime + (smElements.preLayers.length ? 0.08 : 0);
+                const panelDuration = 0.65;
+
+                tl.fromTo( smElements.panel, { xPercent: 100 }, { xPercent: 0, duration: panelDuration, ease: 'power4.out' }, panelInsertTime );
+
+                const itemsStart = panelInsertTime + panelDuration * 0.15;
+                tl.to(smElements.itemEls, { yPercent: 0, rotation: 0, duration: 1, ease: 'power4.out', stagger: { each: 0.1, from: 'start' } }, itemsStart);
+                tl.to(smElements.numberEls, { duration: 0.6, ease: 'power2.out', '--sm-num-opacity': 1, stagger: { each: 0.08, from: 'start' } }, itemsStart + 0.1);
+
+                const socialsStart = panelInsertTime + panelDuration * 0.4;
+                tl.to(smElements.socialTitle, { opacity: 1, duration: 0.5, ease: 'power2.out' }, socialsStart);
+                tl.to(smElements.socialLinks, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out', stagger: { each: 0.08, from: 'start' }, onComplete: () => { gsap.set(smElements.socialLinks, { clearProps: 'opacity' }); } }, socialsStart + 0.04);
+
+                return tl;
             }
 
-            const rotRad = params.rotation * Math.PI / 180;
+            function toggleMenu() {
+                if (smState.busy) return;
+                smState.busy = true;
+                smState.open = !smState.open;
+                smElements.wrapper.setAttribute('data-open', smState.open);
 
-            const uniforms = {
-                uCanvas: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-                uTime: { value: 0 },
-                uSpeed: { value: params.speed },
-                uRot: { value: new THREE.Vector2(Math.cos(rotRad), Math.sin(rotRad)) },
-                uColors: { value: uColorsArray },
-                uScale: { value: params.scale },
-                uFrequency: { value: params.frequency },
-                uWarpStrength: { value: params.warpStrength },
-                uPointer: { value: new THREE.Vector2(0, 0) },
-                uMouseInfluence: { value: params.mouseInfluence },
-                uParallax: { value: params.parallax },
-                uNoise: { value: params.noise },
-                uIntensity: { value: params.intensity },
-                uBandWidth: { value: params.bandWidth },
-                
-                uHueShift: { value: 0.0 },
-                uScan: { value: 0.0 },
-                uScanFreq: { value: 0.0 },
-                uWarp: { value: 0.0 }
-            };
-
-            const material = new THREE.RawShaderMaterial({
-                vertexShader: vert,
-                fragmentShader: frag,
-                uniforms: uniforms,
-                transparent: true,
-                premultipliedAlpha: true
-            });
-
-            const mesh = new THREE.Mesh(geometry, material);
-            scene.add(mesh);
-
-            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-            renderer.setClearColor(0x000000, 0); 
-            renderer.domElement.style.width = '100%';
-            renderer.domElement.style.height = '100%';
-            container.appendChild(renderer.domElement);
-
-            function resize() {
-                const w = window.innerWidth;
-                const h = window.innerHeight;
-                renderer.setSize(w, h, false);
-                uniforms.uCanvas.value.set(w, h);
+                if (smState.open) {
+                    const tl = buildOpenTimeline();
+                    smState.openTl = tl;
+                    tl.eventCallback('onComplete', () => { smState.busy = false; });
+                    tl.play(0);
+                    gsap.to(smElements.icon, { rotation: 225, duration: 0.8, ease: 'power4.out', overwrite: 'auto' });
+                    gsap.to(smElements.textInner, { yPercent: -75, duration: 0.5 + 4 * 0.07, ease: 'power4.out' });
+                } else {
+                    if (smState.openTl) smState.openTl.kill();
+                    const all = [...Array.from(smElements.preLayers), smElements.panel];
+                    smState.closeTween = gsap.to(all, {
+                        xPercent: 100, duration: 0.32, ease: 'power3.in', overwrite: 'auto',
+                        onComplete: () => {
+                            gsap.set(smElements.itemEls, { yPercent: 140, rotation: 10 });
+                            gsap.set(smElements.numberEls, { '--sm-num-opacity': 0 });
+                            gsap.set(smElements.socialTitle, { opacity: 0 });
+                            gsap.set(smElements.socialLinks, { y: 25, opacity: 0 });
+                            smState.busy = false;
+                        }
+                    });
+                    gsap.to(smElements.icon, { rotation: 0, duration: 0.35, ease: 'power3.inOut', overwrite: 'auto' });
+                    gsap.to(smElements.textInner, { yPercent: 0, duration: 0.5 + 4 * 0.07, ease: 'power4.out' });
+                }
             }
-            window.addEventListener('resize', resize);
-            resize();
 
-            const clock = new THREE.Clock();
-            
-            function loop() {
-                const elapsed = clock.getElapsedTime();
-                uniforms.uTime.value = elapsed * 1.25;
-                renderer.render(scene, camera);
-                requestAnimationFrame(loop);
+            if (smElements.btn) {
+                initMenu();
+                smElements.btn.addEventListener('click', toggleMenu);
+                smElements.menuLinks.forEach(link => { link.addEventListener('click', () => { if (smState.open) { smState.busy = false; toggleMenu(); } }); });
+                smElements.wrapper.addEventListener('click', (e) => { if (smState.open && !smElements.panel.contains(e.target)) { smState.busy = false; toggleMenu(); } });
             }
-            loop(); 
-        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            try { initDarkVeil(); } catch (e) { console.error("DarkVeil CPPN 渲染失败:", e); }
-        });
+            // ==========================================
+            // DarkVeil WebGL Background
+            // ==========================================
+            try {
+                const container = document.getElementById('darkveil-canvas');
+                if (container && window.THREE) {
+                    const frag = `
+                    precision highp float;
+                    #define MAX_COLORS 5
+                    #define ITERATIONS 2
 
-        // ==========================================
-        // Tilted Card Effect (GSAP Port of React framer-motion)
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', () => {
+                    uniform vec2 uCanvas;
+                    uniform float uTime;
+                    uniform float uSpeed;
+                    uniform vec2 uRot;
+                    uniform vec3 uColors[MAX_COLORS];
+                    uniform float uScale;
+                    uniform float uFrequency;
+                    uniform float uWarpStrength;
+                    uniform vec2 uPointer;
+                    uniform float uMouseInfluence;
+                    uniform float uParallax;
+                    uniform float uNoise;
+                    uniform float uIntensity;
+                    uniform float uBandWidth;
+                    
+                    uniform float uHueShift;
+                    uniform float uScan;
+                    uniform float uScanFreq;
+                    uniform float uWarp;
+                    
+                    varying vec2 vUv;
+
+                    vec4 buf[8];
+                    float rand(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}
+
+                    mat3 rgb2yiq=mat3(0.299,0.587,0.114,0.596,-0.274,-0.322,0.211,-0.523,0.312);
+                    mat3 yiq2rgb=mat3(1.0,0.956,0.621,1.0,-0.272,-0.647,1.0,-1.106,1.703);
+
+                    vec3 hueShiftRGB(vec3 col,float deg){
+                        vec3 yiq=rgb2yiq*col;
+                        float rad = deg * 0.01745329251;
+                        float cosh=cos(rad),sinh=sin(rad);
+                        vec3 yiqShift=vec3(yiq.x,yiq.y*cosh-yiq.z*sinh,yiq.y*sinh+yiq.z*cosh);
+                        return clamp(yiq2rgb*yiqShift,0.0,1.0);
+                    }
+
+                    vec4 sigmoid(vec4 x){return 1./(1.+exp(-x));}
+
+                    vec4 cppn_fn(vec2 coordinate,float in0,float in1,float in2){
+                        buf[6]=vec4(coordinate.x,coordinate.y,0.3948333106474662+in0,0.36+in1);
+                        buf[7]=vec4(0.14+in2,sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y),0.,0.);
+                        buf[0]=mat4(vec4(6.5404263,-3.6126034,0.7590882,-1.13613),vec4(2.4582713,3.1660357,1.2219609,0.06276096),vec4(-5.478085,-6.159632,1.8701609,-4.7742867),vec4(6.039214,-5.542865,-0.90925294,3.251348))*buf[6]+mat4(vec4(0.8473259,-5.722911,3.975766,1.6522468),vec4(-0.24321538,0.5839259,-1.7661959,-5.350116),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(0.21808943,1.1243913,-1.7969975,5.0294676);
+                        buf[1]=mat4(vec4(-3.3522482,-6.0612736,0.55641043,-4.4719114),vec4(0.8631464,1.7432913,5.643898,1.6106541),vec4(2.4941394,-3.5012043,1.7184316,6.357333),vec4(3.310376,8.209261,1.1355612,-1.165539))*buf[6]+mat4(vec4(5.24046,-13.034365,0.009859298,15.870829),vec4(2.987511,3.129433,-0.89023495,-1.6822904),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-5.9457836,-6.573602,-0.8812491,1.5436668);
+                        buf[0]=sigmoid(buf[0]);buf[1]=sigmoid(buf[1]);
+                        buf[2]=mat4(vec4(-15.219568,8.095543,-2.429353,-1.9381982),vec4(-5.951362,4.3115187,2.6393783,1.274315),vec4(-7.3145227,6.7297835,5.2473326,5.9411426),vec4(5.0796127,8.979051,-1.7278991,-1.158976))*buf[6]+mat4(vec4(-11.967154,-11.608155,6.1486754,11.237008),vec4(2.124141,-6.263192,-1.7050359,-0.7021966),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-4.17164,-3.2281182,-4.576417,-3.6401186);
+                        buf[3]=mat4(vec4(3.1832156,-13.738922,1.879223,3.233465),vec4(0.64300746,12.768129,1.9141049,0.50990224),vec4(-0.049295485,4.4807224,1.4733979,1.801449),vec4(5.0039253,13.000481,3.3991797,-4.5561905))*buf[6]+mat4(vec4(-0.1285731,7.720628,-3.1425676,4.742367),vec4(0.6393625,3.714393,-0.8108378,-0.39174938),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-1.1811101,-21.621881,0.7851888,1.2329718);
+                        buf[2]=sigmoid(buf[2]);buf[3]=sigmoid(buf[3]);
+                        buf[4]=mat4(vec4(5.214916,-7.183024,2.7228765,2.6592617),vec4(-5.601878,-25.3591,4.067988,0.4602802),vec4(-10.57759,24.286327,21.102104,37.546658),vec4(4.3024497,-1.9625226,2.3458803,-1.372816))*buf[0]+mat4(vec4(-17.6526,-10.507558,2.2587414,12.462782),vec4(6.265566,-502.75443,-12.642513,0.9112289),vec4(-10.983244,20.741234,-9.701768,-0.7635988),vec4(5.383626,1.4819539,-4.1911616,-4.8444734))*buf[1]+mat4(vec4(12.785233,-16.345072,-0.39901125,1.7955981),vec4(-30.48365,-1.8345358,1.4542528,-1.1118771),vec4(19.872723,-7.337935,-42.941723,-98.52709),vec4(8.337645,-2.7312303,-2.2927687,-36.142323))*buf[2]+mat4(vec4(-16.298317,3.5471997,-0.44300047,-9.444417),vec4(57.5077,-35.609753,16.163465,-4.1534753),vec4(-0.07470326,-3.8656476,-7.0901804,3.1523974),vec4(-12.559385,-7.077619,1.490437,-0.8211543))*buf[3]+vec4(-7.67914,15.927437,1.3207729,-1.6686112);
+                        buf[5]=mat4(vec4(-1.4109162,-0.372762,-3.770383,-21.367174),vec4(-6.2103205,-9.35908,0.92529047,8.82561),vec4(11.460242,-22.348068,13.625772,-18.693201),vec4(-0.3429052,-3.9905605,-2.4626114,-0.45033523))*buf[0]+mat4(vec4(7.3481627,-4.3661838,-6.3037653,-3.868115),vec4(1.5462853,6.5488915,1.9701879,-0.58291394),vec4(6.5858274,-2.2180402,3.7127688,-1.3730392),vec4(-5.7973905,10.134961,-2.3395722,-5.965605))*buf[1]+mat4(vec4(-2.5132585,-6.6685553,-1.4029363,-0.16285264),vec4(-0.37908727,0.53738135,4.389061,-1.3024765),vec4(-0.70647055,2.0111287,-5.1659346,-3.728635),vec4(-13.562562,10.487719,-0.9173751,-2.6487076))*buf[2]+mat4(vec4(-8.645013,6.5546675,-6.3944063,-5.5933375),vec4(-0.57783127,-1.077275,36.91025,5.736769),vec4(14.283112,3.7146652,7.1452246,-4.5958776),vec4(2.7192075,3.6021907,-4.366337,-2.3653464))*buf[3]+vec4(-5.9000807,-4.329569,1.2427121,8.59503);
+                        buf[4]=sigmoid(buf[4]);buf[5]=sigmoid(buf[5]);
+                        buf[6]=mat4(vec4(-1.61102,0.7970257,1.4675229,0.20917463),vec4(-28.793737,-7.1390953,1.5025433,4.656581),vec4(-10.94861,39.66238,0.74318546,-10.095605),vec4(-0.7229728,-1.5483948,0.7301322,2.1687684))*buf[0]+mat4(vec4(3.2547753,21.489103,-1.0194173,-3.3100595),vec4(-3.7316632,-3.3792162,-7.223193,-0.23685838),vec4(13.1804495,0.7916005,5.338587,5.687114),vec4(-4.167605,-17.798311,-6.815736,-1.6451967))*buf[1]+mat4(vec4(0.604885,-7.800309,-7.213122,-2.741014),vec4(-3.522382,-0.12359311,-0.5258442,0.43852118),vec4(9.6752825,-22.853785,2.062431,0.099892326),vec4(-4.3196306,-17.730087,2.5184598,5.30267))*buf[2]+mat4(vec4(-6.545563,-15.790176,-6.0438633,-5.415399),vec4(-43.591583,28.551912,-16.00161,18.84728),vec4(4.212382,8.394307,3.0958717,8.657522),vec4(-5.0237565,-4.450633,-4.4768,-5.5010443))*buf[3]+mat4(vec4(1.6985557,-67.05806,6.897715,1.9004834),vec4(1.8680354,2.3915145,2.5231109,4.081538),vec4(11.158006,1.7294737,2.0738268,7.386411),vec4(-4.256034,-306.24686,8.258898,-17.132736))*buf[4]+mat4(vec4(1.6889864,-4.5852966,3.8534803,-6.3482175),vec4(1.3543309,-1.2640043,9.932754,2.9079645),vec4(-5.2770967,0.07150358,-0.13962056,3.3269649),vec4(28.34703,-4.918278,6.1044083,4.085355))*buf[5]+vec4(6.6818056,12.522166,-3.7075126,-4.104386);
+                        buf[7]=mat4(vec4(-8.265602,-4.7027016,5.098234,0.7509808),vec4(8.6507845,-17.15949,16.51939,-8.884479),vec4(-4.036479,-2.3946867,-2.6055532,-1.9866527),vec4(-2.2167742,-1.8135649,-5.9759874,4.8846445))*buf[0]+mat4(vec4(6.7790847,3.5076547,-2.8191125,-2.7028968),vec4(-5.743024,-0.27844876,1.4958696,-5.0517144),vec4(13.122226,15.735168,-2.9397483,-4.101023),vec4(-14.375265,-5.030483,-6.2599335,2.9848232))*buf[1]+mat4(vec4(4.0950394,-0.94011575,-5.674733,4.755022),vec4(4.3809423,4.8310084,1.7425908,-3.437416),vec4(2.117492,0.16342592,-104.56341,16.949184),vec4(-5.22543,-2.994248,3.8350096,-1.9364246))*buf[2]+mat4(vec4(-5.900337,1.7946124,-13.604192,-3.8060522),vec4(6.6583457,31.911177,25.164474,91.81147),vec4(11.840538,4.1503043,-0.7314397,6.768467),vec4(-6.3967767,4.034772,6.1714606,-0.32874924))*buf[3]+mat4(vec4(3.4992442,-196.91893,-8.923708,2.8142626),vec4(3.4806502,-3.1846354,5.1725626,5.1804223),vec4(-2.4009497,15.585794,1.2863957,2.0252278),vec4(-71.25271,-62.441242,-8.138444,0.50670296))*buf[4]+mat4(vec4(-12.291733,-11.176166,-7.3474145,4.390294),vec4(10.805477,5.6337385,-0.9385842,-4.7348723),vec4(-12.869276,-7.039391,5.3029537,7.5436664),vec4(1.4593618,8.91898,3.5101583,5.840625))*buf[5]+vec4(2.2415268,-6.705987,-0.98861027,-2.117676);
+                        buf[6]=sigmoid(buf[6]);buf[7]=sigmoid(buf[7]);
+                        buf[0]=mat4(vec4(1.6794263,1.3817469,2.9625452,0.),vec4(-1.8834411,-1.4806935,-3.5924516,0.),vec4(-1.3279216,-1.0918057,-2.3124623,0.),vec4(0.2662234,0.23235129,0.44178495,0.))*buf[0]+mat4(vec4(-0.6299101,-0.5945583,-0.9125601,0.),vec4(0.17828953,0.18300213,0.18182953,0.),vec4(-2.96544,-2.5819945,-4.9001055,0.),vec4(1.4195864,1.1868085,2.5176322,0.))*buf[1]+mat4(vec4(-1.2584374,-1.0552157,-2.1688404,0.),vec4(-0.7200217,-0.52666044,-1.438251,0.),vec4(0.15345335,0.15196142,0.272854,0.),vec4(0.945728,0.8861938,1.2766753,0.))*buf[2]+mat4(vec4(-2.4218085,-1.968602,-4.35166,0.),vec4(-22.683098,-18.0544,-41.954372,0.),vec4(0.63792,0.5470648,1.1078634,0.),vec4(-1.5489894,-1.3075932,-2.6444845,0.))*buf[3]+mat4(vec4(-0.49252132,-0.39877754,-0.91366625,0.),vec4(0.95609266,0.7923952,1.640221,0.),vec4(0.30616966,0.15693925,0.8639857,0.),vec4(1.1825981,0.94504964,2.176963,0.))*buf[4]+mat4(vec4(0.35446745,0.3293795,0.59547555,0.),vec4(-0.58784515,-0.48177817,-1.0614829,0.),vec4(2.5271258,1.9991658,4.6846647,0.),vec4(0.13042648,0.08864098,0.30187556,0.))*buf[5]+mat4(vec4(-1.7718065,-1.4033192,-3.3355875,0.),vec4(3.1664357,2.638297,5.378702,0.),vec4(-3.1724713,-2.6107926,-5.549295,0.),vec4(-2.851368,-2.249092,-5.3013067,0.))*buf[6]+mat4(vec4(1.5203838,1.2212278,2.8404984,0.),vec4(1.5210563,1.2651345,2.683903,0.),vec4(2.9789467,2.4364579,5.2347264,0.),vec4(2.2270417,1.8825914,3.8028636,0.))*buf[7]+vec4(-1.5468478,-3.6171484,0.24762098,0.);
+                        buf[0]=sigmoid(buf[0]);
+                        return vec4(buf[0].x,buf[0].y,buf[0].z,1.);
+                    }
+
+                    void mainImage(out vec4 fragColor,in vec2 fragCoord){
+                        vec2 uv=fragCoord/uCanvas*2.-1.;
+                        uv.y*=-1.;
+                        uv+=uWarp*vec2(sin(uv.y*6.283+uTime*0.5),cos(uv.x*6.283+uTime*0.5))*0.05;
+                        fragColor=cppn_fn(uv,0.1*sin(0.3*uTime),0.1*sin(0.69*uTime),0.1*sin(0.44*uTime));
+                    }
+
+                    void main(){
+                        vec4 col;
+                        mainImage(col,gl_FragCoord.xy);
+                        col.rgb=hueShiftRGB(col.rgb,uHueShift);
+                        float scanline_val=sin(gl_FragCoord.y*uScanFreq)*0.5+0.5;
+                        col.rgb*=1.-(scanline_val*scanline_val)*uScan;
+                        col.rgb+=(rand(gl_FragCoord.xy+uTime)-0.5)*uNoise;
+                        
+                        float intensity = clamp(max(col.r, max(col.g, col.b)) * 3.0, 0.0, 1.0);
+                        
+                        vec3 bgColor = vec3(252.0/255.0, 252.0/255.0, 251.0/255.0);
+                        
+                        vec3 color1 = vec3(255.0/255.0, 236.0/255.0, 235.0/255.0); 
+                        vec3 color2 = vec3(255.0/255.0, 235.0/254.0, 244.0/255.0); 
+                        float colorBlend = sin(uTime * 0.3) * 0.5 + 0.5; 
+                        vec3 targetColor = mix(color1, color2, colorBlend);
+                        
+                        vec3 shadowColor = targetColor * 0.8; 
+                        vec3 lineColor = mix(targetColor, shadowColor, col.r);
+                        
+                        vec3 finalColor = mix(bgColor, lineColor, intensity);
+                        
+                        gl_FragColor=vec4(clamp(finalColor, 0.0, 1.0), 1.0);
+                    }
+                    `;
+
+                    const vert = `
+                    precision highp float;
+                    attribute vec3 position;
+                    attribute vec2 uv;
+                    varying vec2 vUv;
+                    void main() {
+                      vUv = uv;
+                      gl_Position = vec4(position, 1.0);
+                    }
+                    `;
+
+                    const scene = new THREE.Scene();
+                    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+                    const geometry = new THREE.PlaneGeometry(2, 2);
+
+                    const params = {
+                        speed: 0.15, rotation: 45, scale: 1.2, frequency: 1,
+                        warpStrength: 1.5, mouseInfluence: 1, parallax: 0.5,
+                        noise: 0.05, intensity: 3.0, bandWidth: 6,
+                        colors: ['#e50000', '#b30000', '#660000', '#220000', '#0a0a0a']
+                    };
+
+                    const uColorsArray = Array.from({ length: 5 }, () => new THREE.Vector3());
+                    function toVec3(hex) {
+                        let h = hex.replace('#', '').trim();
+                        if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+                        return new THREE.Vector3( parseInt(h.slice(0, 2), 16) / 255, parseInt(h.slice(2, 4), 16) / 255, parseInt(h.slice(4, 6), 16) / 255 );
+                    }
+                    params.colors.map(toVec3).forEach((col, i) => { if (i < 5) uColorsArray[i].copy(col); });
+
+                    const rotRad = params.rotation * Math.PI / 180;
+                    const uniforms = {
+                        uCanvas: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                        uTime: { value: 0 },
+                        uSpeed: { value: params.speed },
+                        uRot: { value: new THREE.Vector2(Math.cos(rotRad), Math.sin(rotRad)) },
+                        uColors: { value: uColorsArray },
+                        uScale: { value: params.scale },
+                        uFrequency: { value: params.frequency },
+                        uWarpStrength: { value: params.warpStrength },
+                        uPointer: { value: new THREE.Vector2(0, 0) },
+                        uMouseInfluence: { value: params.mouseInfluence },
+                        uParallax: { value: params.parallax },
+                        uNoise: { value: params.noise },
+                        uIntensity: { value: params.intensity },
+                        uBandWidth: { value: params.bandWidth },
+                        uHueShift: { value: 0.0 }, uScan: { value: 0.0 }, uScanFreq: { value: 0.0 }, uWarp: { value: 0.0 }
+                    };
+
+                    const material = new THREE.RawShaderMaterial({ vertexShader: vert, fragmentShader: frag, uniforms: uniforms, transparent: true, premultipliedAlpha: true });
+                    const mesh = new THREE.Mesh(geometry, material);
+                    scene.add(mesh);
+
+                    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+                    renderer.setClearColor(0x000000, 0); 
+                    renderer.domElement.style.width = '100%';
+                    renderer.domElement.style.height = '100%';
+                    container.appendChild(renderer.domElement);
+
+                    function resize() {
+                        const w = window.innerWidth, h = window.innerHeight;
+                        renderer.setSize(w, h, false);
+                        uniforms.uCanvas.value.set(w, h);
+                    }
+                    window.addEventListener('resize', resize);
+                    resize();
+
+                    const clock = new THREE.Clock();
+                    function loop() {
+                        // 優化：當 Modal 開啟時，停止耗效能的背景 WebGL 運算與渲染
+                        if (!window.isModalOpen) {
+                            const elapsed = clock.getElapsedTime();
+                            uniforms.uTime.value = elapsed * 1.25;
+                            renderer.render(scene, camera);
+                        }
+                        requestAnimationFrame(loop);
+                    }
+                    loop(); 
+                }
+            } catch (e) { console.error("DarkVeil CPPN 渲染失敗:", e); }
+
+            // ==========================================
+            // Tilted Card Effect
+            // ==========================================
             const cards = document.querySelectorAll('.works-grid-item');
             const rotateAmplitude = 14;
             const scaleOnHover = 1.05;
@@ -1069,7 +1069,6 @@
                     const rect = card.getBoundingClientRect();
                     const offsetX = e.clientX - rect.left - rect.width / 2;
                     const offsetY = e.clientY - rect.top - rect.height / 2;
-
                     const rotationX = (offsetY / (rect.height / 2)) * -rotateAmplitude;
                     const rotationY = (offsetX / (rect.width / 2)) * rotateAmplitude;
 
@@ -1080,7 +1079,6 @@
                         gsap.to(caption, { x: e.clientX - rect.left, y: e.clientY - rect.top, duration: 0.15, ease: "power2.out", overwrite: "auto" });
                         gsap.to(caption, { rotation: -velocityY * 0.6, duration: 0.4, ease: "power3.out", overwrite: "auto" });
                     }
-                    
                     lastY = offsetY;
                 });
 
@@ -1094,129 +1092,107 @@
                     if (caption) gsap.to(caption, { opacity: 0, rotation: 0, duration: 0.3, overwrite: "auto" });
                 });
             });
-        });
 
-        // ==========================================
-        // 真 Iframe Modal 控制邏輯 (Behance 風格全螢幕/置中 + 上下頁切換)
-        // ==========================================
-        let projectList = [];
-        let currentProjectIndex = 0;
+            // ==========================================
+            // Iframe Modal 控制邏輯 (Behance 風格)
+            // ==========================================
+            let projectList = [];
+            window.currentProjectIndex = 0;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // 動態抓取頁面上的所有專案卡片，建立專案列表陣列
-            const cards = document.querySelectorAll('.works-grid-item');
             cards.forEach((card, index) => {
-                // 移除寫死在 HTML 裡的 onclick
                 card.removeAttribute('onclick');
-                
                 const url = card.getAttribute('href');
                 const titleEl = card.querySelector('h3');
                 const title = titleEl ? titleEl.textContent.trim() : `Project ${index + 1}`;
-                
                 projectList.push({ url, title });
                 
-                // 重新綁定點擊事件
                 card.addEventListener('click', (e) => {
                     e.preventDefault();
-                    openProjectModal(index);
+                    window.openProjectModal(index);
                 });
             });
-        });
 
-        function updateModalNav(index) {
-            if(projectList.length === 0) return;
-            const len = projectList.length;
-            
-            // 計算上一頁與下一頁索引 (包含循環邏輯)
-            const prevIndex = (index - 1 + len) % len;
-            const nextIndex = (index + 1) % len;
-            
-            // 更新底部導航的名稱
-            document.getElementById('prev-project-name').textContent = projectList[prevIndex].title;
-            document.getElementById('next-project-name').textContent = projectList[nextIndex].title;
-        }
+            window.updateModalNav = function(index) {
+                if(projectList.length === 0) return;
+                const len = projectList.length;
+                const prevIndex = (index - 1 + len) % len;
+                const nextIndex = (index + 1) % len;
+                document.getElementById('prev-project-name').textContent = projectList[prevIndex].title;
+                document.getElementById('next-project-name').textContent = projectList[nextIndex].title;
+            };
 
-        function loadProjectInModal(index) {
-            currentProjectIndex = index;
-            const project = projectList[index];
-            
+            window.loadProjectInModal = function(index) {
+                window.currentProjectIndex = index;
+                const project = projectList[index];
+                const iframe = document.getElementById('project-iframe');
+                const loader = document.getElementById('modal-loader');
+                
+                iframe.style.opacity = '0';
+                loader.style.display = 'flex';
+                loader.style.opacity = '1';
+                
+                window.updateModalNav(index);
+                setTimeout(() => { iframe.src = project.url; }, 200);
+            };
+
+            window.openProjectModal = function(index) {
+                const modal = document.getElementById('project-modal');
+                const container = document.getElementById('modal-container');
+                
+                window.isModalOpen = true; // 鎖定背景動畫
+                window.loadProjectInModal(index);
+
+                modal.classList.remove('hidden');
+                void modal.offsetWidth; 
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+                container.classList.remove('scale-95', 'translate-y-4');
+                container.classList.add('scale-100', 'translate-y-0');
+                
+                document.documentElement.classList.add('lock-scroll');
+                document.body.classList.add('lock-scroll');
+            };
+
+            window.prevProject = function() {
+                if(projectList.length === 0) return;
+                const prevIndex = (window.currentProjectIndex - 1 + projectList.length) % projectList.length;
+                window.loadProjectInModal(prevIndex);
+            };
+
+            window.nextProject = function() {
+                if(projectList.length === 0) return;
+                const nextIndex = (window.currentProjectIndex + 1) % projectList.length;
+                window.loadProjectInModal(nextIndex);
+            };
+
+            window.closeModal = function() {
+                const modal = document.getElementById('project-modal');
+                const container = document.getElementById('modal-container');
+                const iframe = document.getElementById('project-iframe');
+                
+                window.isModalOpen = false; // 恢復背景動畫
+                
+                container.classList.remove('scale-100', 'translate-y-0');
+                container.classList.add('scale-95', 'translate-y-4');
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0');
+                
+                document.documentElement.classList.remove('lock-scroll');
+                document.body.classList.remove('lock-scroll');
+                
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    iframe.src = ''; 
+                }, 300);
+            };
+
             const iframe = document.getElementById('project-iframe');
             const loader = document.getElementById('modal-loader');
-            
-            // 加入淡出特效與 loader
-            iframe.style.opacity = '0';
-            loader.style.display = 'flex';
-            
-            updateModalNav(index);
-            
-            // 稍等淡出後再換 src
-            setTimeout(() => {
-                iframe.src = project.url;
-            }, 200);
-        }
-
-        function openProjectModal(index) {
-            const modal = document.getElementById('project-modal');
-            const container = document.getElementById('modal-container');
-            
-            loadProjectInModal(index);
-
-            modal.classList.remove('hidden');
-            // 強制重繪
-            void modal.offsetWidth; 
-            
-            // 淡入背景
-            modal.classList.remove('opacity-0');
-            modal.classList.add('opacity-100');
-            
-            // 讓容器從縮小狀態彈出
-            container.classList.remove('scale-95', 'translate-y-4');
-            container.classList.add('scale-100', 'translate-y-0');
-            
-            document.body.style.overflow = 'hidden';
-        }
-
-        function prevProject() {
-            if(projectList.length === 0) return;
-            const prevIndex = (currentProjectIndex - 1 + projectList.length) % projectList.length;
-            loadProjectInModal(prevIndex);
-        }
-
-        function nextProject() {
-            if(projectList.length === 0) return;
-            const nextIndex = (currentProjectIndex + 1) % projectList.length;
-            loadProjectInModal(nextIndex);
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('project-modal');
-            const container = document.getElementById('modal-container');
-            const iframe = document.getElementById('project-iframe');
-            
-            // 讓容器縮小並下移
-            container.classList.remove('scale-100', 'translate-y-0');
-            container.classList.add('scale-95', 'translate-y-4');
-            
-            // 淡出背景
-            modal.classList.remove('opacity-100');
-            modal.classList.add('opacity-0');
-            
-            document.body.style.overflow = '';
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                iframe.src = ''; 
-            }, 300); // 配合 CSS 的 duration-300
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const iframe = document.getElementById('project-iframe');
-            const loader = document.getElementById('modal-loader');
-
             if(iframe) {
                 iframe.addEventListener('load', function() {
                     if (this.src && this.src !== window.location.href && this.src !== 'about:blank') {
-                        loader.style.display = 'none';
+                        loader.style.opacity = '0';
+                        setTimeout(() => loader.style.display = 'none', 300);
                         this.style.opacity = '1';
                     }
                 });
@@ -1224,258 +1200,161 @@
 
             window.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && !document.getElementById('project-modal').classList.contains('hidden')) {
-                    closeModal();
+                    window.closeModal();
                 }
             });
-        });
 
-        // ==========================================
-        // Scroll Reveal Text Animation (GSAP)
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.gsap && window.ScrollTrigger) {
-                gsap.registerPlugin(ScrollTrigger);
-                
-                const revealContainer = document.getElementById('scroll-reveal-text');
-                const words = document.querySelectorAll('.reveal-word');
-
-                if (revealContainer && words.length > 0) {
-                    gsap.fromTo(revealContainer, 
-                        { rotation: 3 }, 
-                        {
-                            rotation: 0,
-                            ease: 'none',
-                            scrollTrigger: {
-                                trigger: revealContainer,
-                                start: 'top 95%',
-                                end: 'center 45%',
-                                scrub: 1
-                            }
-                        }
-                    );
-
-                    gsap.fromTo(words,
-                        { opacity: 0.1, filter: 'blur(4px)' },
-                        {
-                            opacity: 1,
-                            filter: 'blur(0px)',
-                            ease: 'none',
-                            stagger: 0.05,
-                            scrollTrigger: {
-                                trigger: revealContainer,
-                                start: 'top 90%',
-                                end: 'center 45%',
-                                scrub: 1
-                            }
-                        }
-                    );
-                }
-            }
-        });
-
-        // ==========================================
-        // Logo Loop Animation
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', () => {
+            // ==========================================
+            // Logo Loop Animation
+            // ==========================================
             const track = document.getElementById('logoloop-track');
             const seq = document.getElementById('logoloop-seq');
-            if (!track || !seq) return;
+            if (track && seq) {
+                const speed = 37.5; 
+                let currentSpeed = speed;
+                let offset = 0;
+                let lastTimestamp = null;
+                let reqId = null;
+                let seqWidth = 0;
+                let isVisible = false;
 
-            const speed = 37.5; 
-            let currentTargetSpeed = speed;
-            let currentSpeed = speed;
-            const tau = 0.25; 
+                function resizeLoop() {
+                    seqWidth = seq.getBoundingClientRect().width;
+                    if(seqWidth === 0) return;
+                    const containerWidth = track.parentElement.clientWidth;
+                    const copiesNeeded = Math.ceil(containerWidth / seqWidth) + 2;
+                    
+                    track.querySelectorAll('.logoloop__list-clone').forEach(c => c.remove());
+                    for(let i = 1; i < Math.max(2, copiesNeeded); i++) {
+                        const clone = seq.cloneNode(true);
+                        clone.classList.add('logoloop__list-clone');
+                        clone.id = ''; 
+                        track.appendChild(clone);
+                    }
+                }
 
-            let offset = 0;
-            let lastTimestamp = null;
-            let reqId = null;
-            let seqWidth = 0;
-            let isVisible = false;
+                function animateLoop(timestamp) {
+                    if (!isVisible) return;
+                    if (lastTimestamp === null) lastTimestamp = timestamp;
+                    const dt = Math.max(0, timestamp - lastTimestamp) / 1000;
+                    lastTimestamp = timestamp;
 
-            function resize() {
-                seqWidth = seq.getBoundingClientRect().width;
-                if(seqWidth === 0) return;
-                const containerWidth = track.parentElement.clientWidth;
-                const copiesNeeded = Math.ceil(containerWidth / seqWidth) + 2;
+                    currentSpeed += (speed - currentSpeed) * (1 - Math.exp(-dt / 0.25));
+
+                    if (seqWidth > 0) {
+                        offset += currentSpeed * dt;
+                        offset = ((offset % seqWidth) + seqWidth) % seqWidth;
+                        track.style.transform = `translate3d(${-offset}px, 0, 0)`;
+                    }
+                    reqId = requestAnimationFrame(animateLoop);
+                }
+
+                const loopObserver = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        if (!isVisible) {
+                            isVisible = true;
+                            lastTimestamp = null; 
+                            reqId = requestAnimationFrame(animateLoop);
+                        }
+                    } else {
+                        isVisible = false;
+                        if (reqId) cancelAnimationFrame(reqId);
+                    }
+                }, { threshold: 0 });
                 
-                const clones = track.querySelectorAll('.logoloop__list-clone');
-                clones.forEach(c => c.remove());
+                const loopContainer = document.getElementById('logo-loop-container');
+                if(loopContainer) loopObserver.observe(loopContainer);
 
-                for(let i = 1; i < Math.max(2, copiesNeeded); i++) {
-                    const clone = seq.cloneNode(true);
-                    clone.classList.add('logoloop__list-clone');
-                    clone.id = ''; 
-                    track.appendChild(clone);
-                }
+                let resizeTimer;
+                const loopResizeObserver = new ResizeObserver(() => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => { window.requestAnimationFrame(resizeLoop); }, 50);
+                });
+                loopResizeObserver.observe(seq);
+                loopResizeObserver.observe(track.parentElement);
             }
 
-            function animate(timestamp) {
-                if (!isVisible) return;
+            // ==========================================
+            // Text Pressure Animation
+            // ==========================================
+            const pressureContainer = document.getElementById('text-pressure-container');
+            const contactAnimArea = document.getElementById('contact-animation-area');
+            const pressureTitle = document.getElementById('text-pressure-title');
+            if (pressureContainer && pressureTitle && contactAnimArea) {
+                const text = "FunX Game Arts";
+                const chars = text.split('');
+                const spans = [];
 
-                if (lastTimestamp === null) lastTimestamp = timestamp;
-                const dt = Math.max(0, timestamp - lastTimestamp) / 1000;
-                lastTimestamp = timestamp;
-
-                const easing = 1 - Math.exp(-dt / tau);
-                currentSpeed += (currentTargetSpeed - currentSpeed) * easing;
-
-                if (seqWidth > 0) {
-                    offset += currentSpeed * dt;
-                    offset = ((offset % seqWidth) + seqWidth) % seqWidth;
-                    track.style.transform = `translate3d(${-offset}px, 0, 0)`;
-                }
-
-                reqId = requestAnimationFrame(animate);
-            }
-
-            const observer = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    if (!isVisible) {
-                        isVisible = true;
-                        lastTimestamp = null; 
-                        reqId = requestAnimationFrame(animate);
-                    }
-                } else {
-                    isVisible = false;
-                    if (reqId) cancelAnimationFrame(reqId);
-                }
-            }, { threshold: 0 });
-            
-            const container = document.getElementById('logo-loop-container');
-            if(container) observer.observe(container);
-
-            let resizeTimer;
-            const resizeObserver = new ResizeObserver(() => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    window.requestAnimationFrame(resize);
-                }, 50);
-            });
-            resizeObserver.observe(seq);
-            resizeObserver.observe(track.parentElement);
-        });
-
-        // ==========================================
-        // Text Pressure Animation
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('text-pressure-container');
-            const contactSection = document.getElementById('contact-animation-area');
-            const title = document.getElementById('text-pressure-title');
-            if (!container || !title || !contactSection) return;
-
-            const text = "FunX Game Arts";
-            const chars = text.split('');
-            const spans = [];
-
-            chars.forEach(char => {
-                const span = document.createElement('span');
-                span.dataset.char = char;
-                span.textContent = char === ' ' ? '\u00A0' : char; 
-                span.style.display = 'inline-block';
-                title.appendChild(span);
-                spans.push(span);
-            });
-
-            let mouseX = 0, mouseY = 0;
-            let cursorX = 0, cursorY = 0;
-            let isVisible = false;
-
-            const handleMouseMove = e => {
-                cursorX = e.clientX;
-                cursorY = e.clientY;
-            };
-            const handleTouchMove = e => {
-                const t = e.touches[0];
-                cursorX = t.clientX;
-                cursorY = t.clientY;
-            };
-
-            window.addEventListener('mousemove', handleMouseMove);
-            window.addEventListener('touchmove', handleTouchMove, { passive: true });
-
-            let fontSize = 24;
-            const minFontSize = 24;
-
-            const setSize = () => {
-                if (!container) return;
-                const { width: containerW } = container.getBoundingClientRect();
-                const ratio = window.innerWidth <= 768 ? 1.4 : 2;
-                let newFontSize = (containerW / chars.length) * ratio;
-                newFontSize = Math.max(newFontSize, minFontSize);
-                fontSize = newFontSize;
-                title.style.fontSize = `${fontSize}px`;
-                title.style.lineHeight = '1';
-            };
-
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(setSize, 100);
-            });
-            
-            setSize();
-            const initialRect = container.getBoundingClientRect();
-            mouseX = cursorX = initialRect.left + initialRect.width / 2;
-            mouseY = cursorY = initialRect.top + initialRect.height / 2;
-
-            const dist = (a, b) => {
-                const dx = b.x - a.x;
-                const dy = b.y - a.y;
-                return Math.sqrt(dx * dx + dy * dy);
-            };
-
-            const getAttr = (distance, maxDist, minVal, maxVal) => {
-                const val = maxVal - Math.abs((maxVal * distance) / maxDist);
-                return Math.max(minVal, val + minVal);
-            };
-
-            let rafId;
-            const animate = () => {
-                if (!isVisible) return; 
-
-                mouseX += (cursorX - mouseX) / 15;
-                mouseY += (cursorY - mouseY) / 15;
-
-                const titleRect = title.getBoundingClientRect();
-                const maxDist = titleRect.width / 2;
-
-                spans.forEach(span => {
-                    const rect = span.getBoundingClientRect();
-                    const charCenter = {
-                        x: rect.x + rect.width / 2,
-                        y: rect.y + rect.height / 2
-                    };
-
-                    const d = dist({ x: mouseX, y: mouseY }, charCenter);
-
-                    const wdth = Math.floor(getAttr(d, maxDist, 5, 200));
-                    const wght = Math.floor(getAttr(d, maxDist, 100, 900));
-                    const italVal = getAttr(d, maxDist, 0, 1).toFixed(2);
-
-                    const newFontVariationSettings = `'wght' ${wght}, 'wdth' ${wdth}, 'ital' ${italVal}`;
-
-                    if (span.style.fontVariationSettings !== newFontVariationSettings) {
-                        span.style.fontVariationSettings = newFontVariationSettings;
-                    }
+                chars.forEach(char => {
+                    const span = document.createElement('span');
+                    span.textContent = char === ' ' ? '\u00A0' : char; 
+                    span.style.display = 'inline-block';
+                    pressureTitle.appendChild(span);
+                    spans.push(span);
                 });
 
-                rafId = requestAnimationFrame(animate);
-            };
+                let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0, isPressureVisible = false;
 
-            const observer = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    if (!isVisible) {
-                        isVisible = true;
-                        animate();
+                window.addEventListener('mousemove', e => { cursorX = e.clientX; cursorY = e.clientY; });
+                window.addEventListener('touchmove', e => { cursorX = e.touches[0].clientX; cursorY = e.touches[0].clientY; }, { passive: true });
+
+                const setPressureSize = () => {
+                    if (!pressureContainer) return;
+                    const { width: containerW } = pressureContainer.getBoundingClientRect();
+                    let newFontSize = Math.max((containerW / chars.length) * (window.innerWidth <= 768 ? 1.4 : 2), 24);
+                    pressureTitle.style.fontSize = `${newFontSize}px`;
+                    pressureTitle.style.lineHeight = '1';
+                };
+
+                let pressureResizeTimeout;
+                window.addEventListener('resize', () => {
+                    clearTimeout(pressureResizeTimeout);
+                    pressureResizeTimeout = setTimeout(setPressureSize, 100);
+                });
+                
+                setPressureSize();
+                const initialRect = pressureContainer.getBoundingClientRect();
+                mouseX = cursorX = initialRect.left + initialRect.width / 2;
+                mouseY = cursorY = initialRect.top + initialRect.height / 2;
+
+                const getAttr = (dist, maxDist, minVal, maxVal) => Math.max(minVal, maxVal - Math.abs((maxVal * dist) / maxDist) + minVal);
+
+                let pressureRafId;
+                const animatePressure = () => {
+                    if (!isPressureVisible) return; 
+                    mouseX += (cursorX - mouseX) / 15;
+                    mouseY += (cursorY - mouseY) / 15;
+
+                    const maxDist = pressureTitle.getBoundingClientRect().width / 2;
+
+                    spans.forEach(span => {
+                        const rect = span.getBoundingClientRect();
+                        const dx = mouseX - (rect.x + rect.width / 2);
+                        const dy = mouseY - (rect.y + rect.height / 2);
+                        const d = Math.sqrt(dx * dx + dy * dy);
+
+                        const wdth = Math.floor(getAttr(d, maxDist, 5, 200));
+                        const wght = Math.floor(getAttr(d, maxDist, 100, 900));
+                        const italVal = getAttr(d, maxDist, 0, 1).toFixed(2);
+                        const newSettings = `'wght' ${wght}, 'wdth' ${wdth}, 'ital' ${italVal}`;
+
+                        if (span.style.fontVariationSettings !== newSettings) {
+                            span.style.fontVariationSettings = newSettings;
+                        }
+                    });
+                    pressureRafId = requestAnimationFrame(animatePressure);
+                };
+
+                const pressureObserver = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        if (!isPressureVisible) { isPressureVisible = true; animatePressure(); }
+                    } else {
+                        isPressureVisible = false;
+                        if (pressureRafId) cancelAnimationFrame(pressureRafId);
                     }
-                } else {
-                    isVisible = false;
-                    if (rafId) cancelAnimationFrame(rafId);
-                }
-            }, { threshold: 0 });
-            
-            observer.observe(contactSection);
+                }, { threshold: 0 });
+                pressureObserver.observe(contactAnimArea);
+            }
         });
     </script>
 </body>

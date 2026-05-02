@@ -61,22 +61,26 @@
 <body class="text-zinc-900 antialiased overflow-x-hidden">
 
     <!-- ========================================== -->
-    <!-- 專案全局配置區 (輕鬆自定義)                 -->
+    <!-- 🛡️ 專案全局配置區 (安全混淆版)                 -->
     <!-- ========================================== -->
     <script>
-        const CONFIG = {
-            // 一、密碼功能開關 (true: 開啟密碼保護, false: 關閉密碼保護直接顯示)
-            requirePassword: true, 
-            
-            // 二、自定義密碼 (4位數)
-            password: "2026",      
-            
-            // 專案唯一標識符 (請為不同作品設定不同ID，例如 "eva", "project2")
-            // 這樣可以確保解鎖A作品時，B作品仍需要密碼
-            projectId: "eva-ui",
-            
-            // 三、防拷貝與防下載開關 (true: 禁止右鍵/拖曳/快捷鍵, false: 允許正常操作)
-            disableCopy: false
+        // 說明：為防止在「查看原始碼(Ctrl+U)」中直接暴露密碼與開關狀態，
+        // 這裡的數值與變數名稱採用了 Base64 編碼進行輕度混淆。
+        //
+        // 【狀態開關對照表】
+        // 開啟 (true)  👉 "dHJ1ZQ=="
+        // 關閉 (false) 👉 "ZmFsc2U="
+        //
+        // 【自定義密碼教學】
+        // 預設密碼 "2026" 編碼後為 "MjAyNg=="
+        // 常見密碼： "1234" 👉 "MTIzNA==" | "0000" 👉 "MDAwMA==" | "8888" 👉 "ODg4OA=="
+        // 若要自訂其他密碼，請在瀏覽器按 F12 進入 Console (主控台)，
+        // 輸入 btoa("你的密碼") 即可獲得編碼字串，填入下方 p_key 即可。
+        const _CONF = {
+            s_lock: "dHJ1ZQ==",  // 一、密碼功能開關 (預設: dHJ1ZQ== 開啟)
+            p_key: "MjAyNg==",   // 二、自定義密碼 4位數
+            p_id: "eva-ui",      // 專案唯一標識符 (區分不同作品，不需編碼)
+            s_copy: "ZmFsc2U="   // 三、防拷貝與防下載開關 (預設: ZmFsc2U= 關閉)
         };
 
         // ==========================================
@@ -223,12 +227,12 @@
 
             // 檢查是否需要顯示內容
             function checkAuthStatus() {
-                if (!CONFIG.requirePassword) {
+                if (atob(_CONF.s_lock) !== 'true') {
                     revealContent();
                     return;
                 }
 
-                const storageKey = `FUNX_AUTH_${CONFIG.projectId}`;
+                const storageKey = `FUNX_AUTH_${_CONF.p_id}`;
                 const savedAuth = sessionStorage.getItem(storageKey);
                 
                 if (savedAuth) {
@@ -334,9 +338,9 @@
 
             // 驗證邏輯
             function verifyPin(val) {
-                if (val === CONFIG.password) {
+                if (val === atob(_CONF.p_key)) {
                     // 密碼正確
-                    const storageKey = `FUNX_AUTH_${CONFIG.projectId}`;
+                    const storageKey = `FUNX_AUTH_${_CONF.p_id}`;
                     sessionStorage.setItem(storageKey, JSON.stringify({ timestamp: new Date().getTime() }));
                     
                     // 輸入框變綠色/紅色反饋？(這裡選擇直接淡出進入)
@@ -382,7 +386,7 @@
             checkAuthStatus();
 
             // --- 3. 嚴格防拷貝與防下載邏輯 ---
-            if (CONFIG.disableCopy) {
+            if (atob(_CONF.s_copy) === 'true') {
                 // 加上 CSS 防選中樣式
                 document.body.classList.add('prevent-copy');
 
