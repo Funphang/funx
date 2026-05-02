@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVA - Evangelion UI - FunX Portfolio</title>
+    
+    <!-- 引入字體與圖標 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    
+    <style>
+        /* 統一捲動條樣式與背景 */
+        ::-webkit-scrollbar { width: 6px; background: #fcfcfb; }
+        ::-webkit-scrollbar-thumb { background: #e4e4e7; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d4d4d8; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #fcfcfb; 
+        }
+
+        /* 將防拷貝樣式獨立，由 JS 動態控制 */
+        .prevent-copy {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .prevent-copy img {
+            /* 禁止圖片上的預設行為 (如行動端長按出現選單) */
+            -webkit-touch-callout: none;
+        }
+        
+        /* 密碼錯誤震動動畫 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* 隱藏原生輸入框的光標和背景，保留其功能性 */
+        .pin-input-hidden {
+            color: transparent;
+            text-shadow: 0 0 0 transparent;
+            background: transparent;
+            caret-color: transparent;
+        }
+        .pin-input-hidden:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body class="text-zinc-900 antialiased overflow-x-hidden">
+
+    <!-- ========================================== -->
+    <!-- 專案全局配置區 (輕鬆自定義)                 -->
+    <!-- ========================================== -->
+    <script>
+        const CONFIG = {
+            // 一、密碼功能開關 (true: 開啟密碼保護, false: 關閉密碼保護直接顯示)
+            requirePassword: false, 
+            
+            // 二、自定義密碼 (4位數)
+            password: "2026",      
+            
+            // 專案唯一標識符 (請為不同作品設定不同ID，例如 "eva", "project2")
+            // 這樣可以確保解鎖A作品時，B作品仍需要密碼
+            projectId: "eva-ui",
+            
+            // 三、防拷貝與防下載開關 (true: 禁止右鍵/拖曳/快捷鍵, false: 允許正常操作)
+            disableCopy: false
+        };
+
+        // ==========================================
+        // 專案內容資料 (防扒取核心)
+        // 說明：為了防止未解鎖前被扒圖軟體(如Eagle)掃描源代碼，
+        // 這裡不直接把內容寫入HTML，而是透過JS動態生成。
+        // ==========================================
+        const PROJECT_DATA = {
+            title: "EVA - Evangelion UI",
+            desc: "本人的遊戲UI視覺概念設計。完美復刻長圖瀏覽體驗，完全貼合螢幕邊緣，底部無限延伸。這是一個獨立的 HTML 頁面，供所有專案覆用。",
+            
+            // 縮略圖 (與主頁卡片保持一致，同樣採用陣列打斷防扒取)
+            thumbnail: ["https://", "images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop"],
+
+            // 【防扒圖寫法】
+            // 請將網址拆成兩段放在陣列裡，例如將 "https://" 與後面網址分開，
+            // 這樣爬蟲腳本或軟體就無法用語法特徵識別出這是一張完整圖片網址！
+            images: [
+                ["https://", "images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920&auto=format&fit=crop"],
+                ["https://", "images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1920&auto=format&fit=crop"],
+                ["https://", "images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1920&auto=format&fit=crop"]
+            ]
+        };
+    </script>
+
+    <!-- ========================================== -->
+    <!-- 密碼驗證畫面 (Auth Screen)                  -->
+    <!-- ========================================== -->
+    <div id="auth-screen" class="fixed inset-0 z-[200] bg-[#fcfcfb] hidden flex-col items-center justify-center transition-opacity duration-500 opacity-100 p-6">
+        <div class="w-full max-w-sm px-4 text-center flex flex-col items-center">
+            
+            <!-- 動態注入的專案縮略圖與標題 -->
+            <div id="auth-project-preview" class="w-full mb-8 flex flex-col items-center text-center">
+                <!-- 由 JS 動態生成，防扒取 -->
+            </div>
+
+            <!-- 私密專案標籤 -->
+            <div class="flex items-center justify-center gap-2 mb-3 mt-2">
+                <iconify-icon icon="solar:lock-bold-duotone" width="24" height="24" class="text-[#e50000]"></iconify-icon>
+                <h2 class="text-xl font-bold text-[#e50000] tracking-tight">Private Project</h2>
+            </div>
+            
+            <p class="text-sm text-zinc-500 mb-8 font-medium">該作品未公開，請聯繫作者獲取密碼</p>
+
+            <!-- 密碼輸入區塊 -->
+            <div id="pin-container" class="relative w-full max-w-[240px] mx-auto">
+                <!-- 隱藏的實際輸入框 (用於呼叫行動端數字鍵盤及處理邏輯) -->
+                <input type="tel" id="hidden-pin" class="absolute inset-0 w-full h-full opacity-0 z-10 cursor-text pin-input-hidden" maxlength="4" pattern="[0-9]*" inputmode="numeric" autocomplete="off">
+                
+                <!-- 視覺化方塊 -->
+                <div class="flex justify-between gap-3 relative pointer-events-none">
+                    <div class="pin-box w-12 h-14 border-2 border-zinc-200 rounded-xl flex items-center justify-center text-2xl font-bold text-zinc-900 bg-white transition-colors duration-200 shadow-sm"></div>
+                    <div class="pin-box w-12 h-14 border-2 border-zinc-200 rounded-xl flex items-center justify-center text-2xl font-bold text-zinc-900 bg-white transition-colors duration-200 shadow-sm"></div>
+                    <div class="pin-box w-12 h-14 border-2 border-zinc-200 rounded-xl flex items-center justify-center text-2xl font-bold text-zinc-900 bg-white transition-colors duration-200 shadow-sm"></div>
+                    <div class="pin-box w-12 h-14 border-2 border-zinc-200 rounded-xl flex items-center justify-center text-2xl font-bold text-zinc-900 bg-white transition-colors duration-200 shadow-sm"></div>
+                </div>
+            </div>
+
+            <!-- 錯誤提示 -->
+            <p id="auth-error" class="text-[#e50000] text-sm font-semibold mt-6 opacity-0 transition-opacity duration-300">
+                密碼錯誤
+            </p>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- 實際專案內容 (Real Content)                -->
+    <!-- 初始設為 hidden，驗證後顯示                  -->
+    <!-- ========================================== -->
+    <div id="real-content" class="hidden opacity-0 transition-opacity duration-700 ease-out">
+        
+        <!-- 導航列：在首頁 iframe 中會被 JS 自動隱藏，僅在獨立訪問時顯示 -->
+        <nav id="project-nav" class="fixed top-0 left-0 w-full p-6 text-black flex items-center justify-between bg-white/90 backdrop-blur-md z-50 border-b border-zinc-100 transition-opacity duration-300">
+            <a href="../index.html" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#e50000] transition-colors bg-zinc-50 hover:bg-zinc-100 px-5 py-2.5 rounded-full shadow-sm border border-zinc-200">
+                &larr; Back to Home
+            </a>
+            <div class="font-bold text-xl uppercase tracking-tighter">FUNX.</div>
+        </nav>
+
+        <!-- 專案內容區塊 -->
+        <main class="w-full mx-auto pb-12 transition-all duration-300" id="main-container">
+            
+            <!-- 標題區域 (清空，由JS動態寫入防讀取) -->
+            <header class="max-w-5xl mx-auto pt-32 pb-12 px-6 md:px-10 text-center md:text-left" id="project-header">
+            </header>
+
+            <!-- Behance 風格長圖展示 (清空，由JS動態寫入防讀取) -->
+            <section id="project-content" class="w-full flex flex-col m-0 p-0 bg-zinc-50 border-t border-zinc-200">
+            </section>
+            
+        </main>
+
+        <!-- 統一 Footer：在 iframe 中同樣被隱藏 -->
+        <footer id="project-footer" class="bg-zinc-900 text-white py-12 px-6 text-center border-t border-zinc-800 transition-opacity duration-300 mt-20">
+            <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="text-sm text-zinc-500 font-medium uppercase tracking-wide">
+                    © 2026 FUNX. All rights reserved
+                </div>
+                <div class="flex gap-6 justify-center">
+                    <a href="https://www.behance.net/funxarts" target="_blank" class="hover:text-[#e50000] transition-colors font-semibold uppercase text-sm">Behance</a>
+                    <a href="https://www.artstation.com/funx" target="_blank" class="hover:text-[#e50000] transition-colors font-semibold uppercase text-sm">ArtStation</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- 實際內容結束 -->
+
+
+    <!-- 獨立的 Lightbox (燈箱效果) -->
+    <div id="template-lightbox" class="fixed inset-0 z-[300] bg-black/95 hidden opacity-0 transition-opacity duration-300 flex-col items-center justify-center cursor-zoom-out" onclick="closeTemplateLightbox()">
+        <button class="absolute top-4 right-4 md:top-8 md:right-8 z-[310] w-12 h-12 bg-white/10 hover:bg-[#e50000] hover:scale-110 rounded-full transition-all flex items-center justify-center shadow-lg border border-white/20 text-white">
+            <iconify-icon icon="solar:close-linear" width="24" height="24"></iconify-icon>
+        </button>
+        <img id="template-lb-img" class="max-w-[95vw] max-h-[95vh] object-contain transition-transform duration-300" src="" alt="Expanded Image">
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 邏輯控制腳本                                -->
+    <!-- ========================================== -->
+    <script>
+        // --- 1. 密碼驗證核心邏輯 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const authScreen = document.getElementById('auth-screen');
+            const realContent = document.getElementById('real-content');
+            const pinInput = document.getElementById('hidden-pin');
+            const pinBoxes = document.querySelectorAll('.pin-box');
+            const errorText = document.getElementById('auth-error');
+            const pinContainer = document.getElementById('pin-container');
+
+            // 渲染密碼頁面的縮略圖與標題
+            function renderAuthPreview() {
+                const previewContainer = document.getElementById('auth-project-preview');
+                const thumbUrl = PROJECT_DATA.thumbnail.join('');
+                
+                previewContainer.innerHTML = `
+                    <div class="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-6 shadow-sm border border-zinc-100 relative group bg-zinc-100">
+                        <img src="${thumbUrl}" alt="Thumbnail" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-2xl font-black text-zinc-900 tracking-tighter">${PROJECT_DATA.title}</h3>
+                `;
+            }
+
+            // 檢查是否需要顯示內容
+            function checkAuthStatus() {
+                if (!CONFIG.requirePassword) {
+                    revealContent();
+                    return;
+                }
+
+                const storageKey = `FUNX_AUTH_${CONFIG.projectId}`;
+                const savedAuth = sessionStorage.getItem(storageKey);
+                
+                if (savedAuth) {
+                    try {
+                        const { timestamp } = JSON.parse(savedAuth);
+                        const now = new Date().getTime();
+                        const hours12 = 12 * 60 * 60 * 1000; // 12小時的毫秒數
+
+                        if (now - timestamp < hours12) {
+                            // 驗證通過（在12小時內且瀏覽器未關閉）
+                            revealContent();
+                            return;
+                        } else {
+                            // 已過期
+                            sessionStorage.removeItem(storageKey);
+                        }
+                    } catch (e) {
+                        sessionStorage.removeItem(storageKey);
+                    }
+                }
+
+                // 需要驗證，顯示密碼頁面
+                renderAuthPreview();
+                authScreen.classList.remove('hidden');
+                authScreen.classList.add('flex');
+                
+                // 點擊任意處聚焦輸入框，確保在手機上體驗順暢
+                document.addEventListener('click', (e) => {
+                    if(!authScreen.classList.contains('hidden')) {
+                         pinInput.focus();
+                    }
+                });
+                pinInput.focus();
+            }
+
+            // 顯示實際內容並初始化 Iframe 樣式
+            function revealContent() {
+                // 1. 動態渲染真實內容 (防扒機制核心)
+                renderProtectedContent();
+
+                // 2. 顯示畫面
+                authScreen.classList.add('hidden');
+                realContent.classList.remove('hidden');
+                // 延遲一點點添加 opacity 產生淡入效果
+                setTimeout(() => {
+                    realContent.classList.remove('opacity-0');
+                    realContent.classList.add('opacity-100');
+                }, 50);
+                
+                initIframeStyles();
+            }
+
+            // --- 動態注入安全內容 ---
+            function renderProtectedContent() {
+                const header = document.getElementById('project-header');
+                const content = document.getElementById('project-content');
+                
+                // 避免重複渲染
+                if (header.innerHTML.trim() !== '') return;
+
+                header.innerHTML = `
+                    <h1 class="text-4xl md:text-6xl tracking-tighter font-black text-zinc-900 mb-6 drop-shadow-sm" id="project-title">${PROJECT_DATA.title}</h1>
+                    <p class="text-base md:text-lg text-zinc-600 font-medium leading-relaxed max-w-3xl mx-auto md:mx-0" id="project-desc">${PROJECT_DATA.desc}</p>
+                `;
+
+                // 將打斷的網址重新拼湊並渲染
+                content.innerHTML = PROJECT_DATA.images.map((imgParts, idx) => {
+                    const url = imgParts.join('');
+                    return `<img src="${url}" class="w-full max-w-7xl mx-auto h-auto block m-0 p-0 align-bottom object-cover cursor-zoom-in" alt="Project Image ${idx + 1}">`;
+                }).join('');
+
+                // 綁定圖片點擊燈箱事件
+                document.querySelectorAll('#project-content img').forEach(img => {
+                    img.onclick = () => openTemplateLightbox(img.src);
+                });
+            }
+
+            // 處理密碼輸入事件
+            pinInput.addEventListener('input', (e) => {
+                // 限制只能輸入數字
+                pinInput.value = pinInput.value.replace(/\D/g, '');
+                const val = pinInput.value;
+
+                // 更新視覺化方塊
+                pinBoxes.forEach((box, i) => {
+                    if (val[i]) {
+                        box.textContent = '*'; // 出於安全和極簡考慮，顯示星號或圓點
+                        box.classList.add('border-zinc-500'); // 輸入時邊框加深
+                    } else {
+                        box.textContent = '';
+                        box.classList.remove('border-zinc-500');
+                    }
+                });
+
+                // 隱藏錯誤提示
+                errorText.classList.add('opacity-0');
+
+                // 輸入滿4位數時自動驗證
+                if (val.length === 4) {
+                    verifyPin(val);
+                }
+            });
+
+            // 驗證邏輯
+            function verifyPin(val) {
+                if (val === CONFIG.password) {
+                    // 密碼正確
+                    const storageKey = `FUNX_AUTH_${CONFIG.projectId}`;
+                    sessionStorage.setItem(storageKey, JSON.stringify({ timestamp: new Date().getTime() }));
+                    
+                    // 輸入框變綠色/紅色反饋？(這裡選擇直接淡出進入)
+                    pinBoxes.forEach(box => {
+                        box.classList.remove('border-zinc-500', 'text-zinc-900');
+                        box.classList.add('border-green-500', 'text-green-500');
+                    });
+                    
+                    pinInput.blur();
+                    
+                    // 淡出 Auth 畫面並顯示內容
+                    setTimeout(() => {
+                        authScreen.classList.remove('opacity-100');
+                        authScreen.classList.add('opacity-0');
+                        setTimeout(() => {
+                            revealContent();
+                        }, 500); // 等待淡出動畫
+                    }, 300);
+
+                } else {
+                    // 密碼錯誤
+                    errorText.classList.remove('opacity-0');
+                    pinInput.value = ''; // 清空輸入
+                    
+                    // 執行震動動畫與紅色邊框
+                    pinBoxes.forEach(box => {
+                        box.textContent = '';
+                        box.classList.remove('border-zinc-500');
+                        box.classList.add('border-[#e50000]');
+                    });
+                    
+                    pinContainer.classList.add('animate-shake');
+                    
+                    setTimeout(() => {
+                        pinContainer.classList.remove('animate-shake');
+                        pinBoxes.forEach(box => box.classList.remove('border-[#e50000]'));
+                        pinInput.focus(); // 重新聚焦
+                    }, 500);
+                }
+            }
+
+            // 啟動流程
+            checkAuthStatus();
+
+            // --- 3. 嚴格防拷貝與防下載邏輯 ---
+            if (CONFIG.disableCopy) {
+                // 加上 CSS 防選中樣式
+                document.body.classList.add('prevent-copy');
+
+                // 禁止右鍵選單
+                document.addEventListener('contextmenu', e => e.preventDefault());
+                
+                // 禁止拖曳圖片或內容
+                document.addEventListener('dragstart', e => e.preventDefault());
+                
+                // 禁止使用快捷鍵 (如F12, Ctrl+S, Ctrl+C, Ctrl+U)
+                document.addEventListener('keydown', e => {
+                    if (
+                        e.key === 'F12' || 
+                        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                        (e.ctrlKey && ['u', 's', 'c', 'p'].includes(e.key.toLowerCase()))
+                    ) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        });
+
+
+        // --- 2. 原始專案邏輯 (Lightbox 與 Iframe 判定) ---
+        function openTemplateLightbox(src) {
+            const lb = document.getElementById('template-lightbox');
+            const img = document.getElementById('template-lb-img');
+            img.src = src;
+            lb.classList.remove('hidden');
+            lb.classList.add('flex');
+            void lb.offsetWidth; // 觸發重繪
+            lb.classList.remove('opacity-0');
+            lb.classList.add('opacity-100');
+            
+            try {
+                if (window !== window.parent) {
+                    window.parent.document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = 'hidden';
+                }
+            } catch (e) {
+                // 防止跨域 (Cross-Origin) iframe 存取報錯
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeTemplateLightbox() {
+            const lb = document.getElementById('template-lightbox');
+            lb.classList.remove('opacity-100');
+            lb.classList.add('opacity-0');
+            setTimeout(() => {
+                lb.classList.remove('flex');
+                lb.classList.add('hidden');
+            }, 300);
+            
+            try {
+                if (window !== window.parent) {
+                    window.parent.document.body.style.overflow = '';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            } catch (e) {
+                // 防止跨域 (Cross-Origin) iframe 存取報錯
+                document.body.style.overflow = '';
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !document.getElementById('template-lightbox').classList.contains('hidden')) {
+                closeTemplateLightbox();
+            }
+        });
+
+        // Iframe 樣式適配
+        function initIframeStyles() {
+            if (window !== window.parent) {
+                document.getElementById('project-nav').style.display = 'none';
+                document.getElementById('project-footer').style.display = 'none';
+                
+                const mainContainer = document.getElementById('main-container');
+                const header = document.getElementById('project-header');
+                const title = document.getElementById('project-title');
+                
+                mainContainer.classList.remove('pb-12');
+                header.classList.remove('pt-32', 'pb-12');
+                header.classList.add('pt-4', 'pb-8');
+                
+                title.classList.remove('text-zinc-900');
+                title.classList.add('text-[#e50000]');
+            }
+        }
+    </script>
+</body>
+</html>

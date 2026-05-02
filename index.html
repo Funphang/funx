@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FunX - Creative Portfolio</title>
     
-    <!-- 資源預先連線，提升字體載入速度 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
@@ -25,7 +23,6 @@
             }
         });
         
-        // Image Fallback Script for Preview Environment
         window.addEventListener('DOMContentLoaded', () => {
             const fallbackImage = "https://placehold.co/400x400/27272a/e50000?text=FunX+Asset";
             const images = document.querySelectorAll("img");
@@ -38,16 +35,12 @@
         });
     </script>
 
-    <!-- 外部依賴庫 -->
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <style>
-        /* ==========================================
-           全域動畫與樣式庫
-           ========================================== */
         @keyframes revealUp {
             0% { opacity: 0; transform: translateY(15%); }
             100% { opacity: 1; transform: translateY(0); }
@@ -56,13 +49,10 @@
             0% { transform: translateY(-100%); }
             100% { transform: translateY(200%); }
         }
-
         .perspective-container {
             perspective: 1000px;
             transform-style: preserve-3d;
         }
-
-        /* Loading Screen 專屬動畫 */
         @keyframes fadeOut {
             0% { opacity: 1; visibility: visible; }
             100% { opacity: 0; visibility: hidden; }
@@ -74,9 +64,6 @@
         .animate-fade-out { animation: fadeOut 0.8s ease-in-out 1.5s forwards; }
         .animate-fade-in-up { animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
 
-        /* ==========================================
-           Text Pressure 專屬字體與樣式
-           ========================================== */
         @font-face {
             font-family: 'Compressa VF';
             src: url('https://res.cloudinary.com/dr6lvwubh/raw/upload/v1529908256/CompressaPRO-GX.woff2');
@@ -88,129 +75,50 @@
             justify-content: space-between;
         }
 
-        /* ==========================================
-           Logo Loop 專屬樣式
-           ========================================== */
-        .logoloop {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            display: flex;
-        }
+        .logoloop { position: relative; overflow: hidden; width: 100%; display: flex; }
         .logoloop--fade {
             -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
             mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
         }
-        .logoloop__track {
-            display: flex;
-            width: fit-content;
-            will-change: transform;
-        }
+        .logoloop__track { display: flex; width: fit-content; will-change: transform; }
         .logoloop__list {
-            display: flex;
-            align-items: center;
-            gap: var(--logoloop-gap, 32px);
-            padding-right: var(--logoloop-gap, 32px);
-            margin: 0;
-            list-style: none;
-            flex-shrink: 0;
+            display: flex; align-items: center; gap: var(--logoloop-gap, 32px); padding-right: var(--logoloop-gap, 32px); margin: 0; list-style: none; flex-shrink: 0;
         }
-        .logoloop__item {
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .logoloop__item { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
 
-        /* ==========================================
-           Staggered Menu 專屬樣式
-           ========================================== */
         .staggered-menu-header {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            max-width: 1536px;
-            margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1.5rem 1.5rem;
-            pointer-events: auto;
-            mix-blend-mode: difference;
-            color: #1affff; 
-            z-index: 60; 
-            transition: color 0.2s, mix-blend-mode 0.2s;
+            position: fixed; top: 0; left: 0; right: 0; max-width: 1536px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 1.5rem; pointer-events: auto; mix-blend-mode: difference; color: #1affff; z-index: 60; transition: color 0.2s, mix-blend-mode 0.2s;
         }
-        .sm-logo a {
-            font-weight: 600; letter-spacing: -0.05em; font-size: 1.5rem; text-transform: uppercase; text-decoration: none;
-            transition: opacity 0.3s; color: inherit;
-        }
+        .sm-logo a { font-weight: 600; letter-spacing: -0.05em; font-size: 1.5rem; text-transform: uppercase; text-decoration: none; transition: opacity 0.3s; color: inherit; }
         .sm-logo a:hover { opacity: 0.7; }
         .sm-toggle {
-            display: flex; align-items: center; gap: 0.5rem;
-            background: transparent; border: none; cursor: pointer; font-family: inherit; font-size: 0.875rem; text-transform: uppercase; font-weight: 500;
-            color: inherit; transition: opacity 0.3s;
+            display: flex; align-items: center; gap: 0.5rem; background: transparent; border: none; cursor: pointer; font-family: inherit; font-size: 0.875rem; text-transform: uppercase; font-weight: 500; color: inherit; transition: opacity 0.3s;
         }
         .sm-toggle:hover { opacity: 0.7; }
-        .sm-toggle-textWrap {
-            display: block; height: 1.2em; overflow: hidden; position: relative;
-        }
-        .sm-toggle-textInner {
-            display: flex; flex-direction: column;
-            will-change: transform;
-        }
-        .sm-toggle-line {
-            height: 1.2em; line-height: 1.2; white-space: nowrap; flex-shrink: 0;
-        }
-        .sm-icon {
-            position: relative; width: 24px; height: 24px; display: block;
-        }
+        .sm-toggle-textWrap { display: block; height: 1.2em; overflow: hidden; position: relative; }
+        .sm-toggle-textInner { display: flex; flex-direction: column; will-change: transform; }
+        .sm-toggle-line { height: 1.2em; line-height: 1.2; white-space: nowrap; flex-shrink: 0; }
+        .sm-icon { position: relative; width: 24px; height: 24px; display: block; }
         .sm-icon-line {
-            position: absolute; top: 50%; left: 50%; width: 100%; height: 2px;
-            background: currentColor; margin-left: -12px; margin-top: -1px;
+            position: absolute; top: 50%; left: 50%; width: 100%; height: 2px; background: currentColor; margin-left: -12px; margin-top: -1px;
         }
-        .sm-icon-line-v {
-            transform: rotate(90deg);
-        }
+        .sm-icon-line-v { transform: rotate(90deg); }
 
-        /* 選單展開層 */
-        .staggered-menu-wrapper {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none;
-            z-index: 55;
-        }
-        .staggered-menu-wrapper[data-open="true"] {
-            pointer-events: auto;
-        }
-        .sm-prelayers {
-            position: absolute; top: 0; right: 0; bottom: 0; width: 100vw;
-            max-width: 480px; pointer-events: none; overflow: hidden;
-        }
-        .sm-prelayer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        }
+        .staggered-menu-wrapper { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 55; }
+        .staggered-menu-wrapper[data-open="true"] { pointer-events: auto; }
+        .sm-prelayers { position: absolute; top: 0; right: 0; bottom: 0; width: 100vw; max-width: 480px; pointer-events: none; overflow: hidden; }
+        .sm-prelayer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .staggered-menu-panel {
-            position: absolute; top: 0; right: 0; bottom: 0; width: 100vw; max-width: 480px;
-            background: #ffffff; 
-            display: flex; flex-direction: column;
-            padding: 6rem 3rem 3rem; color: #000;
+            position: absolute; top: 0; right: 0; bottom: 0; width: 100vw; max-width: 480px; background: #ffffff; display: flex; flex-direction: column; padding: 6rem 3rem 3rem; color: #000;
         }
-        .sm-panel-inner {
-            display: flex; flex-direction: column; height: 100%;
-        }
-        .sm-panel-list {
-            list-style: none; padding: 0; margin: 0; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 1rem;
-        }
-        .sm-panel-itemWrap {
-            overflow: hidden;
-            padding-bottom: 0.2rem; 
-        }
-        .sm-panel-item {
-            display: flex; align-items: flex-start; gap: 0.25rem; font-size: 4rem; font-weight: 800; color: #000000; text-decoration: none; text-transform: uppercase; line-height: 1; transition: color 0.3s;
-        }
+        .sm-panel-inner { display: flex; flex-direction: column; height: 100%; }
+        .sm-panel-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 1rem; }
+        .sm-panel-itemWrap { overflow: hidden; padding-bottom: 0.2rem; }
+        .sm-panel-item { display: flex; align-items: flex-start; gap: 0.25rem; font-size: 4rem; font-weight: 800; color: #000000; text-decoration: none; text-transform: uppercase; line-height: 1; transition: color 0.3s; }
         .sm-panel-item:hover { color: #e50000; }
         .sm-panel-item::after {
-            content: "0" attr(data-index);
-            font-size: 1.125rem; font-weight: 600; opacity: var(--sm-num-opacity, 0); 
-            color: #e50000; align-self: flex-start; margin-top: 0.4rem; margin-left: 0.2rem;
+            content: "0" attr(data-index); font-size: 1.125rem; font-weight: 600; opacity: var(--sm-num-opacity, 0); color: #e50000; align-self: flex-start; margin-top: 0.4rem; margin-left: 0.2rem;
         }
         .sm-panel-itemLabel { display: block; will-change: transform; }
         
@@ -220,63 +128,27 @@
         .sm-socials-link { color: #000; text-decoration: none; font-size: 1rem; font-weight: 500; transition: color 0.3s; }
         .sm-socials-link:hover { color: #e50000; }
 
-        /* ==========================================
-           Tilted Card (Works Section) 專屬樣式
-           ========================================== */
-        .works-grid-item {
-            perspective: 1500px;
-            position: relative;
-        }
-        .tilted-card-inner {
-            transform-style: preserve-3d;
-            will-change: transform;
-        }
-        .tilted-card-caption {
-            position: absolute;
-            top: 0; left: 0;
-            pointer-events: none;
-            z-index: 50;
-            will-change: transform, opacity;
-            white-space: nowrap;
-        }
+        .works-grid-item { perspective: 1500px; position: relative; }
+        .tilted-card-inner { transform-style: preserve-3d; will-change: transform; }
+        .tilted-card-caption { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 50; will-change: transform, opacity; white-space: nowrap; }
 
-        /* 行動端專屬：關閉透視標籤與防止全域橫向偏移 */
         @media (max-width: 768px) {
-            html, body {
-                overflow-x: hidden !important;
-                overscroll-behavior-x: none;
-                width: 100%;
-            }
+            html, body { overflow-x: hidden !important; overscroll-behavior-x: none; width: 100%; }
             .staggered-menu-panel, .sm-prelayers { max-width: 100vw; }
             .sm-panel-item { font-size: 3rem; }
             .staggered-menu-panel { padding: 6rem 2rem 2rem; }
-            .tilted-card-caption {
-                display: none !important;
-            }
+            .tilted-card-caption { display: none !important; }
         }
 
-        /* 自定義滾動條 */
-        ::-webkit-scrollbar {
-            width: 6px;
-            background: #fcfcfb;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #e4e4e7;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #d4d4d8;
-        }
+        ::-webkit-scrollbar { width: 6px; background: #fcfcfb; }
+        ::-webkit-scrollbar-thumb { background: #e4e4e7; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d4d4d8; }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background-color: #fcfcfb; /* 頁面最底層保底白底 */
-        }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background-color: #fcfcfb; }
     </style>
 </head>
 <body class="text-zinc-900 antialiased selection:bg-f-red selection:text-white overflow-x-hidden flex flex-col min-h-screen relative w-full">
 
-    <!-- Loading Screen -->
     <div class="fixed inset-0 z-[100] flex items-center justify-center bg-[#fcfcfb] animate-fade-out pointer-events-none">
         <div class="flex items-center gap-4 animate-fade-in-up">
             <img src="assets/images/hero/logo.png" alt="FunX Logo" class="h-12 w-auto object-contain">
@@ -284,13 +156,9 @@
         </div>
     </div>
 
-    <!-- 
-        【核心修复：绝对强制的底层画布】
-        固定在屏幕最底层，用来播放 DarkVeil 效果。
-    -->
+    <!-- WebGL Background -->
     <div id="darkveil-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none;"></div>
 
-    <!-- Navigation Header -->
     <header class="staggered-menu-header" aria-label="Main navigation header" style="z-index: 60;">
         <div class="sm-logo" aria-label="Logo">
             <a href="#hero">FUNX.</a>
@@ -311,18 +179,15 @@
         </button>
     </header>
 
-    <!-- 頂部置中 Logo -->
     <div class="fixed top-0 left-1/2 -translate-x-1/2 pointer-events-none pt-[1.5rem] flex items-center h-[calc(1.5rem+24px)] md:h-[calc(1.5rem+32px)]" style="z-index: 65;">
         <img src="assets/images/hero/logo.png" alt="FunX Logo" class="h-8 md:h-10 w-auto object-contain">
     </div>
 
-    <!-- Staggered Menu Wrapper -->
     <div class="staggered-menu-wrapper" data-position="right" style="z-index: 55;">
         <div class="sm-prelayers" aria-hidden="true">
             <div class="sm-prelayer" style="background: #18181b;"></div>
             <div class="sm-prelayer" style="background: #e50000;"></div>
         </div>
-
         <aside id="staggered-menu-panel" class="staggered-menu-panel" aria-hidden="true">
             <div class="sm-panel-inner">
                 <ul class="sm-panel-list" role="list" data-numbering="true">
@@ -343,7 +208,6 @@
         </aside>
     </div>
 
-    <!-- 【纸张层1：Hero Section】 -->
     <section id="hero" class="flex flex-col overflow-hidden min-h-[100vh] py-24 justify-center items-center" style="position: relative; z-index: 10; background-color: #fcfcfb; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
         <div class="flex flex-col items-center justify-center w-full px-6 relative mt-16 md:mt-24 pointer-events-none">
             <div id="hero-img-wrapper" class="w-full flex justify-center perspective-container">
@@ -358,7 +222,6 @@
                 <img id="hero-qr" src="assets/images/hero/sq.png" alt="QR Code" class="w-12 h-12 md:w-16 md:h-16 opacity-0 translate-y-[50px] object-contain cursor-pointer hover:opacity-80 transition-opacity">
             </div>
         </div>
-
         <div class="absolute bottom-8 md:bottom-12 right-6 md:right-12 flex flex-col items-center gap-4 opacity-0" id="hero-scroll-indicator">
             <span class="text-[10px] md:text-xs uppercase tracking-widest text-zinc-400 font-semibold rotate-90 origin-bottom mb-8">Scroll</span>
             <div class="w-[1.5px] h-12 bg-zinc-200 relative overflow-hidden mt-2">
@@ -367,11 +230,9 @@
         </div>
     </section>
 
-    <!-- 【镂空透视层：Experience Section】 -->
     <section id="experience" class="w-full overflow-hidden" style="position: relative; z-index: 5; background-color: transparent; padding-top: 10rem; padding-bottom: 10rem;">
         <div class="max-w-screen-2xl mx-auto w-full px-6 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-6 relative z-10 pointer-events-none">
-                
                 <div class="lg:col-span-10 lg:col-start-2 xl:col-span-8 xl:col-start-3 mb-16 md:mb-24 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pointer-events-auto">
                     <h2 class="text-5xl md:text-7xl font-bold tracking-tighter uppercase leading-none text-zinc-900 drop-shadow-sm">
                         My <br><span class="text-f-red">Experience</span>
@@ -383,15 +244,12 @@
                 </div>
 
                 <div class="lg:col-span-10 lg:col-start-2 xl:col-span-8 xl:col-start-3 space-y-20 pointer-events-auto">
-                    
-                    <!-- FunPlus -->
                     <div>
                         <div class="group border-t border-zinc-300 pt-8">
                             <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-8 gap-4">
                                 <div class="flex items-center gap-4">
                                     <img loading="lazy" src="assets/images/projects/fp.webp" class="w-12 h-12 md:w-16 md:h-16 rounded-full border border-zinc-200 object-cover bg-white p-1 shadow-sm" alt="FunPlus Logo">
                                     <div class="flex-1">
-                                        <!-- 响应式自适应换行：优先单行，超出会自然折断为两行，同时字号随屏幕缩放 -->
                                         <h3 class="flex flex-wrap items-baseline gap-x-2 gap-y-0 group-hover:text-f-red transition-colors drop-shadow-sm font-bold text-zinc-900">
                                             <span class="whitespace-nowrap text-[clamp(1.75rem,5vw,3rem)] leading-tight tracking-tight">FunPlus</span>
                                             <span class="whitespace-nowrap text-[clamp(1.75rem,5vw,3rem)] leading-tight tracking-tight">趣加游戏</span>
@@ -407,7 +265,6 @@
                                     <h4 class="text-2xl font-bold text-zinc-900 mb-4 drop-shadow-sm">
                                         UI Design Expert <span class="text-base font-medium text-zinc-600 ml-2">/ 视觉设计专家</span>
                                     </h4>
-                                    
                                     <div class="mb-5 flex flex-wrap items-center gap-3">
                                         <span class="text-xs font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
                                             Main Project:
@@ -418,7 +275,6 @@
                                             <iconify-icon icon="solar:arrow-right-up-linear" class="text-lg"></iconify-icon>
                                         </a>
                                     </div>
-
                                     <ul class="text-lg text-zinc-800 font-medium leading-relaxed transition-colors space-y-3 list-none drop-shadow-sm">
                                         <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">作为UED负责人，主导项目从0到1构建完整UX体系（Strategy → System → Implementation），支撑策略类复杂系统设计落地。</li>
                                         <li class="relative pl-5 before:content-[''] before:absolute before:left-0 before:top-3 before:w-1.5 before:h-1.5 before:bg-zinc-400 before:rounded-full">搭建UI/UX设计管线（Design Pipeline），建立规范化与模块化设计体系，显著提升设计复用率与协作效率。</li>
@@ -430,13 +286,11 @@
                             </div>
                         </div>
 
-                        <!-- NetEase -->
                         <div class="group border-t border-zinc-300 pt-8 mt-12">
                             <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-8 gap-4">
                                 <div class="flex items-center gap-4">
                                     <img loading="lazy" src="assets/images/projects/netease.webp" class="w-12 h-12 md:w-16 md:h-16 rounded-full border border-zinc-200 object-cover bg-white p-1 shadow-sm" alt="NetEase Logo">
                                     <div class="flex-1">
-                                        <!-- 响应式自适应换行 -->
                                         <h3 class="flex flex-wrap items-baseline gap-x-2 gap-y-0 group-hover:text-f-red transition-colors drop-shadow-sm font-bold text-zinc-900">
                                             <span class="whitespace-nowrap text-[clamp(1.75rem,5vw,3rem)] leading-tight tracking-tight">NetEase Games</span>
                                             <span class="whitespace-nowrap text-[clamp(1.75rem,5vw,3rem)] leading-tight tracking-tight">网易游戏</span>
@@ -485,7 +339,6 @@
                             </div>
                         </div>
 
-                        <!-- 游戏项目 Logo Loop -->
                         <div class="pt-20 w-full">
                             <h3 class="text-sm tracking-widest font-bold text-zinc-500 uppercase mb-8 drop-shadow-sm">Participated Projects</h3>
                             <div class="logoloop logoloop--horizontal logoloop--fade" style="--logoloop-gap: clamp(24px, 4vw, 48px);" id="logo-loop-container">
@@ -533,7 +386,6 @@
                         </div>
                     </div>
 
-                    <!-- 2. Core Skills Section -->
                     <div class="pt-16 border-t border-zinc-300 w-full">
                         <h3 class="text-sm tracking-widest font-bold text-zinc-500 uppercase mb-8 drop-shadow-sm">Core Skills</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -556,18 +408,14 @@
                         </div>
                     </div>
 
-                    <!-- 3. Software Toolkit Section -->
                     <div class="pt-16 border-t border-zinc-300 w-full" id="toolkit-section">
                         <h3 class="text-sm tracking-widest font-bold text-zinc-500 uppercase mb-6 drop-shadow-sm">Software Toolkit</h3>
-                        
                         <p class="text-base text-zinc-800 font-bold leading-relaxed mb-1 max-w-2xl drop-shadow-sm">
                             熟练工具：Photoshop / Unreal Engine / Unity / Figma / Blender ...
                         </p>
                         <p class="text-base text-zinc-800 font-bold leading-relaxed mb-8 max-w-2xl drop-shadow-sm">
                             * 具备 Unreal Engine Blueprint 蓝图开发能力
                         </p>
-
-                        <!-- 彩色原版软件Logo -->
                         <div class="flex flex-wrap items-center w-full gap-6 md:gap-8 py-4">
                             <iconify-icon icon="logos:adobe-photoshop" height="42"></iconify-icon>
                             <iconify-icon icon="logos:unrealengine-icon" height="42"></iconify-icon>
@@ -628,9 +476,10 @@
                 </h2>
             </div>
 
+            <!-- 所有项目卡片触发 Iframe Modal 载入独立页面 (通过 openProjectModal 拦截) -->
             <div class="columns-1 md:columns-2 lg:columns-3 gap-8 md:gap-12">
                 
-                <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('eva')">
+                <a href="projects/eva.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12" onclick="event.preventDefault(); openProjectModal(this.href)">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="https://images.unsplash.com/photo-1618557140306-3829029a8a48?q=80&w=800&auto=format&fit=crop" alt="EVA Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -648,9 +497,9 @@
                     <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
                         Explore
                     </figcaption>
-                </div>
+                </a>
 
-                <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('fintech')">
+                <a href="projects/fintech.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12" onclick="event.preventDefault(); openProjectModal(this.href)">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="https://images.unsplash.com/photo-1618761714954-0b8cd0026356?q=80&w=800&auto=format&fit=crop" alt="Fintech App" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -668,9 +517,9 @@
                     <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
                         Explore
                     </figcaption>
-                </div>
+                </a>
 
-                <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('ecommerce')">
+                <a href="projects/ecommerce.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12" onclick="event.preventDefault(); openProjectModal(this.href)">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=800&auto=format&fit=crop" alt="E-commerce Platform" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -688,9 +537,9 @@
                     <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
                         Explore
                     </figcaption>
-                </div>
+                </a>
                 
-                <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('project4')">
+                <a href="projects/project4.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12" onclick="event.preventDefault(); openProjectModal(this.href)">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?q=80&w=800&auto=format&fit=crop" alt="Brand Identity" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -708,9 +557,9 @@
                     <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
                         Explore
                     </figcaption>
-                </div>
+                </a>
 
-                <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('project5')">
+                <a href="projects/project5.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12" onclick="event.preventDefault(); openProjectModal(this.href)">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop" alt="Smart Home" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -728,9 +577,9 @@
                     <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
                         Explore
                     </figcaption>
-                </div>
+                </a>
 
-                <div class="group works-grid-item cursor-pointer break-inside-avoid mb-8 md:mb-12" onclick="openProject('project6')">
+                <a href="projects/project6.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12" onclick="event.preventDefault(); openProjectModal(this.href)">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800&auto=format&fit=crop" alt="Travel Concept" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -748,7 +597,7 @@
                     <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
                         Explore
                     </figcaption>
-                </div>
+                </a>
 
             </div>
         </div>
@@ -805,36 +654,52 @@
         </div>
     </section>
 
-    <!-- Project Modal -->
-    <div id="project-modal" class="fixed inset-0 z-[60] hidden opacity-0 transition-opacity duration-300">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm z-0"></div>
-        <button onclick="closeModal()" class="absolute top-4 right-4 md:top-8 md:right-8 z-[70] w-12 h-12 bg-zinc-900 hover:bg-f-red hover:scale-110 rounded-full transition-all flex items-center justify-center shadow-lg cursor-pointer border border-zinc-800">
-            <iconify-icon icon="solar:close-linear" width="24" height="24" style="color: #ffffff;"></iconify-icon>
+    <!-- 【 真 Behance 風格 Iframe Modal - 全螢幕/置中懸浮 】 -->
+    <div id="project-modal" class="fixed inset-0 z-[100] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4 md:p-8">
+        <!-- 背景點擊關閉 (更深色的毛玻璃效果) -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md z-0 cursor-pointer" onclick="closeModal()"></div>
+        
+        <!-- 右上角固定關閉按鈕 (已修正顏色，深色底色使其在白底上清晰可見) -->
+        <button onclick="closeModal()" aria-label="Close" class="fixed top-4 right-4 md:top-8 md:right-8 z-[110] w-10 h-10 md:w-12 md:h-12 bg-zinc-900/90 hover:bg-[#e50000] hover:scale-110 rounded-full transition-all flex items-center justify-center shadow-lg cursor-pointer border border-zinc-700/50 text-white backdrop-blur-md">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
-        <div id="modal-scroll-area" class="absolute inset-0 z-10 overflow-y-auto" onclick="if(event.target === this) closeModal()">
-            <div id="modal-container" class="relative w-full sm:w-[95%] lg:max-w-5xl mx-auto my-12 md:my-24 shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col rounded-2xl overflow-hidden" style="background-color: #ffffff;">
+        
+        <!-- 容器：從畫面中間彈出並置中 -->
+        <div id="modal-container" class="relative z-10 w-full max-w-[1400px] h-full bg-[#fcfcfb] rounded-xl md:rounded-2xl shadow-2xl overflow-hidden transform scale-95 translate-y-4 transition-all duration-300 flex flex-col" onclick="event.stopPropagation()">
+            
+            <!-- 讀取中動畫 -->
+            <div id="modal-loader" class="absolute inset-0 flex items-center justify-center bg-[#fcfcfb] z-0">
+                <div class="w-10 h-10 border-4 border-zinc-200 border-t-[#e50000] rounded-full animate-spin"></div>
+            </div>
+            
+            <!-- Iframe 載入專案內容 -->
+            <iframe id="project-iframe" class="relative z-10 w-full flex-grow border-0 opacity-0 transition-opacity duration-300 bg-white" src=""></iframe>
+            
+            <!-- 底部專案切換導航 (浮窗末尾) -->
+            <div class="relative z-20 w-full h-[64px] md:h-[72px] bg-white border-t border-zinc-200 flex items-center justify-between px-4 md:px-8 shrink-0">
+                <!-- 上一頁按鈕 -->
+                <button onclick="prevProject()" class="group flex flex-col items-start hover:opacity-70 transition-opacity text-left max-w-[40%] md:max-w-[45%]">
+                    <div class="flex items-center text-[10px] md:text-xs uppercase tracking-widest text-zinc-400 font-bold mb-0.5 gap-1">
+                        <iconify-icon icon="solar:alt-arrow-left-linear"></iconify-icon>
+                        Prev
+                    </div>
+                    <span id="prev-project-name" class="text-sm md:text-base font-bold text-zinc-900 group-hover:text-f-red transition-colors truncate w-full">Project Name</span>
+                </button>
                 
-                <div class="px-4 sm:px-6 md:px-10 pt-10 md:pt-14 pb-8">
-                    <h2 id="modal-title" class="text-3xl md:text-5xl tracking-tighter font-bold text-f-red mb-4 mt-2">Project Title</h2>
-                    <p id="modal-desc" class="text-sm text-zinc-500 font-medium leading-relaxed mb-0 max-w-2xl">
-                        Project description will appear here.
-                    </p>
+                <!-- 絕對居中的 Logo -->
+                <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                    <img src="assets/images/hero/logo.png" alt="FunX Logo" class="h-5 md:h-6 w-auto object-contain opacity-40">
                 </div>
                 
-                <div id="modal-content-area" class="w-full flex flex-col m-0 p-0 bg-transparent"></div>
-                
-                <div id="modal-nav" class="border-t border-zinc-200 grid grid-cols-2 divide-x divide-zinc-200 bg-zinc-50/50 mt-auto"></div>
+                <!-- 下一頁按鈕 -->
+                <button onclick="nextProject()" class="group flex flex-col items-end hover:opacity-70 transition-opacity text-right max-w-[40%] md:max-w-[45%]">
+                    <div class="flex items-center text-[10px] md:text-xs uppercase tracking-widest text-zinc-400 font-bold mb-0.5 gap-1">
+                        Next
+                        <iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon>
+                    </div>
+                    <span id="next-project-name" class="text-sm md:text-base font-bold text-zinc-900 group-hover:text-f-red transition-colors truncate w-full">Project Name</span>
+                </button>
             </div>
-        </div>
-    </div>
-
-    <!-- Lightbox -->
-    <div id="lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden opacity-0 transition-opacity duration-300 touch-none flex flex-col items-center">
-        <button onclick="closeLightbox()" class="absolute top-4 right-4 md:top-8 md:right-8 z-[110] w-12 h-12 bg-zinc-900 hover:bg-f-red hover:scale-110 rounded-full transition-all flex items-center justify-center shadow-lg cursor-pointer border border-zinc-800">
-            <iconify-icon icon="solar:close-linear" width="24" height="24" style="color: #ffffff;"></iconify-icon>
-        </button>
-        <div id="lb-track" class="w-full h-full relative overflow-hidden flex justify-center items-start cursor-grab active:cursor-grabbing">
-            <img id="lb-img" class="w-[90vw] md:w-[85vw] h-auto origin-top-left absolute top-0 left-0 transition-transform duration-300 select-none shadow-2xl rounded-sm" draggable="false" src="" alt="Expanded Image">
         </div>
     </div>
 
@@ -845,32 +710,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const tl = gsap.timeline();
-                
-                tl.to('#hero-main-img', {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 1.6,
-                    ease: 'power3.out',
-                    filter: 'blur(0px)',
-                    clearProps: 'filter'
-                }, 0)
-                .to('#hero-sub-text', {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1.2,
-                    ease: 'power4.out'
-                }, 0.3)
-                .to('#hero-qr', {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1.2,
-                    ease: 'power3.out'
-                }, 0.5)
-                .to('#hero-scroll-indicator', {
-                    opacity: 1,
-                    duration: 1,
-                    ease: 'power2.out'
-                }, 0.8);
+                tl.to('#hero-main-img', { opacity: 1, scale: 1, duration: 1.6, ease: 'power3.out', filter: 'blur(0px)', clearProps: 'filter' }, 0)
+                .to('#hero-sub-text', { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out' }, 0.3)
+                .to('#hero-qr', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, 0.5)
+                .to('#hero-scroll-indicator', { opacity: 1, duration: 1, ease: 'power2.out' }, 0.8);
             }, 1400); 
         });
 
@@ -921,44 +764,15 @@
             const panelInsertTime = lastTime + (smElements.preLayers.length ? 0.08 : 0);
             const panelDuration = 0.65;
 
-            tl.fromTo(
-                smElements.panel,
-                { xPercent: 100 },
-                { xPercent: 0, duration: panelDuration, ease: 'power4.out' },
-                panelInsertTime
-            );
+            tl.fromTo( smElements.panel, { xPercent: 100 }, { xPercent: 0, duration: panelDuration, ease: 'power4.out' }, panelInsertTime );
 
             const itemsStart = panelInsertTime + panelDuration * 0.15;
-            tl.to(smElements.itemEls, {
-                yPercent: 0,
-                rotation: 0,
-                duration: 1,
-                ease: 'power4.out',
-                stagger: { each: 0.1, from: 'start' }
-            }, itemsStart);
-
-            tl.to(smElements.numberEls, {
-                duration: 0.6,
-                ease: 'power2.out',
-                '--sm-num-opacity': 1,
-                stagger: { each: 0.08, from: 'start' }
-            }, itemsStart + 0.1);
+            tl.to(smElements.itemEls, { yPercent: 0, rotation: 0, duration: 1, ease: 'power4.out', stagger: { each: 0.1, from: 'start' } }, itemsStart);
+            tl.to(smElements.numberEls, { duration: 0.6, ease: 'power2.out', '--sm-num-opacity': 1, stagger: { each: 0.08, from: 'start' } }, itemsStart + 0.1);
 
             const socialsStart = panelInsertTime + panelDuration * 0.4;
-            tl.to(smElements.socialTitle, {
-                opacity: 1,
-                duration: 0.5,
-                ease: 'power2.out'
-            }, socialsStart);
-
-            tl.to(smElements.socialLinks, {
-                y: 0,
-                opacity: 1,
-                duration: 0.55,
-                ease: 'power3.out',
-                stagger: { each: 0.08, from: 'start' },
-                onComplete: () => { gsap.set(smElements.socialLinks, { clearProps: 'opacity' }); }
-            }, socialsStart + 0.04);
+            tl.to(smElements.socialTitle, { opacity: 1, duration: 0.5, ease: 'power2.out' }, socialsStart);
+            tl.to(smElements.socialLinks, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out', stagger: { each: 0.08, from: 'start' }, onComplete: () => { gsap.set(smElements.socialLinks, { clearProps: 'opacity' }); } }, socialsStart + 0.04);
 
             return tl;
         }
@@ -980,10 +794,7 @@
                 if (smState.openTl) smState.openTl.kill();
                 const all = [...Array.from(smElements.preLayers), smElements.panel];
                 smState.closeTween = gsap.to(all, {
-                    xPercent: 100,
-                    duration: 0.32,
-                    ease: 'power3.in',
-                    overwrite: 'auto',
+                    xPercent: 100, duration: 0.32, ease: 'power3.in', overwrite: 'auto',
                     onComplete: () => {
                         gsap.set(smElements.itemEls, { yPercent: 140, rotation: 10 });
                         gsap.set(smElements.numberEls, { '--sm-num-opacity': 0 });
@@ -1000,21 +811,8 @@
         if (smElements.btn) {
             initMenu();
             smElements.btn.addEventListener('click', toggleMenu);
-            smElements.menuLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    if (smState.open) {
-                        smState.busy = false; 
-                        toggleMenu();
-                    }
-                });
-            });
-
-            smElements.wrapper.addEventListener('click', (e) => {
-                if (smState.open && !smElements.panel.contains(e.target)) {
-                    smState.busy = false; 
-                    toggleMenu();
-                }
-            });
+            smElements.menuLinks.forEach(link => { link.addEventListener('click', () => { if (smState.open) { smState.busy = false; toggleMenu(); } }); });
+            smElements.wrapper.addEventListener('click', (e) => { if (smState.open && !smElements.panel.contains(e.target)) { smState.busy = false; toggleMenu(); } });
         }
 
         // ==========================================
@@ -1023,18 +821,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (window.gsap && window.ScrollTrigger) {
                 gsap.registerPlugin(ScrollTrigger);
-                
                 const contactSection = document.getElementById('contact');
                 if (contactSection) {
                     ScrollTrigger.create({
                         trigger: contactSection,
                         start: "top 80px", 
-                        onEnter: () => {
-                            gsap.to('.staggered-menu-header', { mixBlendMode: 'normal', color: '#e50000', duration: 0.1 });
-                        },
-                        onLeaveBack: () => {
-                            gsap.to('.staggered-menu-header', { mixBlendMode: 'difference', color: '#1affff', duration: 0.1 });
-                        }
+                        onEnter: () => { gsap.to('.staggered-menu-header', { mixBlendMode: 'normal', color: '#e50000', duration: 0.1 }); },
+                        onLeaveBack: () => { gsap.to('.staggered-menu-header', { mixBlendMode: 'difference', color: '#1affff', duration: 0.1 }); }
                     });
                 }
             }
@@ -1067,7 +860,6 @@
             uniform float uIntensity;
             uniform float uBandWidth;
             
-            // 加入缺失的 uniform 變數宣告
             uniform float uHueShift;
             uniform float uScan;
             uniform float uScanFreq;
@@ -1112,7 +904,6 @@
             }
 
             void mainImage(out vec4 fragColor,in vec2 fragCoord){
-                // 修正了 uResolution 替換為現有的 uCanvas
                 vec2 uv=fragCoord/uCanvas*2.-1.;
                 uv.y*=-1.;
                 uv+=uWarp*vec2(sin(uv.y*6.283+uTime*0.5),cos(uv.x*6.283+uTime*0.5))*0.05;
@@ -1131,9 +922,8 @@
                 
                 vec3 bgColor = vec3(252.0/255.0, 252.0/255.0, 251.0/255.0);
                 
-                // 光效（线条）颜色缓慢循环：#ffeceb 到 #ffebf4
-                vec3 color1 = vec3(255.0/255.0, 236.0/255.0, 235.0/255.0); // #ffeceb
-                vec3 color2 = vec3(255.0/255.0, 235.0/255.0, 244.0/255.0); // #ffebf4
+                vec3 color1 = vec3(255.0/255.0, 236.0/255.0, 235.0/255.0); 
+                vec3 color2 = vec3(255.0/255.0, 235.0/254.0, 244.0/255.0); 
                 float colorBlend = sin(uTime * 0.3) * 0.5 + 0.5; 
                 vec3 targetColor = mix(color1, color2, colorBlend);
                 
@@ -1210,7 +1000,6 @@
                 uIntensity: { value: params.intensity },
                 uBandWidth: { value: params.bandWidth },
                 
-                // 補充遺漏的變數傳遞
                 uHueShift: { value: 0.0 },
                 uScan: { value: 0.0 },
                 uScanFreq: { value: 0.0 },
@@ -1244,21 +1033,11 @@
             window.addEventListener('resize', resize);
             resize();
 
-            const pointerTarget = new THREE.Vector2(0, 0);
-            const pointerCurrent = new THREE.Vector2(0, 0);
-            
-            window.addEventListener('pointermove', e => {
-                pointerTarget.x = (e.clientX / window.innerWidth) * 2 - 1;
-                pointerTarget.y = -(e.clientY / window.innerHeight) * 2 + 1;
-            });
-
             const clock = new THREE.Clock();
             
             function loop() {
                 const elapsed = clock.getElapsedTime();
-                
                 uniforms.uTime.value = elapsed * 1.25;
-
                 renderer.render(scene, camera);
                 requestAnimationFrame(loop);
             }
@@ -1266,11 +1045,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            try {
-                initDarkVeil();
-            } catch (e) {
-                console.error("DarkVeil CPPN 渲染失败:", e);
-            }
+            try { initDarkVeil(); } catch (e) { console.error("DarkVeil CPPN 渲染失败:", e); }
         });
 
         // ==========================================
@@ -1287,8 +1062,7 @@
                 const inner = card.querySelector('.tilted-card-inner');
                 const caption = card.querySelector('.tilted-card-caption');
 
-                if (!inner || !caption) return;
-
+                if (!inner) return; 
                 let lastY = 0;
 
                 card.addEventListener('mousemove', (e) => {
@@ -1299,437 +1073,160 @@
                     const rotationX = (offsetY / (rect.height / 2)) * -rotateAmplitude;
                     const rotationY = (offsetX / (rect.width / 2)) * rotateAmplitude;
 
-                    gsap.to(inner, {
-                        rotationY: rotationY,
-                        rotationX: rotationX,
-                        duration: 0.5,
-                        ease: "power3.out",
-                        overwrite: "auto"
-                    });
+                    gsap.to(inner, { rotationY: rotationY, rotationX: rotationX, duration: 0.5, ease: "power3.out", overwrite: "auto" });
 
-                    const velocityY = offsetY - lastY;
-
-                    gsap.to(caption, {
-                        x: e.clientX - rect.left,
-                        y: e.clientY - rect.top,
-                        duration: 0.15,
-                        ease: "power2.out",
-                        overwrite: "auto"
-                    });
-
-                    gsap.to(caption, {
-                        rotation: -velocityY * 0.6,
-                        duration: 0.4,
-                        ease: "power3.out",
-                        overwrite: "auto"
-                    });
+                    if (caption) {
+                        const velocityY = offsetY - lastY;
+                        gsap.to(caption, { x: e.clientX - rect.left, y: e.clientY - rect.top, duration: 0.15, ease: "power2.out", overwrite: "auto" });
+                        gsap.to(caption, { rotation: -velocityY * 0.6, duration: 0.4, ease: "power3.out", overwrite: "auto" });
+                    }
                     
                     lastY = offsetY;
                 });
 
                 card.addEventListener('mouseenter', () => {
-                    gsap.to(inner, {
-                        scale: scaleOnHover,
-                        duration: 0.5,
-                        ease: "power3.out",
-                        overwrite: "auto"
-                    });
-                    gsap.to(caption, { opacity: 1, duration: 0.3, overwrite: "auto" });
+                    gsap.to(inner, { scale: scaleOnHover, duration: 0.5, ease: "power3.out", overwrite: "auto" });
+                    if (caption) gsap.to(caption, { opacity: 1, duration: 0.3, overwrite: "auto" });
                 });
 
                 card.addEventListener('mouseleave', () => {
-                    gsap.to(inner, {
-                        rotationY: 0,
-                        rotationX: 0,
-                        scale: 1,
-                        duration: 0.5,
-                        ease: "power3.out",
-                        overwrite: "auto"
-                    });
-                    gsap.to(caption, { opacity: 0, rotation: 0, duration: 0.3, overwrite: "auto" });
+                    gsap.to(inner, { rotationY: 0, rotationX: 0, scale: 1, duration: 0.5, ease: "power3.out", overwrite: "auto" });
+                    if (caption) gsap.to(caption, { opacity: 0, rotation: 0, duration: 0.3, overwrite: "auto" });
                 });
             });
         });
 
         // ==========================================
-        // 項目數據與模態框邏輯
+        // 真 Iframe Modal 控制邏輯 (Behance 風格全螢幕/置中 + 上下頁切換)
         // ==========================================
-        const projectIds = ['eva', 'fintech', 'ecommerce', 'project4', 'project5', 'project6', 'project7', 'project8'];
+        let projectList = [];
+        let currentProjectIndex = 0;
 
-        const projectsData = {
-            'eva': {
-                title: 'EVA - Evangelion UI',
-                desc: '本人的遊戲UI視覺概念設計。完美復刻長圖瀏覽體驗，完全貼合螢幕邊緣，底部無限延伸。',
-                bgColor: '#ffffff',
-                html: `<img src="https://img.zcool.cn/community/01c1ea5ef60a3ba801215aa0a2e74f.png" class="w-full h-auto block m-0 p-0 align-bottom object-cover" alt="EVA 圖1"><img src="https://img.zcool.cn/community/016e315ef60a3ea8012066214a24cd.png" class="w-full h-auto block m-0 p-0 align-bottom object-cover" alt="EVA 圖2"><img src="https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=1200&auto=format&fit=crop" class="w-full h-auto block m-0 p-0 align-bottom object-cover" alt="EVA 圖3">`
-            },
-            'fintech': {
-                title: 'Fintech App Design',
-                desc: '一款金融理財應用的從0到1體驗設計。包含完整的用戶體驗路徑規劃、介面視覺設計以及動效原型製作。',
-                bgColor: '#ffffff',
-                html: `<img src="https://images.unsplash.com/photo-1618761714954-0b8cd0026356?q=80&w=1200&auto=format&fit=crop" class="w-full h-auto block m-0 p-0 align-bottom object-cover" alt="Fintech Design">`
-            },
-            'ecommerce': {
-                title: 'E-commerce Platform',
-                desc: '大型電商平台的網頁端重構。重塑了商品分類層級，優化了結算流程，提升了整體轉化率與用戶滿意度。',
-                bgColor: '#ffffff',
-                html: `<img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=1200&auto=format&fit=crop" class="w-full h-auto block m-0 p-0 align-bottom object-cover" alt="E-commerce Design">`
-            },
-            'project4': {
-                title: 'Brand Identity',
-                desc: '品牌視覺識別系統設計，包含標誌、色彩規範及周邊延伸物料。',
-                bgColor: '#ffffff',
-                html: `<img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?q=80&w=1200&auto=format&fit=crop" class="w-full h-auto block m-0 p-0 align-bottom object-cover" alt="Brand Identity">`
-            },
-            'project5': {
-                title: 'Smart Home Dashboard',
-                desc: '智能家居控制終端介面設計，強調數據可視化與操作直觉性。',
-                bgColor: '#ffffff',
-                html: `<img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop" class="w-full h-auto block m-0 p-0 align-bottom object-cover" alt="Smart Home">`
-            },
-            'project6': {
-                title: 'Travel App Concept',
-                desc: '為年輕旅行者打造的旅遊行程規劃 APP 概念設計。',
-                bgColor: '#ffffff',
-                html: `<img src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=1200&auto=format&fit=crop" class="w-full h-auto block m-0 p-0 align-bottom object-cover" alt="Travel App">`
-            },
-            'project7': {
-                title: 'Crypto Wallet',
-                desc: '去中心化加密貨幣錢包的 UI/UX 設計，注重資產安全感與交易便捷度。',
-                bgColor: '#ffffff',
-                html: `<img src="https://images.unsplash.com/photo-1621504450181-5d156ff811be?q=80&w=1200&auto=format&fit=crop" class="w-full h-auto block m-0 p-0 align-bottom object-cover" alt="Crypto Wallet">`
-            },
-            'project8': {
-                title: 'Modern Furniture',
-                desc: '現代極簡風格家具品牌的官方網站設計與前端視覺表現。',
-                bgColor: '#ffffff',
-                html: `<img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=1200&auto=format&fit=crop" class="w-full h-auto block m-0 p-0 align-bottom object-cover" alt="Modern Furniture">`
-            }
-        };
+        document.addEventListener('DOMContentLoaded', () => {
+            // 動態抓取頁面上的所有專案卡片，建立專案列表陣列
+            const cards = document.querySelectorAll('.works-grid-item');
+            cards.forEach((card, index) => {
+                // 移除寫死在 HTML 裡的 onclick
+                card.removeAttribute('onclick');
+                
+                const url = card.getAttribute('href');
+                const titleEl = card.querySelector('h3');
+                const title = titleEl ? titleEl.textContent.trim() : `Project ${index + 1}`;
+                
+                projectList.push({ url, title });
+                
+                // 重新綁定點擊事件
+                card.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openProjectModal(index);
+                });
+            });
+        });
 
-        function openProject(projectId) {
-            const index = projectIds.indexOf(projectId);
-            if (index === -1) return;
+        function updateModalNav(index) {
+            if(projectList.length === 0) return;
+            const len = projectList.length;
             
-            const data = projectsData[projectId];
+            // 計算上一頁與下一頁索引 (包含循環邏輯)
+            const prevIndex = (index - 1 + len) % len;
+            const nextIndex = (index + 1) % len;
+            
+            // 更新底部導航的名稱
+            document.getElementById('prev-project-name').textContent = projectList[prevIndex].title;
+            document.getElementById('next-project-name').textContent = projectList[nextIndex].title;
+        }
 
-            document.getElementById('modal-title').innerText = data.title;
-            document.getElementById('modal-desc').innerText = data.desc;
-            document.getElementById('modal-content-area').innerHTML = data.html;
+        function loadProjectInModal(index) {
+            currentProjectIndex = index;
+            const project = projectList[index];
             
-            document.getElementById('modal-container').style.backgroundColor = data.bgColor || '#ffffff';
+            const iframe = document.getElementById('project-iframe');
+            const loader = document.getElementById('modal-loader');
             
-            setTimeout(attachLightboxEvents, 50);
+            // 加入淡出特效與 loader
+            iframe.style.opacity = '0';
+            loader.style.display = 'flex';
             
-            const prevIndex = (index - 1 + projectIds.length) % projectIds.length;
-            const nextIndex = (index + 1) % projectIds.length;
+            updateModalNav(index);
             
-            const prevId = projectIds[prevIndex];
-            const nextId = projectIds[nextIndex];
+            // 稍等淡出後再換 src
+            setTimeout(() => {
+                iframe.src = project.url;
+            }, 200);
+        }
 
-            document.getElementById('modal-nav').innerHTML = `
-                <div class="p-6 md:p-10 cursor-pointer group transition-colors flex flex-col justify-center" style="background-color: ${projectsData[prevId].bgColor || '#ffffff'}" onmouseover="this.style.filter='brightness(0.95)'" onmouseout="this.style.filter='none'" onclick="openProject('${prevId}')">
-                    <p class="text-[10px] md:text-xs text-zinc-400 mb-2 uppercase tracking-widest transition-colors">Prev Project</p>
-                    <div class="flex items-center gap-4">
-                        <h4 class="text-sm md:text-base font-bold text-zinc-800 transition-colors line-clamp-1">${projectsData[prevId].title}</h4>
-                    </div>
-                </div>
-                <div class="p-6 md:p-10 cursor-pointer group transition-colors flex flex-col items-end justify-center text-right" style="background-color: ${projectsData[nextId].bgColor || '#ffffff'}" onmouseover="this.style.filter='brightness(0.95)'" onmouseout="this.style.filter='none'" onclick="openProject('${nextId}')">
-                    <p class="text-[10px] md:text-xs text-zinc-400 mb-2 uppercase tracking-widest transition-colors">Next Project</p>
-                    <div class="flex items-center gap-4 justify-end">
-                        <h4 class="text-sm md:text-base font-bold text-zinc-800 transition-colors line-clamp-1">${projectsData[nextId].title}</h4>
-                    </div>
-                </div>
-            `;
-            
+        function openProjectModal(index) {
             const modal = document.getElementById('project-modal');
-            const scrollArea = document.getElementById('modal-scroll-area');
             const container = document.getElementById('modal-container');
             
+            loadProjectInModal(index);
+
             modal.classList.remove('hidden');
-            modal.classList.add('block');
+            // 強制重繪
             void modal.offsetWidth; 
             
-            if (scrollArea) scrollArea.scrollTo({ top: 0 });
-
+            // 淡入背景
             modal.classList.remove('opacity-0');
             modal.classList.add('opacity-100');
-            container.classList.remove('scale-95');
-            container.classList.add('scale-100');
+            
+            // 讓容器從縮小狀態彈出
+            container.classList.remove('scale-95', 'translate-y-4');
+            container.classList.add('scale-100', 'translate-y-0');
             
             document.body.style.overflow = 'hidden';
+        }
+
+        function prevProject() {
+            if(projectList.length === 0) return;
+            const prevIndex = (currentProjectIndex - 1 + projectList.length) % projectList.length;
+            loadProjectInModal(prevIndex);
+        }
+
+        function nextProject() {
+            if(projectList.length === 0) return;
+            const nextIndex = (currentProjectIndex + 1) % projectList.length;
+            loadProjectInModal(nextIndex);
         }
 
         function closeModal() {
             const modal = document.getElementById('project-modal');
             const container = document.getElementById('modal-container');
+            const iframe = document.getElementById('project-iframe');
             
+            // 讓容器縮小並下移
+            container.classList.remove('scale-100', 'translate-y-0');
+            container.classList.add('scale-95', 'translate-y-4');
+            
+            // 淡出背景
             modal.classList.remove('opacity-100');
             modal.classList.add('opacity-0');
-            container.classList.remove('scale-100');
-            container.classList.add('scale-95');
             
             document.body.style.overflow = '';
             
             setTimeout(() => {
                 modal.classList.add('hidden');
-                modal.classList.remove('block');
-                document.getElementById('modal-content-area').innerHTML = '';
-            }, 300);
+                iframe.src = ''; 
+            }, 300); // 配合 CSS 的 duration-300
         }
 
-        const lbState = { images: [], index: 0, scale: 1, x: 0, y: 0 };
-        const lb = document.getElementById('lightbox');
-        const lbImg = document.getElementById('lb-img');
-        const lbTrack = document.getElementById('lb-track');
-        let lbDrag = { active: false, hasDragged: false, startX: 0, startY: 0, initX: 0, initY: 0, isPinching: false, initDist: 0, initScale: 1 };
+        document.addEventListener('DOMContentLoaded', () => {
+            const iframe = document.getElementById('project-iframe');
+            const loader = document.getElementById('modal-loader');
 
-        function attachLightboxEvents() {
-            const contentArea = document.getElementById('modal-content-area');
-            const imgs = contentArea.querySelectorAll('img');
-            lbState.images = Array.from(imgs).map(img => img.src);
-            imgs.forEach((img, i) => {
-                img.style.cursor = 'zoom-in';
-                img.onclick = () => openLightbox(i);
-            });
-        }
-
-        function openLightbox(index) {
-            lbState.index = index;
-            lbState.scale = 1;
-            lbState.x = 0;
-            lbState.y = 0;
-            
-            lbImg.style.opacity = 0;
-            lbImg.style.transition = 'none'; 
-            
-            lb.classList.remove('hidden');
-            lb.classList.add('flex');
-            void lb.offsetWidth; 
-            lb.classList.remove('opacity-0');
-            lb.classList.add('opacity-100');
-
-            lbImg.onload = () => {
-                snapLbToBounds(); 
-                lbImg.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease';
-                lbImg.style.opacity = 1;
-            };
-            lbImg.src = lbState.images[index];
-            if(lbImg.complete) {
-                lbImg.onload();
-            }
-        }
-
-        function closeLightbox() {
-            lb.classList.remove('opacity-100');
-            lb.classList.add('opacity-0');
-            setTimeout(() => { 
-                lb.classList.add('hidden'); 
-                lb.classList.remove('flex');
-            }, 300);
-        }
-
-        function getPinchDist(e) {
-            return Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-        }
-
-        lbTrack.addEventListener('pointerdown', (e) => {
-            if (e.pointerType !== 'mouse' && e.touches && e.touches.length > 1) return;
-            lbDrag.active = true;
-            lbDrag.hasDragged = false; 
-            lbDrag.startX = e.clientX; lbDrag.startY = e.clientY;
-            lbDrag.initX = lbState.x; lbDrag.initY = lbState.y;
-            lbImg.style.transition = 'none'; 
-            lbTrack.setPointerCapture(e.pointerId);
-        });
-
-        lbTrack.addEventListener('pointermove', (e) => {
-            if (!lbDrag.active || lbDrag.isPinching) return;
-            let dx = e.clientX - lbDrag.startX;
-            let dy = e.clientY - lbDrag.startY;
-
-            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) lbDrag.hasDragged = true;
-
-            let targetX = lbDrag.initX + dx;
-            let targetY = lbDrag.initY + dy;
-
-            const imgH = lbImg.offsetHeight * lbState.scale;
-            const imgW = lbImg.offsetWidth * lbState.scale;
-            const winH = window.innerHeight;
-            const winW = window.innerWidth;
-
-            let minX, maxX;
-            if (imgW < winW) {
-                minX = maxX = (winW - imgW) / 2;
-            } else {
-                minX = winW - imgW;
-                maxX = 0;
+            if(iframe) {
+                iframe.addEventListener('load', function() {
+                    if (this.src && this.src !== window.location.href && this.src !== 'about:blank') {
+                        loader.style.display = 'none';
+                        this.style.opacity = '1';
+                    }
+                });
             }
 
-            let minY, maxY;
-            if (imgH < winH) {
-                minY = maxY = (winH - imgH) / 2;
-            } else {
-                minY = winH - imgH;
-                maxY = 0;
-            }
-
-            if (targetX > maxX) targetX = maxX + (targetX - maxX) * 0.3;
-            else if (targetX < minX) targetX = minX + (targetX - minX) * 0.3;
-
-            if (targetY > maxY) targetY = maxY + (targetY - maxY) * 0.3;
-            else if (targetY < minY) targetY = minY + (targetY - minY) * 0.3;
-
-            lbState.x = targetX; lbState.y = targetY;
-            updateLbTransform();
-        });
-
-        lbTrack.addEventListener('pointerup', (e) => {
-            if(!lbDrag.active) return;
-            lbDrag.active = false;
-            lbImg.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)';
-
-            if (!lbDrag.hasDragged && lbState.scale === 1) {
-                closeLightbox(); return;
-            }
-
-            if (lbState.scale <= 1.05) {
-                let dx = e.clientX - lbDrag.startX;
-                if (dx > 80) { prevLbImage(); return; }
-                if (dx < -80) { nextLbImage(); return; }
-            }
-            snapLbToBounds();
-        });
-
-        lbTrack.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 2) {
-                lbDrag.isPinching = true; lbDrag.active = false;
-                lbDrag.initDist = getPinchDist(e);
-                lbDrag.initScale = lbState.scale;
-                lbImg.style.transition = 'none';
-            }
-        }, {passive: false});
-
-        lbTrack.addEventListener('touchmove', (e) => {
-            if (lbDrag.isPinching && e.touches.length === 2) {
-                e.preventDefault();
-                let currentDist = getPinchDist(e);
-                let newScale = lbDrag.initScale * (currentDist / lbDrag.initDist);
-                lbState.scale = Math.max(1, Math.min(newScale, 5));
-                updateLbTransform();
-            }
-        }, {passive: false});
-
-        lbTrack.addEventListener('touchend', (e) => {
-            if (e.touches.length < 2 && lbDrag.isPinching) {
-                lbDrag.isPinching = false;
-                lbImg.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)';
-                snapLbToBounds();
-            }
-        });
-
-        lbTrack.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            const zoomDelta = e.deltaY > 0 ? 0.9 : 1.1; 
-            let newScale = lbState.scale * zoomDelta;
-            newScale = Math.max(1, Math.min(newScale, 5)); 
-            
-            const scaleRatio = newScale / lbState.scale;
-            lbState.x = e.clientX - (e.clientX - lbState.x) * scaleRatio;
-            lbState.y = e.clientY - (e.clientY - lbState.y) * scaleRatio;
-            lbState.scale = newScale;
-
-            lbImg.style.transition = 'transform 0.1s linear';
-            snapLbToBounds();
-            setTimeout(() => { lbImg.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)'; }, 100);
-        }, {passive: false});
-
-        function snapLbToBounds() {
-            const imgH = lbImg.offsetHeight * lbState.scale;
-            const imgW = lbImg.offsetWidth * lbState.scale;
-            const winH = window.innerHeight;
-            const winW = window.innerWidth;
-
-            let minX, maxX;
-            if (imgW < winW) {
-                minX = maxX = (winW - imgW) / 2;
-            } else {
-                minX = winW - imgW;
-                maxX = 0;
-            }
-
-            let minY, maxY;
-            if (imgH < winH) {
-                minY = maxY = (winH - imgH) / 2;
-            } else {
-                minY = winH - imgH;
-                maxY = 0;
-            }
-
-            if (lbState.x > maxX) lbState.x = maxX;
-            if (lbState.x < minX) lbState.x = minX;
-            if (lbState.y > maxY) lbState.y = maxY;
-            if (lbState.y < minY) lbState.y = minY;
-
-            updateLbTransform();
-        }
-
-        function updateLbTransform() {
-            lbImg.style.transform = `translate3d(${lbState.x}px, ${lbState.y}px, 0) scale(${lbState.scale})`;
-        }
-
-        function prevLbImage() {
-            if (lbState.index > 0) {
-                lbState.index--; updateLbImageSrc();
-            } else {
-                const winW = window.innerWidth;
-                const imgW = lbImg.offsetWidth * lbState.scale;
-                const maxX = imgW < winW ? (winW - imgW)/2 : 0;
-                lbState.x = maxX + 80; updateLbTransform();
-                setTimeout(snapLbToBounds, 300); 
-            }
-        }
-
-        function nextLbImage() {
-            if (lbState.index < lbState.images.length - 1) {
-                lbState.index++; updateLbImageSrc();
-            } else {
-                const winW = window.innerWidth;
-                const imgW = lbImg.offsetWidth * lbState.scale;
-                const minX = imgW < winW ? (winW - imgW)/2 : winW - imgW;
-                lbState.x = minX - 80; updateLbTransform();
-                setTimeout(snapLbToBounds, 300); 
-            }
-        }
-
-        function updateLbImageSrc() {
-            lbImg.style.opacity = 0;
-            setTimeout(() => {
-                lbState.scale = 1;
-                lbState.x = 0;
-                lbState.y = 0;
-                lbImg.style.transition = 'none';
-
-                lbImg.onload = () => {
-                    snapLbToBounds();
-                    lbImg.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease';
-                    lbImg.style.opacity = 1;
-                };
-                lbImg.src = lbState.images[lbState.index];
-                if(lbImg.complete) {
-                    lbImg.onload();
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !document.getElementById('project-modal').classList.contains('hidden')) {
+                    closeModal();
                 }
-            }, 200);
-        }
-
-        window.addEventListener('keydown', (e) => {
-            if (!lb.classList.contains('hidden')) {
-                if (e.key === 'ArrowLeft') prevLbImage();
-                if (e.key === 'ArrowRight') nextLbImage();
-                if (e.key === 'Escape') closeLightbox();
-            } else if (!document.getElementById('project-modal').classList.contains('hidden')) {
-                if (e.key === 'Escape') closeModal();
-            }
+            });
         });
 
         // ==========================================
