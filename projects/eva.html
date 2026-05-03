@@ -89,7 +89,11 @@
             title: "EVA console game UI",
             desc: "2020年EVA剧场版终章上线前的主机化尝试",
             
-            // 四、是否強制圖片等比例拉伸至左右完全貼邊 (true: 滿版貼邊, false: 限制最大寬度居中)
+            // 四、自定義大標題區域的上下間距 (支援 "px", "vh", "rem" 等單位)
+            // 覺得上方太緊湊可以把 mt 調大。若想使用系統預設的自適應間距，請保持為空字串 ""
+            headerSpacing: { mt: "40px", mb: "10px" },
+
+            // 五、是否強制圖片等比例拉伸至左右完全貼邊 (true: 滿版貼邊, false: 限制最大寬度居中)
             stretchToEdge: true,
 
             // 縮略圖 (與主頁卡片保持一致，同樣採用陣列打斷防扒取)
@@ -311,6 +315,12 @@
                 
                 // 避免重複渲染
                 if (header.innerHTML.trim() !== '') return;
+
+                // 套用大標題區域的自定義間距 (Inline Style 優先級會完美覆蓋預設的 Tailwind 響應式 Class)
+                if (PROJECT_DATA.headerSpacing) {
+                    if (PROJECT_DATA.headerSpacing.mt) header.style.paddingTop = PROJECT_DATA.headerSpacing.mt;
+                    if (PROJECT_DATA.headerSpacing.mb) header.style.paddingBottom = PROJECT_DATA.headerSpacing.mb;
+                }
 
                 header.innerHTML = `
                     <h1 class="text-4xl md:text-6xl tracking-tighter font-black text-zinc-900 mb-6 drop-shadow-sm" id="project-title">${PROJECT_DATA.title}</h1>
