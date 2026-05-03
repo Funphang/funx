@@ -74,7 +74,7 @@
         // 若要自訂其他密碼，請在瀏覽器按 F12 進入 Console (主控台)，
         // 輸入 btoa("你的密碼") 即可獲得編碼字串，填入下方 p_key 即可。
         const _CONF = {
-            s_lock: "ZmFsc2U=",  // 一、密碼功能開關 (預設: dHJ1ZQ== 開啟)
+            s_lock: "dHJ1ZQ==",  // 一、密碼功能開關 (預設: dHJ1ZQ== 開啟)
             p_key: "MjAyNg==",   // 二、自定義密碼 4位數
             p_id: "eva-ui",      // 專案唯一標識符 (區分不同作品，不需編碼)
             s_copy: "ZmFsc2U="   // 三、防拷貝與防下載開關 (預設: ZmFsc2U= 關閉)
@@ -86,8 +86,8 @@
         // 這裡不直接把內容寫入HTML，而是透過JS動態生成。
         // ==========================================
         const PROJECT_DATA = {
-            title: "EVA console game UI",
-            desc: "2020年EVA剧场版终章上线前的主机化尝试",
+            title: "EVA - Evangelion UI",
+            desc: "本人的遊戲UI視覺概念設計。完美復刻長圖瀏覽體驗，完全貼合螢幕邊緣，底部無限延伸。這是一個獨立的 HTML 頁面，供所有專案覆用。",
             
             // 四、是否強制圖片等比例拉伸至左右完全貼邊 (true: 滿版貼邊, false: 限制最大寬度居中)
             stretchToEdge: true,
@@ -100,17 +100,19 @@
             // 新增功能：你可以使用 `mt` (上間距) 與 `mb` (下間距) 來單獨自定義每個區塊的距離！支援 "px", "rem", "vw" 等單位。
             blocks: [
                 // 1. 圖片區塊 (預設無間距貼合)
-                { type: "image", src: ["../../assets/images/", "works/eva/login.jpg"]},
-                { type: "image", src: ["../../assets/images/", "works/eva/combat.jpg"]},
-                { type: "image", src: ["../../assets/images/", "works/eva/painting_gif.gif"]},
-                { type: "image", src: ["../../assets/images/", "works/eva/cur.jpg"]},
-                { type: "image", src: ["../../assets/images/", "works/eva/icons.jpg"]},
-                { type: "image", src: ["../../assets/images/", "works/eva/gallery.jpg"]},
-                { type: "image", src: ["../../assets/images/", "works/eva/mark06.jpg"]},
-                { type: "image", src: ["../../assets/images/", "works/eva/inventory.jpg"]},
-                { type: "image", src: ["../../assets/images/", "works/eva/paint.jpg"]},
-                { type: "image", src: ["../../assets/images/", "works/eva/collector's_edition.jpg"]},
-                { type: "image", src: ["../../assets/images/", "works/eva/thanks.jpg"], mt: "0px", mb: "40px"}
+                { type: "image", src: ["../../assets/images/", "works/eva/login.jpg"], mt: "0px", mb: "0px" },
+                
+                // 2. 文字區塊 (示範：上下各留白 40px)
+                { type: "text", content: "這是一段穿插在設計圖之間的說明文字。可以介紹設計理念、遇到的挑戰或解決方案。文字會自動置中並保持舒適的閱讀寬度。", mt: "40px", mb: "40px" },
+                
+                // 3. 圖片區塊 (示範：下方留白 100px)
+                { type: "image", src: ["../../assets/images/", "works/eva/page2.jpg"], mt: "0px", mb: "100px" },
+                
+                // 4. 外部影片區塊 
+                { type: "iframe", src: ["https://www.", "youtube.com/embed/dQw4w9WgXcQ"], mb: "80px" },
+
+                // 5. 圖片區塊
+                { type: "image", src: ["../../assets/images/", "works/eva/page3.jpg"] }
             ]
         };
     </script>
