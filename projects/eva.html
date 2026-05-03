@@ -119,6 +119,7 @@
         };
     </script>
 
+
     <!-- ========================================== -->
     <!-- 密碼驗證畫面 (Auth Screen)                  -->
     <!-- ========================================== -->
@@ -174,11 +175,11 @@
             <div class="font-bold text-xl uppercase tracking-tighter">FUNX.</div>
         </nav>
 
-        <!-- 專案內容區塊 -->
-        <main class="w-full mx-auto pb-12 transition-all duration-300" id="main-container">
+        <!-- 專案內容區塊 (加入 pt-28 為導航列預留固定空間) -->
+        <main class="w-full mx-auto pb-12 pt-28 transition-all duration-300" id="main-container">
             
-            <!-- 標題區域 (清空，由JS動態寫入防讀取) -->
-            <header class="max-w-5xl mx-auto pt-32 pb-12 px-6 md:px-10 text-center md:text-left" id="project-header">
+            <!-- 標題區域 (清空，由JS動態寫入防讀取，並移除舊的 pt-32) -->
+            <header class="max-w-5xl mx-auto pb-12 px-6 md:px-10 text-center md:text-left" id="project-header">
             </header>
 
             <!-- Behance 風格長圖展示 (清空，由JS動態寫入防讀取) -->
@@ -559,8 +560,9 @@
                 const header = document.getElementById('project-header');
                 const title = document.getElementById('project-title');
                 
-                mainContainer.classList.remove('pb-12');
-                header.classList.remove('pt-32', 'pb-12');
+                // Iframe 內不需要閃避導航列的空間，自動移除 pt-28
+                mainContainer.classList.remove('pb-12', 'pt-28');
+                header.classList.remove('pb-12');
                 header.classList.add('pt-4', 'pb-8');
                 
                 title.classList.remove('text-zinc-900');
