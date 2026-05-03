@@ -61,11 +61,23 @@
     <!-- 🛡️ 專案全局配置區 (安全混淆版)                 -->
     <!-- ========================================== -->
     <script>
+        // 說明：為防止在「查看原始碼(Ctrl+U)」中直接暴露密碼與開關狀態，
+        // 這裡的數值與變數名稱採用了 Base64 編碼進行輕度混淆。
+        //
+        // 【狀態開關對照表】
+        // 開啟 (true)  👉 "dHJ1ZQ=="
+        // 關閉 (false) 👉 "ZmFsc2U="
+        //
+        // 【自定義密碼教學】
+        // 預設密碼 "2026" 編碼後為 "MjAyNg=="
+        // 常見密碼： "1234" 👉 "MTIzNA==" | "0000" 👉 "MDAwMA==" | "8888" 👉 "ODg4OA=="
+        // 若要自訂其他密碼，請在瀏覽器按 F12 進入 Console (主控台)，
+        // 輸入 btoa("你的密碼") 即可獲得編碼字串，填入下方 p_key 即可。
         const _CONF = {
-            s_lock: "ZmFsc2U=", 
-            p_key: "MjAyNg==",  
-            p_id: "eva-ui",     
-            s_copy: "ZmFsc2U="  
+            s_lock: "dHJ1ZQ==",  // 一、密碼功能開關 (預設: dHJ1ZQ== 開啟)
+            p_key: "MjAyNg==",   // 二、自定義密碼 4位數
+            p_id: "wasteland",      // 專案唯一標識符 (區分不同作品，不需編碼)
+            s_copy: "ZmFsc2U="   // 三、防拷貝與防下載開關 (預設: ZmFsc2U= 關閉)
         };
 
         // ==========================================
@@ -74,39 +86,42 @@
         // 這裡不直接把內容寫入HTML，而是透過JS動態生成。
         // ==========================================
         const PROJECT_DATA = {
-            title: "EVA console game UI",
-            desc: "2020年EVA剧场版终章上线前的主机化尝试",
+            title: "漫威争锋-早期风格",
+            desc: "2018年漫威争锋的早期风格设计",
             
             // 四、自定義大標題區域的上下間距 (支援 "px", "vh", "rem" 等單位)
             // 覺得上方太緊湊可以把 mt 調大。若想使用系統預設的自適應間距，請保持為空字串 ""
             headerSpacing: { mt: "40px", mb: "10px" },
 
-            // 五、是否強制圖片等比例拉伸至左右完全貼邊 (true: 滿版貼邊, false: 限制最大寬度居中)
+            // 五、全局文字設定 (字號與行距)
+            // 可使用 "px", "rem" 或純數字。若想使用系統預設，請保持為空字串 ""
+            globalTextConfig: { 
+                fontSize: "15px",   // 範例: "16px", "1.125rem" (預設留空為自適應大小)
+                lineHeight: "2"     // 範例: "1.6", "2", "32px" (預設留空為 1.625)
+            },
+
+            // 六、是否強制圖片等比例拉伸至左右完全貼邊 (true: 滿版貼邊, false: 限制最大寬度居中)
             stretchToEdge: true,
 
             // 縮略圖 (與主頁卡片保持一致，同樣採用陣列打斷防扒取)
-            thumbnail: ["../assets/images/works/eva/thumbnail.jpg"],
+            thumbnail: ["../assets/images/works/marvel/thumbnail.png"],
 
             // 【混合排版核心】
             // 透過 blocks 陣列，你可以自由組合「圖片 (image)」、「文字 (text)」與「外部影片 (iframe)」
             // 新增功能：你可以使用 `mt` (上間距) 與 `mb` (下間距) 來單獨自定義每個區塊的距離！支援 "px", "rem", "vw" 等單位。
             blocks: [
                 // 1. 圖片區塊 (預設無間距貼合)
-                { type: "image", src: ["../assets/images/works/eva/login.jpg"]},
-                { type: "image", src: ["../assets/images/works/eva/combat.jpg"]},
-                { type: "image", src: ["../assets/images/works/eva/painting_gif.gif"]},
-                { type: "image", src: ["../assets/images/works/eva/cur.jpg"]},
-                { type: "image", src: ["../assets/images/works/eva/icons.jpg"]},
-                { type: "image", src: ["../assets/images/works/eva/gallery.jpg"]},
-                { type: "image", src: ["../assets/images/works/eva/mark06.jpg"]},
-                { type: "image", src: ["../assets/images/works/eva/inventory.jpg"]},
-                { type: "image", src: ["../assets/images/works/eva/paint.jpg"]},
-                { type: "image", src: ["../assets/images/works/eva/collector's_edition.jpg"]},
-                { type: "image", src: ["../assets/images/works/eva/thanks.jpg"], mt: "0px", mb: "40px"}
+                { type: "image", src: ["../assets/images/works/marvel/01.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/marvel/02.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/marvel/03.jpg"], mt: "0px", mb: "0px" },   
+                { type: "image", src: ["../assets/images/works/marvel/04.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/marvel/05.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/marvel/06.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/marvel/07.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/marvel/08.jpg"], mt: "0px", mb: "0px" },                          
             ]
         };
     </script>
-
 
     <!-- ========================================== -->
     <!-- 密碼驗證畫面 (Auth Screen)                  -->
@@ -157,7 +172,7 @@
         
         <!-- 導航列：在首頁 iframe 中會被 JS 自動隱藏，僅在獨立訪問時顯示 -->
         <nav id="project-nav" class="fixed top-0 left-0 w-full p-6 text-black flex items-center justify-between bg-white/90 backdrop-blur-md z-50 border-b border-zinc-100 transition-opacity duration-300">
-            <a href="../index.html" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#e50000] transition-colors bg-zinc-50 hover:bg-zinc-100 px-5 py-2.5 rounded-full shadow-sm border border-zinc-200">
+            <a href="#" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#e50000] transition-colors bg-zinc-50 hover:bg-zinc-100 px-5 py-2.5 rounded-full shadow-sm border border-zinc-200">
                 &larr; Back to Home
             </a>
             <div class="font-bold text-xl uppercase tracking-tighter">FUNX.</div>
@@ -183,8 +198,8 @@
                     © 2026 FUNX. All rights reserved
                 </div>
                 <div class="flex gap-6 justify-center">
-                    <a href="https://www.behance.net/funxarts" target="_blank" class="hover:text-[#e50000] transition-colors font-semibold uppercase text-sm">Behance</a>
-                    <a href="https://www.artstation.com/funx" target="_blank" class="hover:text-[#e50000] transition-colors font-semibold uppercase text-sm">ArtStation</a>
+                    <a href="https://www.behance.net/" target="_blank" class="hover:text-[#e50000] transition-colors font-semibold uppercase text-sm">Behance</a>
+                    <a href="https://www.artstation.com/" target="_blank" class="hover:text-[#e50000] transition-colors font-semibold uppercase text-sm">ArtStation</a>
                 </div>
             </div>
         </footer>
@@ -202,7 +217,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- 邏輯控制腳本                                -->
+    <!-- 邏輯控制腳本                               -->
     <!-- ========================================== -->
     <script>
         // 嚴謹的 Iframe 判斷函式 (防止跨域存取引發 SecurityError)
@@ -311,9 +326,18 @@
                     if (PROJECT_DATA.headerSpacing.mb) header.style.paddingBottom = PROJECT_DATA.headerSpacing.mb;
                 }
 
+                // 套用全局文字樣式
+                const customFontSize = PROJECT_DATA.globalTextConfig?.fontSize ? `font-size: ${PROJECT_DATA.globalTextConfig.fontSize};` : '';
+                const customLineHeight = PROJECT_DATA.globalTextConfig?.lineHeight ? `line-height: ${PROJECT_DATA.globalTextConfig.lineHeight};` : '';
+                const globalTextStyle = (customFontSize || customLineHeight) ? `style="${customFontSize} ${customLineHeight}"` : '';
+                
+                // 動態保留預設的 Tailwind 響應式類別 (若未自定義，則套用預設值)
+                const baseTextClass = !customFontSize ? 'text-base md:text-lg' : '';
+                const baseLineClass = !customLineHeight ? 'leading-relaxed' : '';
+
                 header.innerHTML = `
                     <h1 class="text-4xl md:text-6xl tracking-tighter font-black text-zinc-900 mb-6 drop-shadow-sm" id="project-title">${PROJECT_DATA.title}</h1>
-                    <p class="text-base md:text-lg text-zinc-600 font-medium leading-relaxed max-w-3xl mx-auto md:mx-0" id="project-desc">${PROJECT_DATA.desc}</p>
+                    <p class="text-zinc-600 font-medium max-w-3xl mx-auto md:mx-0 whitespace-pre-line ${baseTextClass} ${baseLineClass}" id="project-desc" ${globalTextStyle}>${PROJECT_DATA.desc}</p>
                 `;
 
                 // 判斷目前是否處於 Iframe 浮窗內
@@ -325,25 +349,26 @@
 
                 // 根據 blocks 陣列的 type 動態渲染對應的 HTML 結構
                 content.innerHTML = PROJECT_DATA.blocks.map((block, idx) => {
-                    // 解析自定義間距 (mt: 上外距, mb: 下外距)
-                    const mtStyle = block.mt ? `margin-top: ${block.mt};` : '';
-                    const mbStyle = block.mb ? `margin-bottom: ${block.mb};` : '';
-                    const spacingStyle = (mtStyle || mbStyle) ? `style="${mtStyle} ${mbStyle}"` : '';
+                    // 升級間距系統：將使用 padding 來取代 margin，徹底杜絕 Margin 折疊(Collapse)產生的意外留白
+                    const defaultSpacing = block.type === 'text' ? '64px' : '0px'; // 若未填寫，文字區塊預設給 64px 留白
+                    const pt = block.mt !== undefined ? block.mt : defaultSpacing;
+                    const pb = block.mb !== undefined ? block.mb : defaultSpacing;
+                    const spacingStyle = `style="padding-top: ${pt}; padding-bottom: ${pb};"`;
 
                     if (block.type === 'image') {
-                        // 渲染圖片：加入「佔位高度」與「漸顯動畫」，徹底解決載入卡頓問題
+                        // 渲染圖片：移除高度漸變動畫避免卡頓產生空白，高度限制改為 30vh 確保優雅加載
                         const url = block.src.join('');
                         const imgClass = shouldStretch ? 'w-full' : 'w-full max-w-[1440px]';
                         
                         const imgHTML = `
-                            <div class="relative w-full flex justify-center items-center bg-zinc-100/50 min-h-[50vh] md:min-h-[80vh] transition-all duration-300">
+                            <div class="relative w-full flex justify-center items-center bg-zinc-100/50 min-h-[30vh]">
                                 <!-- 優雅的載入動畫 (Spinner) -->
                                 <div class="absolute flex flex-col items-center justify-center transition-opacity duration-300">
                                     <div class="w-8 h-8 border-2 border-zinc-300 border-t-[#e50000] rounded-full animate-spin"></div>
                                 </div>
                                 <!-- 真實圖片 (載入完成後自動淡入，並動態移除父層的最小高度與灰底) -->
                                 <img src="${url}" loading="lazy" decoding="async" 
-                                     onload="this.style.opacity='1'; this.previousElementSibling.style.opacity='0'; this.parentElement.classList.remove('min-h-[50vh]', 'md:min-h-[80vh]', 'bg-zinc-100/50'); setTimeout(() => this.previousElementSibling.remove(), 300);" 
+                                     onload="this.style.opacity='1'; this.previousElementSibling.style.opacity='0'; this.parentElement.classList.remove('min-h-[30vh]', 'bg-zinc-100/50'); setTimeout(() => this.previousElementSibling.remove(), 300);" 
                                      style="opacity: 0; transition: opacity 0.6s ease-out;" 
                                      class="${imgClass} relative z-10 h-auto block m-0 p-0 align-bottom object-cover cursor-zoom-in" 
                                      alt="Project Image ${idx + 1}">
@@ -357,12 +382,42 @@
                                         ${imgHTML}
                                     </div>`;
                         }
-                        
+                    } else if (block.type === 'title') {
+                            return `<div class="w-full flex justify-center px-6 md:px-10" ${spacingStyle}>
+                                     <h2 class="w-full max-w-4xl text-2xl md:text-3xl font-bold text-zinc-900 m-0 p-0">
+                                        ${block.content}
+                                    </h2>
+                                    </div>`;
+                    
+                    } else if (block.type === 'title2') {
+                            return `<div class="w-full flex justify-center px-6 md:px-10" ${spacingStyle}>
+                                     <h2 class="w-full max-w-4xl text-1.5xl md:text-2xl font-bold text-zinc-900 m-0 p-0">
+                                        ${block.content}
+                                    </h2>
+                                    </div>`;                                                          
+
                     } else if (block.type === 'text') {
-                        // 渲染文字：舒適的閱讀寬度、適當的上下留白
-                        return `<div class="w-full bg-zinc-50 flex justify-center py-16 px-6 md:px-10" ${spacingStyle}>
-                                    <p class="w-full max-w-4xl text-base md:text-lg text-zinc-700 font-medium leading-loose text-left">${block.content}</p>
+                        // 渲染文字：加入 m-0 p-0 清除預設邊距，並套用全局字號與行距設定
+                        return `<div class="w-full flex justify-center px-6 md:px-10 m-0" ${spacingStyle}>
+                                    <p class="w-full max-w-4xl text-zinc-700 font-medium text-left whitespace-pre-line m-0 p-0 ${baseTextClass} ${baseLineClass}" ${globalTextStyle}>${block.content.trim()}</p>
                                 </div>`;
+            
+                    } else if (block.type === 'quote') {
+                        return `<div class="w-full flex justify-center px-6 md:px-10" ${spacingStyle}>
+                                <div class="w-full max-w-3xl border-l-4 border-[#e50000] pl-5 py-2">
+            
+                                <p class="text-base md:text-lg italic text-zinc-800 leading-relaxed">
+                                    “${block.content}”
+                                </p>
+            
+                            ${block.author ? `
+                                    <p class="text-sm text-zinc-500 mt-3">
+                                        — ${block.author}
+                                   </p>
+                                ` : ''}
+
+                            </div>
+                        </div>`;
                                 
                     } else if (block.type === 'iframe') {
                         // 渲染外部影片 (嵌入代碼)
@@ -372,7 +427,7 @@
                                         <iframe src="${url}" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                     </div>`;
                         } else {
-                            return `<div class="w-full px-0 sm:px-6 md:px-12 lg:px-20 xl:px-32 py-6 flex justify-center bg-zinc-50" ${spacingStyle}>
+                            return `<div class="w-full px-0 sm:px-6 md:px-12 lg:px-20 xl:px-32 flex justify-center bg-zinc-50" ${spacingStyle}>
                                         <div class="w-full max-w-[1440px] aspect-video bg-black m-0 p-0 flex overflow-hidden rounded shadow-sm">
                                             <iframe src="${url}" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                         </div>
@@ -420,7 +475,7 @@
                     const storageKey = `FUNX_AUTH_${_CONF.p_id}`;
                     sessionStorage.setItem(storageKey, JSON.stringify({ timestamp: new Date().getTime() }));
                     
-                    // 輸入框變綠色/紅色反饋？(這裡選擇直接淡出進入)
+                    // 輸入框變綠色
                     pinBoxes.forEach(box => {
                         box.classList.remove('border-zinc-500', 'text-zinc-900');
                         box.classList.add('border-green-500', 'text-green-500');

@@ -74,7 +74,7 @@
         // 若要自訂其他密碼，請在瀏覽器按 F12 進入 Console (主控台)，
         // 輸入 btoa("你的密碼") 即可獲得編碼字串，填入下方 p_key 即可。
         const _CONF = {
-            s_lock: "dHJ1ZQ==",  // 一、密碼功能開關 (預設: dHJ1ZQ== 開啟)
+            s_lock: "ZmFsc2U=",  // 一、密碼功能開關 (預設: dHJ1ZQ== 開啟)
             p_key: "MjAyNg==",   // 二、自定義密碼 4位數
             p_id: "wasteland",      // 專案唯一標識符 (區分不同作品，不需編碼)
             s_copy: "ZmFsc2U="   // 三、防拷貝與防下載開關 (預設: ZmFsc2U= 關閉)
@@ -86,8 +86,8 @@
         // 這裡不直接把內容寫入HTML，而是透過JS動態生成。
         // ==========================================
         const PROJECT_DATA = {
-            title: "EVA console game UI",
-            desc: "2020年EVA剧场版终章上线前的主机化尝试",
+            title: "“废土”设定与精神内核",
+            desc: "“开局一条狗，装备全靠捡”你的狗帮你把2077申请了退款，并帮你打开了这篇文章",
             
             // 四、自定義大標題區域的上下間距 (支援 "px", "vh", "rem" 等單位)
             // 覺得上方太緊湊可以把 mt 調大。若想使用系統預設的自適應間距，請保持為空字串 ""
@@ -101,41 +101,124 @@
             },
 
             // 六、是否強制圖片等比例拉伸至左右完全貼邊 (true: 滿版貼邊, false: 限制最大寬度居中)
-            stretchToEdge: true,
+            stretchToEdge: false,
 
             // 縮略圖 (與主頁卡片保持一致，同樣採用陣列打斷防扒取)
-            thumbnail: ["../assets/images/works/eva/thumbnail.jpg"],
+            thumbnail: ["../assets/images/works/wasteland/thumbnail.webp"],
 
             // 【混合排版核心】
             // 透過 blocks 陣列，你可以自由組合「圖片 (image)」、「文字 (text)」與「外部影片 (iframe)」
             // 新增功能：你可以使用 `mt` (上間距) 與 `mb` (下間距) 來單獨自定義每個區塊的距離！支援 "px", "rem", "vw" 等單位。
             blocks: [
                 // 1. 圖片區塊 (預設無間距貼合)
-                { type: "image", src: ["../assets/images/works/eva/login.jpg"], mt: "0px", mb: "0px" },
-                
-                // 2. 文字區塊 (支援 \n 換行，或使用 <br> 標籤)
-                { type: "text", content: "文字<strong>加粗文字</strong>。\n你可以使用 \\n 來進行換行。\n\n文字會自動置中並保持舒適的閱讀寬度 <span style='color:#e50000;'>紅色文字</span>。", mt: "0px", mb: "0px" },
-                
-                // 3. 圖片區塊 (示範：下方留白 100px)
-                { type: "image", src: ["../assets/images/works/eva/page2.jpg"], mt: "0px", mb: "100px" },
-                
-                // 4. 外部影片區塊 
-                { type: "iframe", src: ["https://www.youtube.com/embed/dQw4w9WgXcQ"], mb: "80px" },
-
-                // 5. 圖片區塊
-                { type: "image", src: ["../assets/images/works/eva/page3.jpg"] }
-
-                // 6. 标题
-                { type: "title", content: "文字",, mt: "20px", mb: "6px"},
-
-                // 7. 二级标题
-                { type: "title2", content: "文字",, mt: "20px", mb: "6px"},   
-                
-                // 8. 引用
-                { type: "quote", content: "文字",, mt: "6px", mb: "6px"},
+                { type: "text", content: "就在周五（2020年12月11日），《The Last Of Us Part II》荣获「TGA2020」年度最佳游戏，同样这也是一款极具争议的游戏，但我认为可以先将争议暂放一边，先来探讨一下对我个人影响深远的题材——废土。", mt: "32px", mb: "10px" },
+                { type: "quote", content: "Ellie “Swear to me，swear to me that everything you said about the Fireflies is true.”  \nJoel “I swear.” \nEllie “OKay” \n ——《The Last Of Us》", mt: "0px", mb: "0px" },
+                { type: "text", content: "这是一个美丽且沉重的谎言，故事在这戛然而止。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/01.jpg"], mt: "10px", mb: "10px" },
+                { type: "text", content: "美末1毫无疑问是我目前为止的游戏经历里最伟大的一款（实名安利），过程中我被俩主人翁间强大的感情纽带所感染，同时也为我活灵活现地展现了“灾后重生”的世界。\n这个世界里，有灾难发生前幸存下来的带着旧世界观念的人（如Joel），也有生于末世之后的新生代（如Ellie）。以旧世界（又或者我们玩家身处的世界）观念来看，这个世界的所有人都不正常。但若用这个世界本身的目光来看，一切又理所应当。所有的掠夺、杀戮、扭曲的信仰，都是为了活下去。", mt: "10px", mb: "10px"},
+                { type: "image", src: ["../assets/images/works/wasteland/02.jpg"], mt: "10px", mb: "10px" },
+                { type: "text", content: "原有的价值观、思考模式、道德规范在新的世界里似乎都需要重新考虑，这不禁让人反思，现有的这些观念是否真的自发的，抑或只是乌合之众下的无脑跟随。这或许就是末世废土类题材所最吸引我的原因之一。",mt: "0px", mb: "0px" },
+                { type: "title", content: "废土文化的起源", mt: "50px", mb: "6px"},
+                { type: "text", content: "二战后的冷战时期，在遭受完战争摧残并长期处于军备竞赛下核担忧的精神压迫下，世界逐渐涌现出各种“末世”题材的艺术作品。 \n这个时期的作品其实还不能称为“废土”，它们有个更大的类别——后启示录（post-Apocalyptic）。", mt: "0px", mb: "0px" },
+                { type: "title2", content: "启示录与后启示录", mt: "20px", mb: "6px"},      
+                { type: "quote", content: "“我就观看，见有一匹灰色马。骑在马上的，名字叫作死。阴府也随着他。有权柄赐给他们，可以用刀剑，饥荒，瘟疫，野兽，杀害地上四分之一的人。——《启示录》6:1-8", mt: "0px", mb: "0px" },      
+                { type: "text", content: "《新约圣经》的《启示录》[1] 描绘了末日审判的情景，讲述神要降灾祸临到地上，清理掉大部分的人。\n后人把启示录中描绘的情景解读为世界末日，慢慢“启示录”便衍变为“末日”的代名词，而描绘大灾难发生前或发生状况的作品，大都可归为启示录（Apocalyptic）作品，如《2012》。 \n而“后启示录（post-Apocalyptic）”则侧重在“后”字，主要讲述毁灭后的幸存、重生与变化。", mt: "0px", mb: "0px" },
+                { type: "title2", content: "《莱伯维茨的赞歌》", mt: "30px", mb: "0px"},   
+                { type: "image", src: ["../assets/images/works/wasteland/03.png"], mt: "10px", mb: "10px" },
+                { type: "quote", content: "“这本书里，地球毁灭了两次\n只有对文明不灭的信仰，才能抵御一次次的沦灭”", mt: "0px", mb: "0px" },
+                { type: "text", content: "[2] 讲述文明从毁灭中重生，再走向毁灭，周而复始。 \n这本巨作可以说是许多末世题材电影、游戏的精神文本源头，其中不乏许多经典的桥段被后续许多作品所致敬，如： \n在第一部分「要有人」中，一个修士意外发现了一个古老的辐射避难所，里面寻得上古遗迹的手稿。", mt: "0px", mb: "0px" },
+                { type: "title2", content: "《地平线·零之曙光》", mt: "30px", mb: "0px"},   
+                { type: "image", src: ["../assets/images/works/wasteland/04.jpg"], mt: "10px", mb: "10px" },
+                { type: "text", content: "游戏开篇，有段剧情任务「来自过去的礼物」，小埃洛伊误入地下旧世界洞穴，拾获上代文明遗留下的全息装置 \n是不是与前面提到的《莱博维茨的赞歌》 那段情节“不谋而合”？ \n \n《地平线》可谓是一个存在明显文明断层的典型的后启示录内核的游戏。 \n像前面提到的“旧世界的目光来看一切都不正常，而身在其中的人毫无异样”，原始人类部落与高科技机械生物共存，他们不知道原因，他们只觉得这些都在正常不过了。反观，我们所身处的世界，那些在正常不过而又不知道如何解释的事物，是否也是上一代文明遗留下来的瑰宝？这种种的引人深思，便是后启示录内核作品的魅力之一。 \n《地平线》不属于“废土”内核的题材作品，它重心不在“废土”表达的特质上，至于这些特质是什么，下文会做进一步探讨。", mt: "0px", mb: "0px" },
+                { type: "title", content: "废土", mt: "50px", mb: "6px"},
+                { type: "text", content: "前面介绍了废土的“父类”——后启示录，那么这里就开始正式探讨一下本文的主角——废土。 ", mt: "0px", mb: "0px" },
+                { type: "title2", content: "名字的由来——《Wasteland》系列游戏", mt: "30px", mb: "0px"},   
+                { type: "image", src: ["../assets/images/works/wasteland/05.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "《废土1》", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/06.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "2020年8月发布的《废土3》", mt: "0px", mb: "0px" },
+                { type: "text", content: " “废土”这个名词其实是直接来源于1988年EA制作发售的《废土》（“Wasteland”）。《废土》[2] 系列讲述的是经过核战浩劫后，美国变成蛮荒之地。到了2087年，一支隶属于政府的沙漠游骑兵回到故土，寻找人类残存的文明，也就在这时，他们发现了一台人工智能正在创建一支可怕的杀手部队，意图彻底毁灭世界。 \n这个系列初代发布时正处于我们现实世界冷战的末期，游戏中充斥着现实冷战如果真实发动核战后的映射与思考，是它将“末世”的种种意象用游戏的形式呈现给世人。加之，游戏本身在那个年代来说拥有大量可玩内容，画面华丽，自然形成不小风潮。而它的致敬者《辐射》更是将这个题材的RPG发扬光大。 \n自然而然，“Wasteland”便成为了这个品类题材的代名词。", mt: "0px", mb: "0px" },
+                { type: "title2", content: "概念成型的代表——《Mad Max》系列电影", mt: "30px", mb: "0px"},   
+                { type: "quote", content: "「  “我曾是一名警察，是一个追寻正义的公路斗士，最终到达了崩溃的边缘。世界沦陷后，我们每个人都变得支离破碎。很难说清谁才是更疯狂的那个……是我，还是其他所有人？我告诉我自己，没人能伤害得了我。因为他们早就死了。”说罢，麦克斯连泥带土吃下了刚踩死的双头蜥蜴。 \n\n ——《Mad Max 4》片头」", mt: "0px", mb: "0px" },
+                { type: "text", content: "说到废土概念的成型，这归功于《疯狂的麦克斯2》（“Mad Max”）对废土在视觉感官领域的巨大影响。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/07.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "第二部影片在北美发行时被改名为《The Road Warrior》\n\n因为同系列的首部只在北美部分地区上映，《疯狂麦克斯2》势必引起其他地区观众的困惑\n从左到右分别是该系列1~5的海报，其中第五部副标题直接取名为“THE WASTELAND（废土）”，预计2021年上映。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/08.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "本系列的第一部只是改改车，行为彪悍一点，本质上还是警匪公路片。 \n真正开始展示“末世”内核的是在1981年的第二部，世界观背景在未来，因为战争和资源的枯竭，建立在石油之上的工业社会陷入崩溃，人们为了汽油展开生死争夺。这个设定正好映射78~80年对美国经济造成巨大冲击的第二次石油危机事件，当时的美国社会动荡，加油站枪机抢油事件时有发生。这一映射更加刺激了民众的肾上腺素分泌。 \n设定上混沌、冲突，角色穿着大胆（甚至有点变态），行为疯狂、暴力，明显与现实生活剥离出来。拼凑、乱改的载具当做屠杀工具在荒漠中无法无天肆意狂奔。 \n其奠定了本作后续系列的设定基调，更为其他类似题材的作品提供了一个“模板”。如：《北斗神拳》、《艾利之书》、《无主之地》（无主其实不能称为废土题材游戏）等等…当然，本IP也出了游戏~", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/09.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "2015年推出了《Mad Max》PC&主机端游戏，IGN评分8.4：“疯狂且迷人”", mt: "0px", mb: "0px" },
+                { type: "title2", content: "「Wasteland Weekend」——一年一度的废土狂欢", mt: "30px", mb: "0px"},   
+                { type: "image", src: ["../assets/images/works/wasteland/10.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "废土文化（“Wasteland Culture”）已然根深到到粉丝的骨子里，各式各样的电影、书籍、游戏已经满足不了他们想要表达自己的冲动。 \nWasteland Weekend自2010年首次举办以来，每年9月25日~29日，都会吸引到成千上万人来到加州荒芜人烟的莫哈维沙漠之中，暂时抛弃自己原有的一切标签成为另一个人，进行一场末日狂欢聚会。（《Mad Max》的导演George Miller也是Wasteland Weekend的超级粉丝） \n该活动就像一个完全沉浸式的大型RPG现场,所有参与者都必须在期间保持既定主题的打扮。（如果你穿着“火人节”的小清新打扮前来，抱歉，请滚蛋）", mt: "0px", mb: "0px" },
+                { type: "title", content: "废土的美学", mt: "50px", mb: "6px"}, 
+                { type: "text", content: "我们要了解废土的美学，必然需要去解析其普遍被认知的艺术风格表达形态，以及去探讨其更多可能性的形式。\n我们在解析的时候有个大前提——“文明经历了巨大灾变，幸存者失去了大部分赖以生存的资源、技术或手段，在生存线上挣扎”。不像蒸汽朋克那样“低效能，精神丰满”，也不像赛博朋克般“高科技，低生活”。身处废土中的人，生存本就已是最大考验，废土的美学是关于“毁灭与重生”的探讨。", mt: "0px", mb: "0px" },
+                { type: "title2", content: "普遍认知的废土风格", mt: "20px", mb: "6px"}, 
+                { type: "text", content: "废土美学已然产生了巨大的影响，《疯狂的麦克斯》系列的风格也成为这类美学的icon。它到底为大家奠定了怎样的“废土”基调？", mt: "0px", mb: "0px" },
+                { type: "text", content: "<strong><span style='color:#e50000;'>•</span> 环境</strong>", mt: "20px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/11.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "烈日狂风，黄沙滚滚，环境恶劣到大部分生物都无法生存。（水、能源）资源紧缺且常常掌握在个别当权者手中。", mt: "0px", mb: "10px" },
+                { type: "text", content: "<strong><span style='color:#e50000;'>•</span> 工业技术</strong>", mt: "20px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/12.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "没有电力，连照明都是靠折光透镜，一切的动力都来源于燃油。一股浓浓的「柴油朋克」味道\n故事背景为资源枯竭与战争下最终崩塌的世界，以内燃机为该时代的主要工业动力技术顶峰，工业不再发展，现世中的人们仅能用文明毁灭遗留下来的内燃机以及不知是否还残存的内燃机制造技术继续生产。", mt: "0px", mb: "10px" },
+                { type: "text", content: "<strong><span style='color:#e50000;'>•</span> 装备</strong>", mt: "20px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/13.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "功能优先且组合方式粗暴。求生的本能+资源的稀缺，决定了废土居民没机会思考物品的美观性（当然，这也成就了废土的美），有比没有强！\n而工具或技艺的缺乏，许多在我们现实中很简单的物品拼接手段对废土居民来说都“男上加男”。\n只能用原始简陋的捆绑、粘合、粗暴的焊接等解决。", mt: "0px", mb: "10px" },
+                { type: "image", src: ["../assets/images/works/wasteland/14.jpg"], mt: "0px", mb: "0px" },
+                { type: "text", content: "<strong><span style='color:#e50000;'>•</span> 朋克打扮？</strong>", mt: "20px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/15.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "（这里特指“朋克打扮”，而非朋克属性）\n在本系列2中，确实存在许多朋克打扮，但这是否也是废土的标志？\n在我看来不是的，朋克打扮只是一个与“废土”中人们可能存在的反叛精神相融洽的存在，进而被附加进来的元素。它的加入，就犹如蘸了酱油的寿司，让它更鲜美可口。但即使不蘸酱油，寿司还是寿司。", mt: "0px", mb: "10px" },
+                { type: "title", content: "多元的废土", mt: "50px", mb: "6px"},
+                { type: "text", content: "《疯狂的麦克斯》所呈现的“废土”其实是属于它特有的“废土”，并不能局限说只有它那样的才叫废土。\n真正的废土其实是可以很多元的：", mt: "0px", mb: "0px" },                
+                { type: "text", content: "<strong><span style='color:#e50000;'>•</span> (对人)恶劣的环境</strong>", mt: "20px", mb: "6px"},
+                { type: "text", content: "前面介绍过，废土的时代节点是末日过后，文明的重生或就此停滞的景象，生存环境的恶劣，幸存者苟延残喘。", mt: "0px", mb: "0px" },      
+                { type: "image", src: ["../assets/images/works/wasteland/16.jpg"], mt: "0px", mb: "0px" },
+                { type: "text", content: "<strong>《疯狂的麦克斯》——绝大多数生物的地狱</strong>\n\n一切的「好与坏」都是有“语境”的，废土中末日后所呈现的环境的“恶劣”主要是针对“人（或者主要探讨对象）”的，而非万物生灵。废土的“废”，其实一直面向的都是我们，只不过可能顺带连累了其他的物种。不禁让人感慨，人可能才是这个世上的撒旦。\n所以在环境的设定上，只要抓准“人”来针对，都是ok的。至于造成什么形式的“废土”环境，交给那个毁灭这个世界的原因。", mt: "0px", mb: "0px" },                
+                { type: "text", content: "<strong><span style='color:#e50000;'>•</span> 工业技术的停滞或偏离</strong>", mt: "20px", mb: "6px"},                
+                { type: "text", content: "也许是《Mad Max》的影响力着实深远，所以大家提起废土，必然联想到的都是滚滚黄沙上轰轰飞驰的燃油机车。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/17.jpg"], mt: "0px", mb: "0px" },
+                { type: "text", content: "<strong>《辐射》系列游戏</strong>\n大名鼎鼎的《辐射》（Fallout）系列，故事中末世发生时人类的工业技术顶峰为真空管[3] 技术，并未发展到当今社会普遍应用的晶体管，核战争的发生使这项科技树越长越偏离我们的现实世界。这个背景下所呈现的「真空管朋克」附加到废土题材内核里，形成了我们现在所看到的《辐射》世界。\n所以我们在《疯狂的麦克斯》看到的都只是该作时代背景设定下的工业技术上限，并不能与“废土”划等号，不同的废土设定应该存在不同的工业技术或者其“朋克”形式表达。\n而废土下人们的「装备」，其实也是基于所剩下的工业技术的，并不是末日后，所有人就必须穿成捡破烂的样子。", mt: "0px", mb: "0px" },
+                { type: "text", content: "<strong><span style='color:#e50000;'>•</span> 隐藏属性——信仰</strong>", mt: "20px", mb: "6px"},  
+                { type: "text", content: "自古以来信仰都是支撑人们面对极端环境坚强活下去的伟大力量。这里说的信仰不局限于宗教、特定力量、图腾、人，凡是能为他人给予精神支撑或者让人们聚集成一股力量的，均可被称为信仰。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/18.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "《疯狂的麦克斯》中War Boys从小就接受V8邪教洗脑，追随不死乔甘愿成为炮灰，死后进入英灵殿\n对于War Boys来说，随意回眸都被当做惊鸿一瞥，不死乔就是信仰。\n在这资源稀缺、一切功能至上的环境里，唯独方向盘是造工及其精致且供奉在专门的地方，驾驶就是信仰。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/19.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "《艾利之书》（The Book of Eli ），近未来地球爆发一场毁灭性战争后，人类文明消失殆尽，星球满目疮痍。\n故事中的信仰（世上唯一仅存的圣经）既是别有用心之人妄想控制人们的终极武器，也是男主排除万难的精神支柱。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/20.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "《The last of us》系列中人类不同的阵营\n信仰可以是军事力量，也可以是个人崇拜或扭曲的信念，不同价值观的人组成不同的社会形态。总之信念能让绝望的人们团聚一块，应对周遭。可以说，信仰已然是废土居民除了食物和水之外赖以生存的第三要素。\n\n以上便是我所理解的多元废土。", mt: "0px", mb: "0px" },
+                { type: "title", content: " 科幻题材不同亚流派中的「朋克」", mt: "50px", mb: "6px"},
+                { type: "image", src: ["../assets/images/works/wasteland/21.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "维基百科「科幻题材」中列举了20种（截至2020年12月10日）不同的科幻亚流派[4] ，能被称为流派的势必已然具有一定影响力的，其中包含了最近因“2077”而大热的「赛博朋克（Cyberpunk）」、广为人知的「蒸汽朋克（Steampunk）」以及被融入到麦克斯的废土世界中的「柴油朋克（Dieselpunk）」。\n\n<strong>「朋克」？</strong>\n朋克其实是起源于摇滚乐中的一个流派，但超出了音乐的范畴影响广大而形成一种文化 [5] 。网上对朋克的定义也比较泛的，诸如：反叛、无政府、个性等等，而科幻题材下主要引用的是朋克所蕴含的“破坏与重建”。即在文明发展进程中，科技技术在面对技术奇点 [6] 时，往不同于现实世界的方向发展的想象。“破坏”在于改变了现实技术的轨迹，“重建”在于对发展的畅想。", mt: "0px", mb: "0px" },
+                { type: "text", content: "<strong><span style='color:#e50000;'>•</span> 流派只是标签</strong>", mt: "20px", mb: "6px"}, 
+                { type: "text", content: "不同的流派只是一个个的标签，如《疯狂的麦克斯》废土的内核附着柴油朋克的元素，一部作品其实是可以有各种各样的标签。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/22.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "《冰汽时代》（Frostpunk），极寒废土下的「蒸汽朋克」，你会成为怎么样的领导者？", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/23.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "《地铁》（METRO）系列游戏，不同于《辐射》系列「真空管朋克」废土，《地铁》散发着浓浓的毛子味儿。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/24.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "《往日不再》（Days Gone），废土题材与亚文化的对撞，末日下的机车浪漫。\n摩托车文化（Motorcycle Culture），美国重要的亚文化代表，是否可能有一天也与朋克一样出圈，对其他文化题材产生更多影响？", mt: "0px", mb: "0px" },
+                { type: "text", content: "<strong><span style='color:#e50000;'>•</span> 很“废”很“土”，但不“废土”的《无主之地》系列</strong>", mt: "20px", mb: "6px"}, 
+                { type: "text", content: "提起废土，除了前面提到的几款经典游戏以外，肯定会有不少人会想起一款家喻户晓的游戏系列——《无主之地》（Borderlands）。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/25.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "毫无疑问，《无主之地》的世界里充满了对《疯狂的麦克斯》的敬意", mt: "0px", mb: "0px" },
+                { type: "text", content: "<strong>很「废」</strong>", mt: "20px", mb: "6px"}, 
+                { type: "text", content: "无主之地的世界里无处不充满“丧”和无厘头，尤其印象深刻的是游戏中脸谱化的狂人跑过来高举炸药自杀式袭击，不得不让我回味起《疯狂的麦克斯》中向死而生的War Boys。", mt: "0px", mb: "0px" },
+                { type: "text", content: "<strong>很「土」</strong>", mt: "20px", mb: "6px"}, 
+                { type: "text", content: "无主之地每个星球都独具特色，潘多拉星的环境与麦克斯的荒漠如出一辙，也是漫天黄沙中飞驰着各种胡编乱改的车辆。土著们也是这般“热情好客”。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/wasteland/26.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "我们可以说它视觉元素的使用是很废土风格的，但也<span style='color:#e50000;'>仅限</span>无主世界中的潘多拉星，其他星球的风格可是各有风味的", mt: "0px", mb: "0px" },               
+                { type: "image", src: ["../assets/images/works/wasteland/27.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "传说秘藏（The Vault）在每个星球都有遗留，各个大企业都纷纷加入探索宇宙寻找秘藏的“淘金热”中，而玩家所扮演的便是身怀绝技的秘藏猎人（Vault Hunters）。\n试想一下，这样的故事背景，如果去掉各种高科技、魔法等附加的技术或奇幻元素，把车换成马，会不会就突然《荒野大镖客》了？《无主之地》实则一部「太空西部 [7]（Space Western）」内核的淘金大马戏。", mt: "0px", mb: "0px" },                
+                { type: "title", content: "最后", mt: "50px", mb: "6px"},
+                { type: "quote", content: "- “May your survival be long.” （- “愿你活得长久。”）\n- “May your death be swift.” （- “愿你死得痛快。”）", mt: "0px", mb: "0px" },
+                { type: "text", content: "我很喜欢《美国末日2》中狼群的问候语，寥寥几字，末日下顽强又脆弱的生命以及这个群体对生命的态度如滴入水中之墨，迅速晕染开来。\n我也很记得《美国末日1》中Joel和Ellie的一个小片段：", mt: "0px", mb: "0px" },                
+                { type: "quote", content: "Ellie看到末日前留下的海报上的瘦女郎问“为什么把她们画这么瘦?”\nJoel“因为美。”\nEllie“吃胖点不好吗?”", mt: "0px", mb: "0px" },
+                { type: "text", content: "《美末》系列其实一直在为我们呈现的是新老观念的对撞以及大世界下小人物的个人选择，Joel选择救Ellie是，Ellie对Abby的选择也是。我们无法用我们身处的世代的价值观来去评判这个末世下一个小人物选择的对错，我们只需要去感受。\n\n人们被「废土」所吸引是有各色各样的原因的，脱离现世、新旧观念冲突、人性的光辉或阴暗……\n这篇文章意在为自己的对“废土”的理解进行一次复盘与整理，如果有分析得不够深入或偏差的，欢迎指出讨论。", mt: "0px", mb: "0px" },                
+                { type: "title2", content: "标注", mt: "80px", mb: "6px"},
+                { type: "text", content: "<span style='color:#e50000;'>[1]</span> 启示录与后启示录，Apocalyptic and post-apocalyptic fiction，维基百科，https://en.wikipedia.org/wiki/Apocalyptic_and_post-apocalyptic_fiction .\n<span style='color:#e50000;'>[2]</span>《莱博维茨的赞歌》 A Canticle for Leibowitz 1960年出版，[美] 小沃尔特•M•米勒（Walter Michael Miller Jr.，1923-1996）\n<span style='color:#e50000;'>[3]</span> 真空管（Vacuum Tube），代表玻璃瓶内部抽真空，以利于游离电子的流动，也可有效降低灯丝的氧化损耗。真空管被广泛运用于生活中的各个角落.\n<span style='color:#e50000;'>[4]</span> 科幻题材的亚流派，Subgenres of Science fiction，https://en.wikipedia.org/wiki/Science_fiction .\n<span style='color:#e50000;'>[5]</span> 《什么是朋克文化？》知乎，https://www.zhihu.com/question/350725081/answer/858138628 .\n<span style='color:#e50000;'>[6]</span> 技术奇点，Technological singularity，https://en.wikipedia.org/wiki/Technological_singularity .\n<span style='color:#e50000;'>[7]</span> 太空西部，Space Western，维基百科，https://en.wikipedia.org/wiki/Space_Western .", mt: "0px", mb: "0px" },
             ]
         };
     </script>
+
 
     <!-- ========================================== -->
     <!-- 密碼驗證畫面 (Auth Screen)                  -->
@@ -186,7 +269,7 @@
         
         <!-- 導航列：在首頁 iframe 中會被 JS 自動隱藏，僅在獨立訪問時顯示 -->
         <nav id="project-nav" class="fixed top-0 left-0 w-full p-6 text-black flex items-center justify-between bg-white/90 backdrop-blur-md z-50 border-b border-zinc-100 transition-opacity duration-300">
-            <a href="#" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#e50000] transition-colors bg-zinc-50 hover:bg-zinc-100 px-5 py-2.5 rounded-full shadow-sm border border-zinc-200">
+            <a href="../index.html" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#e50000] transition-colors bg-zinc-50 hover:bg-zinc-100 px-5 py-2.5 rounded-full shadow-sm border border-zinc-200">
                 &larr; Back to Home
             </a>
             <div class="font-bold text-xl uppercase tracking-tighter">FUNX.</div>
@@ -212,8 +295,8 @@
                     © 2026 FUNX. All rights reserved
                 </div>
                 <div class="flex gap-6 justify-center">
-                    <a href="https://www.behance.net/" target="_blank" class="hover:text-[#e50000] transition-colors font-semibold uppercase text-sm">Behance</a>
-                    <a href="https://www.artstation.com/" target="_blank" class="hover:text-[#e50000] transition-colors font-semibold uppercase text-sm">ArtStation</a>
+                    <a href="https://www.behance.net/funxarts" target="_blank" class="hover:text-[#e50000] transition-colors font-semibold uppercase text-sm">Behance</a>
+                    <a href="https://www.artstation.com/funx" target="_blank" class="hover:text-[#e50000] transition-colors font-semibold uppercase text-sm">ArtStation</a>
                 </div>
             </div>
         </footer>
@@ -231,7 +314,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- 邏輯控制腳本                               -->
+    <!-- 邏輯控制腳本                                -->
     <!-- ========================================== -->
     <script>
         // 嚴謹的 Iframe 判斷函式 (防止跨域存取引發 SecurityError)
@@ -402,20 +485,20 @@
                                         ${block.content}
                                     </h2>
                                     </div>`;
-                    
+
                     } else if (block.type === 'title2') {
                             return `<div class="w-full flex justify-center px-6 md:px-10" ${spacingStyle}>
                                      <h2 class="w-full max-w-4xl text-1.5xl md:text-2xl font-bold text-zinc-900 m-0 p-0">
                                         ${block.content}
                                     </h2>
-                                    </div>`;                                                          
-
+                                    </div>`;
+                                            
                     } else if (block.type === 'text') {
                         // 渲染文字：加入 m-0 p-0 清除預設邊距，並套用全局字號與行距設定
                         return `<div class="w-full flex justify-center px-6 md:px-10 m-0" ${spacingStyle}>
                                     <p class="w-full max-w-4xl text-zinc-700 font-medium text-left whitespace-pre-line m-0 p-0 ${baseTextClass} ${baseLineClass}" ${globalTextStyle}>${block.content.trim()}</p>
                                 </div>`;
-            
+
                     } else if (block.type === 'quote') {
                         return `<div class="w-full flex justify-center px-6 md:px-10" ${spacingStyle}>
                                 <div class="w-full max-w-3xl border-l-4 border-[#e50000] pl-5 py-2">
@@ -432,7 +515,7 @@
 
                             </div>
                         </div>`;
-                                
+
                     } else if (block.type === 'iframe') {
                         // 渲染外部影片 (嵌入代碼)
                         const url = block.src.join('');
@@ -447,6 +530,7 @@
                                         </div>
                                     </div>`;
                         }
+                        
                     }
                 }).join('');
 
@@ -489,7 +573,7 @@
                     const storageKey = `FUNX_AUTH_${_CONF.p_id}`;
                     sessionStorage.setItem(storageKey, JSON.stringify({ timestamp: new Date().getTime() }));
                     
-                    // 輸入框變綠色
+                    // 輸入框變綠色/紅色反饋？(這裡選擇直接淡出進入)
                     pinBoxes.forEach(box => {
                         box.classList.remove('border-zinc-500', 'text-zinc-900');
                         box.classList.add('border-green-500', 'text-green-500');
@@ -528,7 +612,7 @@
                 }
             }
 
-            // 啟動流程
+            // 啟ড়ান্ত流程
             checkAuthStatus();
 
             // --- 3. 嚴格防拷貝與防下載邏輯 ---
