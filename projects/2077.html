@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2077</title>
+    
+    <!-- 引入字體與圖標 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    
+    <style>
+        /* 移除自製的捲動條設定，改用瀏覽器預設捲動條，避免右側產生空白異常 */
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #fcfcfb; 
+        }
+
+        /* 將防拷貝樣式獨立，由 JS 動態控制 */
+        .prevent-copy {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .prevent-copy img {
+            /* 禁止圖片上的預設行為 (如行動端長按出現選單) */
+            -webkit-touch-callout: none;
+        }
+        
+        /* 密碼錯誤震動動畫 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* 隱藏原生輸入框的光標和背景，保留其功能性 */
+        .pin-input-hidden {
+            color: transparent;
+            text-shadow: 0 0 0 transparent;
+            background: transparent;
+            caret-color: transparent;
+        }
+        .pin-input-hidden:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body class="text-zinc-900 antialiased overflow-x-hidden">
+
+    <!-- ========================================== -->
+    <!-- 🛡️ 專案全局配置區 (安全混淆版)                 -->
+    <!-- ========================================== -->
+    <script>
+        // 說明：為防止在「查看原始碼(Ctrl+U)」中直接暴露密碼與開關狀態，
+        // 這裡的數值與變數名稱採用了 Base64 編碼進行輕度混淆。
+        //
+        // 【狀態開關對照表】
+        // 開啟 (true)  👉 "dHJ1ZQ=="
+        // 關閉 (false) 👉 "ZmFsc2U="
+        //
+        // 【自定義密碼教學】
+        // 預設密碼 "2026" 編碼後為 "MjAyNg=="
+        // 常見密碼： "1234" 👉 "MTIzNA==" | "0000" 👉 "MDAwMA==" | "8888" 👉 "ODg4OA=="
+        // 若要自訂其他密碼，請在瀏覽器按 F12 進入 Console (主控台)，
+        // 輸入 btoa("你的密碼") 即可獲得編碼字串，填入下方 p_key 即可。
+        const _CONF = {
+            s_lock: "ZmFsc2U=",  // 一、密碼功能開關 (預設: dHJ1ZQ== 開啟)
+            p_key: "MjAyNg==",   // 二、自定義密碼 4位數
+            p_id: "wasteland",      // 專案唯一標識符 (區分不同作品，不需編碼)
+            s_copy: "ZmFsc2U="   // 三、防拷貝與防下載開關 (預設: ZmFsc2U= 關閉)
+        };
+
+        // ==========================================
+        // 專案內容資料 (防扒取核心)
+        // 說明：為了防止未解鎖前被扒圖軟體(如Eagle)掃描源代碼，
+        // 這裡不直接把內容寫入HTML，而是透過JS動態生成。
+        // ==========================================
+        const PROJECT_DATA = {
+            title: "波兰蠢驴式对话系统解构分析",
+            desc: "「蠢驴」的倔用在了聊天上",
+            
+            // 四、自定義大標題區域的上下間距 (支援 "px", "vh", "rem" 等單位)
+            // 覺得上方太緊湊可以把 mt 調大。若想使用系統預設的自適應間距，請保持為空字串 ""
+            headerSpacing: { mt: "40px", mb: "10px" },
+
+            // 五、全局文字設定 (字號與行距)
+            // 可使用 "px", "rem" 或純數字。若想使用系統預設，請保持為空字串 ""
+            globalTextConfig: { 
+                fontSize: "15px",   // 範例: "16px", "1.125rem" (預設留空為自適應大小)
+                lineHeight: "2"     // 範例: "1.6", "2", "32px" (預設留空為 1.625)
+            },
+
+            // 六、是否強制圖片等比例拉伸至左右完全貼邊 (true: 滿版貼邊, false: 限制最大寬度居中)
+            stretchToEdge: false,
+
+            // 縮略圖 (與主頁卡片保持一致，同樣採用陣列打斷防扒取)
+            thumbnail: ["../assets/images/works/wasteland/thumbnail.webp"],
+
+            // 【混合排版核心】
+            // 透過 blocks 陣列，你可以自由組合「圖片 (image)」、「文字 (text)」與「外部影片 (iframe)」
+            // 新增功能：你可以使用 `mt` (上間距) 與 `mb` (下間距) 來單獨自定義每個區塊的距離！支援 "px", "rem", "vw" 等單位。
+            blocks: [
+                // 1. 圖片區塊 (預設無間距貼合)
+                { type: "text", content: "半年前，我写的《废土设定与精神内核》的开篇第一句是“你的狗帮你把2077申请了退款，并帮你打开了这篇文章”........然后我瞒着狗买了实体版（我真的不是为了朱迪）。", mt: "32px", mb: "10px" },
+                { type: "image", src: ["../assets/images/works/2077/01.jpg"], mt: "0px", mb: "0px" },
+                { type: "text", content: "奋战两个周末「朱迪2077」并成功“躲开”她之后，我陷入了空虚，开始一段段地回味我与她之间的每句对话。", mt: "0px", mb: "0px" },                
+                { type: "image", src: ["../assets/images/works/2077/02.jpg"], mt: "20px", mb: "0px" },
+                { type: "text", content: "抛开多到令人发指的BUG、铁憨憨一样的AI、谜一样的数值导向、鸡肋般的潜行机制.....不对，我这篇文章不是为了吐槽的！    \n「2077」还是有可圈可点的地方的，比如对话过程中人物的剧情表演方面。游玩下来，且不论整体游戏的大叙事效果如何，至少单个小剧场下演出是非常丰满的。「蠢驴」在这方面从巫师开始一次比一次“倔”，在「波兰蠢驴」式对话叙事的路上越走越远。这次我不谈文化不谈概念，我将以「2077」为主要对象，来聊聊我眼中支撑「波兰蠢驴」式对话演出的对话系统（Dialogue System）是怎样的。\n篇幅有点长~所以分成了上下两篇文章，本篇包含两个章节，6600多字【长篇警告】，同时包含少量剧透成分【剧透警告】。", mt: "0px", mb: "0px" },                
+
+                { type: "title", content: "<span style='color:#e50000;'>•</span> 功能结构", mt: "20px", mb: "6px"},
+                { type: "text", content: "<span style='color:#e50000;'>PART 1：UI解构分析</span> - 本部分将从巫师1开始一直聊到到最新的「2077」，把他们各自的对话系统中各个小模块逐一拆解出来，并对比出它们的迭代方向，让你看个透；", mt: "0px", mb: "0px" },                
+                { type: "text", content: "<span style='color:#e50000;'>PART 2：适配方案</span> 第二部分将反推「2077」这个系统都是怎么自适应适配的。", mt: "0px", mb: "0px" },
+ 
+                { type: "title", content: "<span style='color:#e50000;'>PART 1：UI解构分析</span>", mt: "60px", mb: "6px"},     
+                { type: "title2", content: "UI基本组成结构", mt: "0px", mb: "6px"},                             
+                { type: "image", src: ["../assets/images/works/2077/03.jpg"], mt: "0px", mb: "20px" },
+                { type: "text", content: "首先我针对游戏的对话系统UI进行了简单的解构，为大家分析一下其组成和适配方式。", mt: "0px", mb: "0px" },                
+                { type: "image", src: ["../assets/images/works/2077/04.jpg"], mt: "0px", mb: "0px" },
+                { type: "text", content: "上图01是经过解构反推出来的「赛博朋克2077」（后称「2077」）的对话系统的UI，排除一些如：出身专属信息、对话中付费等特殊结构，以上就是最常用的基础UI结构。\n\n我们再来详细解析一下单个对话条目的构成：", mt: "0px", mb: "0px" },            
+                { type: "image", src: ["../assets/images/works/2077/05.jpg"], mt: "0px", mb: "0px" },
+                { type: "text", content: "最基本的对话选择由图02中所示的三个部分组成，分别是：A-互动对象、C-对话条目，以及B-玩家悬停（Hover）将要操作的对话条目的状态。    \n\n举个日常生活中的例子，我们到便利店买瓶可乐，我要做的是：①确认自己是否有足够的钱【条件】；②对售货员【互动对象】说“我要一瓶可乐！”【对话内容】；③进行付款【动作】。而因为这个行为是发生在计算机游戏中的，所以我还需要按对应按钮去告诉计算机执行这条指令（图02中的B）。    \n有朋友可能会觉得A和B好理解，但为什么C要这么复杂的构成？难道“我要一瓶可乐！”还不足以包含我要付款的【动作】以及我有5元这个【条件】吗？    \n这个问题我们放在本文后面解答，我们先来了解一下「蠢驴」在开发「2077」前的游戏——「巫师」三部曲都是怎么做的，以及都是如何一步步将对话系统的UI改变成现在的样子的。", mt: "0px", mb: "0px" },     
+
+                { type: "title2", content: "<span style='color:#e50000;'>•</span>《巫师》三部曲", mt: "50px", mb: "10px"},    
+                { type: "image", src: ["../assets/images/works/2077/06.jpg"], mt: "0px", mb: "0px" },
+                { type: "text", content: "说起「巫师」，就不得不提一下「蠢驴」在开发巫师1之前在做的事情。在开发巫师前，他们原本做的是BioWare开发的经典D&D（龙与地下城）设定的RPG游戏「博德之门」的波兰代理权，还为其第二部做了主机移植PC的事情。在D&D复杂的世界里，你可以是善良、邪恶或是中立，D&D给予玩家的是足够支撑其成为任何他想要成为的人所需要的完善机制。但这个世界的核心是平衡，绝对的善良或邪恶都不可能支配这个世界。而从巫师给玩家呈现的世界来看，虽然未达到D&D那样的复杂程度，但「博德之门」对「蠢驴」的影响之大是刻在骨子里的。", mt: "0px", mb: "0px" },                 
+
+                { type: "title2", content: "巫师 1", mt: "20px", mb: "10px"},    
+                { type: "image", src: ["../assets/images/works/2077/07-博德之门.jpg"], mt: "0px", mb: "0px" },
+                { type: "text", content: "图03是三款游戏的对话系统的对比图，可以说巫师1在对话文本上深得博德之门的“真传”，浓浓的cRPG味道。", mt: "10px", mb: "0px" },                    
+                { type: "image", src: ["../assets/images/works/2077/08-巫师1.jpg"], mt: "30px", mb: "0px" },
+                { type: "text", content: "如果只是剧情对话还好，如果涉及到如存放道具等与NPC产生交互的情况就会比较尴尬了。而巫师1的做法则是如图04这般...暧昧?", mt: "10px", mb: "0px" },    
+                { type: "image", src: ["../assets/images/works/2077/09-方.jpg"], mt: "30px", mb: "10px" },
+                { type: "text", content: "上述几款游戏的对话系统除了功能入口的尴尬，还有一个很明显的问题——我不知道我选择的对话将产生的<span style='color:#e50000;'>后果</span>，无法对我的选择做一个准确的预判，我所选择的对话到底只是闲聊还是会发生什么别的行为。人类的语言是极其复杂的，我们经常无法准确地判断出某句话将是何用意，更不用说是抛开语气辅助的文本选项。当然，并不排除揣摩心思然后做出应对也是乐趣来源之一，但作为玩家的我还是更希望了解清楚我所选择的这个「意思意思」到底是哪个意思，以避免下方视频主人翁的境遇：", mt: "0px", mb: "0px" },   
+                { type: "iframe", src: ["https://v.qq.com/txp/iframe/player.html?vid=n3259nyejub"], mt: "10px",mb: "10px" }, 
+                { type: "text", content: "原Po：Dialogue Tree (video game parody) - from:Youtube", mt: "0px", mb: "20px" },                               
+
+                { type: "title", content: "巫师 3 - UI解构", mt: "50px", mb: "10px"},  
+                { type: "image", src: ["../assets/images/works/2077/10.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "从UI结构来说，巫师1的十分简单：<span style='color:#e50000;'>【序号】+【对话文本】</span>。    \n就体验而言，序号除了标明条目数之外，还承载着通过键盘数字键快速选择对应条目选项的功能，这一设置也是延续了博德之门。    \n借此，不得不吐槽一下，“跳过对话”操作与“选择对话”操作同为鼠标左键，且在进入对话选择状态时，鼠标会被强行锁定在上图黄色区域所示的对白选择区且进入该状态几乎无操作屏蔽间隔，导致极易误操作。    \n总体来说，一代的交互体验以现在的目光去看待的话，可以说是非常糟糕的...", mt: "10px", mb: "0px" },   
+
+                { type: "title2", content: "巫师 2", mt: "50px", mb: "10px"},  
+                { type: "image", src: ["../assets/images/works/2077/11-巫师2vs2077.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "UI结构相比第一代优化不少，去除了无意义的序号、将功能入口融合进对话选项，还添加了许多辅助性图标来帮助玩家理解。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/2077/12-罗契.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "更具重要意义的是巫师2加入了主要对话与次要对话的区分。图05可以看到有两个黄色选项和一个白色选项，黄色选项实际上就是决定剧情走向的主要对话选项，一般都是N选1的单一选择存在。    \n而大部分白色选项，无论是否触发它，都不会直接影响大故事的走向，它充当的作用大部分是“更多剧情”的选项入口。    \n比如上图中，在杀死还是放过科德温之王的抉择中，如果你选了这个“更多剧情”，相当于让制作组添油加醋地劝你“杀了他！”。    \n简单对比，二代无论从游戏性还是交互体验来说，都相比一代有了质的提升。", mt: "0px", mb: "0px" },
+
+                { type: "title2", content: "巫师 3", mt: "50px", mb: "10px"},  
+                { type: "image", src: ["../assets/images/works/2077/13-巫师3vs2077.jpg"], mt: "10px", mb: "0px" },   
+                { type: "text", content: "巫师3的对话系统与前两代比较明显的区别在于①增加了悬停指示标；②增加动作描述；③增加限时选择机制。", mt: "0px", mb: "0px" },               
+                { type: "text", content: "<span style='color:#e50000;'><strong>① 悬停指示标</strong></span>", mt: "0px", mb: "0px" },                    
+                { type: "text", content: "前两代不同，巫师3不再局限PC版，发布了主机版本。这意味着要支持两套操作逻辑，在主机平台上放弃光标操作（不是说主机不能用光标，而是在对话选择的情境下用手柄控制光标进行选择的效率非常低下），需要为线性操作的手柄操作提供一个足够明确的悬停状态来明确当前将要执行的选项。", mt: "0px", mb: "0px" },
+                { type: "text", content: "<span style='color:#e50000;'><strong>② 动作描述</strong></span>", mt: "0px", mb: "0px" },                    
+                { type: "text", content: "第三代对于动作预警的提示虽然在游戏中未能广泛应用开来，仅在比较少部分的章节对话中出现，更多出现的情形要么是对话实在讲不清楚选项的差别，又或者是不宜说什么但又必须让玩家选一个。但我相信，正因为有此尝试，才会为这个结构在「2077」中的大量出现提供前提。", mt: "0px", mb: "0px" },
+                { type: "text", content: "<span style='color:#e50000;'><strong>③ 限时选择机制</strong></span>", mt: "0px", mb: "0px" },                    
+                { type: "text", content: "在为玩家提供选项的时候，实时继续演绎故事的推进，玩家必须在有限时间内做出选择或反应，否则将终止剧情或按照其中一个默认的选项让剧情继续发展下去。这样的设计一定程度上加强了紧张感和临场感，这个设计同样延续到「2077」中。", mt: "0px", mb: "0px" },
+                { type: "text", content: "<span style='color:#e50000;'><strong>④ 平台差异</strong></span>", mt: "0px", mb: "0px" },                    
+                { type: "text", content: "第三代做了PC和主机双版本。针对PC版本恢复了二代弃用的序号辅助；而针对线性操作的主机版本，则去掉了该操作限制下无意义的序号。", mt: "0px", mb: "0px" },
+
+                { type: "title2", content: "拓展知识：", mt: "50px", mb: "10px"},  
+                { type: "iframe", src: ["https://v.qq.com/txp/iframe/player.html?vid=w3260e4vgtb"], mt: "20px",  mb: "0px" },
+                { type: "text", content: "《巫师3的电影化对话的实现-GDC2016（Behind the Scenes of the Cinematic Dialogues in The Witcher 3）》", mt: "0px", mb: "0px" },     
+                { type: "text", content: "纵观巫师系列三代对于体验上的提升，一代到二代是肉眼可见的，而二代到三代则是润物无声的。", mt: "0px", mb: "0px" },                             
+
+                { type: "title2", content: "赛博朋克2077", mt: "50px", mb: "10px"},  
+                { type: "text", content: "简单分析完巫师系列的优化过程，再来到我们的本次讨论的主要对象「2077」，本作的对话系统的UX着实让我感受到了蠢驴的“倔”！功能性和体验都实实在在地比巫师系列提升了一大档。", mt: "0px", mb: "0px" },       
+
+                { type: "text", content: "<span style='color:#e50000;'><strong>（1） 对话文本</strong></span>", mt: "20px", mb: "0px" },                         
+                { type: "image", src: ["../assets/images/works/2077/14-2077-1文本.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "对话文本是对话系统内容的主要载体，玩家需要通过概括性的选项来表达，表达出符合自己想要成为的「V」。详细的选项描述（如博德之门、巫师1）能尽可能准确描述清楚选项的内容，但这冗长的文本严重加大玩家的阅读负担，所以要进行概括。而概括又需要确保信息、倾向甚至情绪表达无误，所以这样的概括性文本往往很考验文案策划的功底。\n另外，为什么说是“主要”而不是“唯一”载体呢？因为「语言」不仅仅只是对白，还有动作。", mt: "0px", mb: "0px" },
+
+                { type: "text", content: "<span style='color:#e50000;'><strong>（2）动作</strong></span>", mt: "20px", mb: "0px" },                         
+                { type: "image", src: ["../assets/images/works/2077/15-2077-2动作.jpg"], mt: "10px", mb: "10px" },
+                { type: "text", content: "<span style='color:#e50000;'>【预警】</strong></span>    \n「语言」的表达其实可以包含名词性表达和动词性表达。一句对白，是一个包含信息的【物件】，是个名词，它可以表达的可以意图、观点、感叹等等，比如“我要吃饭”表达的是这个意图，能否真的吃饭不得而知。而一个动作，则是执行信息的【事件】，是个动词，它所表达的是一个明确的指令、执行的过程。在游戏当中将「动作」从对白中明确出来，可大大地给玩家预警将要发生的事情。就像前面杰洛特的例子：“[对战] 我是猎魔人”与“[炫耀] 我是猎魔人”，这样杰杰就不用再担心这句话带来的后果了。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/2077/16-2077-2动作2.jpg"], mt: "50px", mb: "10px" },
+                { type: "text", content: "<span style='color:#e50000;'>【自然流露】</strong></span>    \n动作与对白分离还有一个好处就是：对话选项不再需要在对白里“塞进”动作的信息，与日常我们表达的方式是一致的。当我要抽根烟并说一句搭配这个行为的话时，我要做的是说出这句话并点上烟，而不是“吧啦吧啦~我要抽根烟”。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/2077/17-2077-2动作3.jpg"], mt: "50px", mb: "10px" },
+                { type: "text", content: "<span style='color:#e50000;'>【关联强化】</strong></span>    \n切换对话选项时同步切换执行对象的辅助图标，强化操作与对象的关联度。（顺便看看杰克的手...PS4版跟PC版到底差多远...）", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/2077/18-2077-2动作4.jpg"], mt: "50px", mb: "10px" },
+                { type: "text", content: "<span style='color:#e50000;'>【动作排序】</strong></span>    \n这个优化方向是很好理解的，当前选项对后续剧情发展产生最直接作用的是【动作】，而非【对白】。将动作前置，对于玩家来说选择效率肯定是更高的。", mt: "0px", mb: "0px" },
+
+                { type: "text", content: "<span style='color:#e50000;'><strong>（3）条目启用条件</strong></span>", mt: "20px", mb: "0px" },                         
+                { type: "image", src: ["../assets/images/works/2077/19-2077-3条目启用条件.jpg"], mt: "10px", mb: "10px" },
+                { type: "text", content: "其功能就是字面意思，启用这个条目，首先得达到对应的条件，如：拥有某个物件、使用过某个东西、装备了某个物品等等，而在「2077」中则是属性值。条件的设定为玩家的游玩提供了部分培养策略的考量，如何运用有限资源（如可用属性点数）在我更偏好的游玩风格上产生更多价值。不过这个属于另外一个设计范畴了，不在我们今天探讨的对话系统范围内。总地来说条件就是对玩家行为的一些限制，而之所以会有限制，那必然是突破了限制能带来“更多东西”。“更多东西”包含上图所示三种常见的流程：", mt: "0px", mb: "0px" },
+                { type: "text", content: "<span style='color:#e50000;'>① 岔路：</strong></span>", mt: "0px", mb: "0px" },
+                { type: "text", content: "选项间结果完全不同，这个很好理解，比如某个委托任务，你的对话（选择）就决定了被捆在车后备箱里的那个可怜虫的生死；", mt: "0px", mb: "0px" },      
+                { type: "text", content: "<span style='color:#e50000;'>② 捷径：</strong></span>", mt: "0px", mb: "0px" },
+                { type: "text", content: "跳过繁琐的步骤，比如某个支线任务是要在酒店跑上跑下地问人寻找线索才能找到钥匙打开目标房间门，而如果你“肉体”值超过10点，则可以去威胁维修工直接去帮你把门打开；", mt: "0px", mb: "0px" },     
+                { type: "text", content: "<span style='color:#e50000;'>③ 隐藏奖励：</strong></span>", mt: "0px", mb: "0px" },
+                { type: "text", content: "这类设定往往会给玩家带来额外的收益，然后再「折返」到原本的既定剧情路线上。这里的收益可以是实质性的金钱或道具、更多对话剧情、NPC好感度等，比如要推倒朱迪，就得有较高的“技术能力”值才能博得其青睐。    \n故事发展的流程不是只有以上三种简单的形式，它们还可以组合使用产生出很多意想不到的效果。总而言之，条目启用条件的作用就是这些各种发展流程的门锁，我把门放在那，你有钥匙的话就进去看看吧。", mt: "0px", mb: "0px" },     
+
+                { type: "text", content: "<span style='color:#e50000;'><strong>（4）互动对象 & 悬停状态（Hover）</strong></span>", mt: "20px", mb: "0px" },    
+                { type: "image", src: ["../assets/images/works/2077/20-2077-4互动对象&悬停状态.jpg"], mt: "10px", mb: "0px" },   
+                { type: "text", content: "悬停状态是PC和主机平台控件的必要状态，依赖它来明确反馈给玩家当前将要操作的对象控件。    \n互动对象，是巫师系列里不曾出现的UI部件，因为它们不需要，巫师的对话系统大到剧情演绎，小到路边NPC买装备都要进入锁定视角的小剧场，结束对话还要礼貌地说声“再见”。", mt: "0px", mb: "0px" },                
+                { type: "image", src: ["../assets/images/works/2077/21-切换.gif"], mt: "10px", mb: "0px" },                   
+                { type: "text", content: "「2077」存在大量的触发式互动对象，玩家可通过走进特定的区域、朝向来触发对话条目的唤出。而一个小范围中可互动的对象不限制在一个，甚至“我”有时候也是互动对象。在这样的前提下，明确互动对象是谁则是必需项。此外，游戏还支持在一定程度下通过转动视角的朝向来切换互动对象，可以说非常贴心了~", mt: "0px", mb: "0px" },
+                { type: "text", content: "这种触发式的唤出设定也算是蠢驴对对话系统的一次跃进，如果说锁定式的对话互动是坐在观众席下观看的小剧场，那么触发式就是将玩家置身于舞台当中。靠近即是激活互动，走开便是完结。", mt: "0px", mb: "0px" },                
+                { type: "text", content: "不过当然，那些需要强剧情演绎向的对话，仍然是巫师那样小剧场锁定视角的，至少这样才能确保玩家不会冒失地错过必要的选择。此外，也期待有更新颖的互动形式来打破这样的小剧场。", mt: "0px", mb: "0px" },
+
+                { type: "text", content: "<span style='color:#e50000;'><strong>（5）限时对话</strong></span>", mt: "20px", mb: "0px" },    
+                { type: "image", src: ["../assets/images/works/2077/22.webp"], mt: "10px", mb: "0px" },   
+                { type: "text", content: "限时对话在许多对话选择类玩法中比较常见，因表现上有与QTE（Quick Time Event-快速反应事件）接近，需要玩家在有限的短时间内进行操作，而容易让人粗暴地定义为单纯地提高刺激度。", mt: "0px", mb: "0px" },
+                { type: "text", content: "其实QTE需要的是玩家去配合游戏指令——A键出现了你就得赶紧点它。而限时对话其实是一种配合剧情表演的【实时推进】，服务的是剧情，不是玩法。而操作与否也与QTE不同，不限制于成功与否。在「2077」中，如面对军用科技老女人斯托特的质问超过了限时，便是失去耐性把你干掉，作为玩家你不得不重新读档再次面对她的急性子；再如一些听NPC们对话的剧情也常见这样的限时对话操作来插一句嘴，而你保持沉默也无伤大雅；再来一些万万没想到的，若你没有事先联系军用科技老女人，直接去漩涡帮买小平头机器人，故意不选等限时对话结束的话，反而会触发额外剧情。", mt: "0px", mb: "0px" },
+
+                { type: "text", content: "<span style='color:#e50000;'><strong>（6）最后一句话</strong></span>", mt: "20px", mb: "0px" },    
+                { type: "image", src: ["../assets/images/works/2077/23-2077-6最后一句话.jpg"], mt: "10px", mb: "0px" },   
+                { type: "text", content: "最后一句话，指的是剧情进入选择对白的“回合”的时候，将NPC/自己讲的最后一句话的字幕停留在画面上，辅助那些如我一样健忘的玩家进行对话选择。这个设计并不是「2077」才新增的，其实在巫师3里已得到应用。", mt: "0px", mb: "0px" },
+
+
+                { type: "title", content: "<span style='color:#e50000;'>PART 2：适配方案</span>", mt: "60px", mb: "6px"},  
+                { type: "text", content: "适配是即使在复杂硬件/软件变动情况下都要自动调节以保证信息有效显示的必要手段。硬件指的是显示端的分辨率，软件指的是游戏内功能模块间的优先级关系以及定位关系等。适配并不是简单配置一下对齐方式，它是需要花精力用心设计、配置的一门学问。", mt: "0px", mb: "0px" },
+                { type: "text", content: "<span style='color:#e50000;'><strong>• 适配对齐</strong></span>", mt: "0px", mb: "0px" },
+                { type: "text", content: "刚开始的时候总会有种对话面板偏左的错觉，而且也没有一个明确固定的对齐起点，第一反应是：“卧槽？这么随意的吗？”其实不然，认真分析一下其实不难反推到他们的适配方案。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/2077/24.jpg"], mt: "10px", mb: "0px" },   
+                { type: "text", content: "垂直方向的适配，是除互动对象以外的模块（上图蓝色虚线框）的总宽的中点相对于屏幕居中，而模块宽度取决于最长的条目。而互动对象则紧贴篮框模块左边缘进行右对齐。", mt: "0px", mb: "0px" },                
+                { type: "text", content: "编辑器中构建方式：1.单个条目用水平框（Horizontal Box）包裹各组件内容，并勾选“大小到内容（Size To Content）”，那么水平框就会自动根据子集的总宽度自适应宽度；2.建立一个垂直框（Vertical Box）用于包裹条目，同样勾选上“大小到内容”，这样整个垂直列表的宽度就会根据最长的条目进行自适应拉伸适配；3.将上一步骤的垂直框的锚点设置为中点，并把对齐方式设置为垂直居中；4.将互动对象模块锚点设置为右上角，并将对齐关系设置为垂直框的左上角绝对位置。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/2077/25.jpg"], mt: "10px", mb: "0px" },   
+
+                { type: "text", content: "<span style='color:#e50000;'><strong>• 平台差异</strong></span>", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/2077/26.jpg"], mt: "10px", mb: "0px" },   
+                { type: "text", content: "对于不同的平台，操作上有一定区别，部分游戏系统需要做较大的交互改动来适应平台操作特性。如上图战地1的好友系统，无光标的主机游戏只能使用线性操作，是无法复现PC鼠标的并行操作的，而在PC版下又不希望牺牲本应具备的并行操作便捷优势，于是就需要做两个版本的好友系统了。当然这样程度的适配必然产生巨大的工作量，这就要看项目的时间与成本与操作可牺牲的平衡是怎样的偏向了。如「2077」的功能系统也用PC光标的，并且没做多少光标附着优化；而场景中拾取的触发机制也是基于PC的，导致主机版“捡垃圾”体验极度不友好...对不起我又忍不住吐槽了起来，不过我想表达的就是不同平台操作体验上的适配是需要花精力去做区别的。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/2077/27.jpg"], mt: "10px", mb: "0px" },   
+                { type: "text", content: "回到蠢驴的对话系统，巫师3是做了平台差异适配的，PC版可用鼠标点击也可用数字键键入对应编号进行选择，而主机版则把服务于PC端的快速选择的数字序号隐藏了（红色字的选项只是不允许操作，并不是平台差异）。", mt: "0px", mb: "0px" },
+                { type: "text", content: "回到蠢驴的对话系统，巫师3是做了平台差异适配的，PC版可用鼠标点击也可用数字键键入对应编号进行选择，而主机版则把服务于PC端的快速选择的数字序号隐藏了（红色字的选项只是不允许操作，并不是平台差异）。", mt: "0px", mb: "0px" },
+
+                { type: "title", content: "<span style='color:#e50000;'>对话树</span>", mt: "60px", mb: "6px"},  
+                { type: "title2", content: "<strong>PART 1  什么是对话树</strong>", mt: "20px", mb: "6px"},  
+                { type: "text", content: "游戏有各式各样的叙事方式，引用黑曜石设计总监Josh Sawyer在12年GDC上的一个叫做《辐射：新维加斯的选择架构、玩家表达与叙事设计Choice Architecture, Player Expression, and Narrative Design in Fallout：New Veg》[1]的分享里关于叙事方式的分类。他指出常见的叙事方式可以概括为三大类：", mt: "0px", mb: "0px" },                
+                { type: "image", src: ["../assets/images/works/2077/28.jpg"], mt: "10px", mb: "0px" },   
+                { type: "text", content: "<span style='color:#e50000;'>一. 线性叙事（Linear）</span>", mt: "0px", mb: "0px" },
+                { type: "text", content: "也可以叫电影化叙事（Cinematic），也是最常见的一种，顽皮狗的《神秘海域（Uncharted）》系列和《美国末日（The Last Of Us）》系列都是这类叙事的著名例子。编剧掌握了角色的塑造、剧情的编排和节奏把控，玩家主要是在游玩过程中感受和欣赏角色们的表演，就像看电影。这类叙事方式的对话基本是服务于叙事的。", mt: "0px", mb: "0px" },
+                { type: "text", content: "<span style='color:#e50000;'>二. 关键词叙事（Keyword）</span>", mt: "0px", mb: "0px" },
+                { type: "text", content: "又叫主题对白（Subject Dialogue）叙事，代表作为《暗黑破坏神（Diablo）》与线性叙事类似，角色同样是已经塑造好的了，而对话基本为“你想了解***吗？”“你想要开始***任务吗？”这样的一个个选项，对话的作用是允许玩家何时去触发或接受既定内容。", mt: "0px", mb: "0px" },
+                { type: "text", content: "<span style='color:#e50000;'>三. 分支树（Branching Trees）</span>", mt: "0px", mb: "0px" },
+                { type: "text", content: "一般通过对话手段触发剧情分支，所以也可以叫对话树（Dialogue Trees）叙事，本文主要探讨的“蠢驴”的《巫师（The Witcher）》系列和《赛博朋克2077（Cyberpunk2077）》以及Josh Sawyer分享所探讨的主要对象《辐射（Fallout）》系列，都属于这类，叙事的时候会弹出对话框，根据玩家的选择的不同，游戏会在一定程度上往不同的方向发展，最终可能将剧情引向不同的结局，而这样的故事形式一般被称为开放式（Open-ended）故事。", mt: "0px", mb: "0px" },
+                { type: "quote", content: "“开放式故事常用的由对话选择驱动的对话树叙事，是否就是互动叙事？”", mt: "6px", mb: "6px"},
+                { type: "text", content: "首先，关于互动叙事，引用《故事的变身》一书中对其的定义：“互动性来自于数字媒介的互动与反应性质，当互动性与叙事联系时，便产生了互动叙事。[2]”", mt: "0px", mb: "0px" },
+                { type: "text", content: "其次，我们可以肯定的是开放式故事不是互动叙事，前者是故事的一种形式，是【数据】；而叙事是讲故事，属于【过程】。", mt: "0px", mb: "0px" },
+                { type: "text", content: "而游戏开发者是无法把剧情发展这个【数据】本身交由玩家去发挥的，因为完全交由玩家去发挥的故事情节等于没有故事情节，就像《模拟人生（The Sims）》。游戏开发者能做的是把【过程】交给玩家发挥，将情节的走向框架搭建好，让玩家享受选择的过程，并希望通过这样的互动让玩家一定程度上误以为自己描绘了整个故事。", mt: "0px", mb: "0px" },
+                { type: "text", content: "所以毫无疑问，对话树叙事确实是互动叙事，且无关乎叙事的内容是否开放式故事。但对话树叙事并不是互动叙事的全部，前者属于选择叙事，是互动叙事的其中一种。", mt: "0px", mb: "0px" },
+
+                { type: "title2", content: "<strong>PART 2  对话树结构</strong>", mt: "20px", mb: "6px"},  
+                { type: "text", content: "初接触的朋友可能有个误解，认为通过对话树提供更多选项、产生更多剧情走向的手段，就能为玩家提供更多的自由发挥空间。当然这肯定是正相关的，但只要细想一下便可知道这样不切实际。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/2077/29.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "就以简单的一次选择产生两个分支为例子，做4次选择就已经产生16种结果了，这样几何增长的分支差异导致的巨大工作量，放在任何一家游戏开发公司都是无法承受的。    \n那有什么手段能既保证足够丰富的选择方案，又能控制过多的结果导致成本飙升？", mt: "0px", mb: "0px" },                
+                { type: "text", content: "<span style='color:#e50000;'>折返（Foldback）</span>", mt: "0px", mb: "0px" },
+                { type: "text", content: "本文前面提到的关于条目启用条件处其实提到过折返。游戏设计大师Chris Crawford提到过“让一些分支折回到与其他一些分支相同的路线上，实现分支的合并[3]。” 折返的目的就是将剧情发展出来的众多变化节点汇总到有限的结果上。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/2077/30.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "上图来源于「2077」的主线之一“高级动物”中的某个对话选择，我将以它为例子逐一分析“折返”是如何运作的。", mt: "0px", mb: "0px" },
+                { type: "text", content: "先以最简单的③和④来说说，它们属于次级对话选项，主要作用的提供“更多内容”，触发它们之后会产生相应的对白演绎，而最终回归到上图的选择列表。这是最小范围的原地折返，对白选择触发的不是更多选项，而是独立的单元剧情演绎。", mt: "0px", mb: "0px" },
+                { type: "text", content: "最底下的⑤在这个小剧场下是“终止对话”的功能，其目的是结束/跳过/完成当前这个小剧场，让整个故事进入到下一个小剧场去。", mt: "0px", mb: "0px" },
+                { type: "text", content: "而回到①和②，选择了它们则是推进到后续情节，产生更多相应的下一层级的选择，这些选择可以是一层层独立的，也可以是相互交织的。只要这个小剧场继续“表演”，期间产生的分支节点便不断裂变下去。", mt: "0px", mb: "0px" },
+                { type: "text", content: "但无论①和②带来的后续演出如何裂变出各种各样的节点，最终都会回归到⑤这个唯一的[安全口令]，并结束当前这个小剧场的演出，整个剧情将进入到下一阶段的表演，剧情发展终将折返到开发者预设的特定节点上。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/2077/31.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "通过折返，游戏开发者可以将情节的发展编排成N条不同的路线供玩家“自由发挥”。如上图，除去蓝色的原地折返路径外，可以1246/1256/1356三条路径来叙述这个故事，三条路径的结果都折返到同一结果⑥。", mt: "0px", mb: "0px" },
+                { type: "text", content: "然而，Chris Crawford探讨“折返”的同时也表达了对其否定的态度：", mt: "40px", mb: "0px" },
+                { type: "quote", content: "折返的做法只是为玩家制造了“有所选择”的假象。这种交互是欺骗性的，一旦玩家发现了这个“骗局”（多玩几次迟早会发现），自然会有被欺骗的感觉。不断有人对折返系统进行探索，寻求折返与分支树的恰当搭配，以期实现互动叙事。然而这是死路一条。折返必然会让决策本身失去意义。只要在设计当中加入一次折返，整个设计就会变得有一点欺骗性；加入的折返越多，产生的毫无意义的路线也就越多，设计的欺骗性成分也就越多。", mt: "6px", mb: "6px"},
+                { type: "quote", content: "《游戏大师Chris Crawford谈互动叙事》第8章-分支树-P98", mt: "6px", mb: "6px"},
+                { type: "text", content: "但我不认同。\n大师的这个观点实则过于理性、功利化，将大部分的【体验过程】都视为了必须要为功能结果服务。然而，游戏乃至于生活，不正是因为有大大小小各种“无意义”的“骗局”的存在，才让这个【过程】更有意思吗？正如魔术，所有人都知道这是个骗局，但大家不也是在享受这个“被骗”的【过程】吗？", mt: "0px", mb: "0px" },
+                { type: "text", content: "而“蠢驴”在制造这些“骗局”的过程中，也再次让我感受到了他们的倔劲。", mt: "0px", mb: "0px" },
+
+                { type: "title2", content: "<strong>PART 3  案例分析</strong>", mt: "20px", mb: "6px"},  
+                { type: "text", content: "案例：《赛博朋克2077》 \n-主线任务 - 高级动物 - ◇ 在前台接入", mt: "0px", mb: "0px" },
+                { type: "iframe", src: ["https://v.qq.com/txp/iframe/player.html?origin=https%3A%2F%2Fmp.weixin.qq.com&containerId=js_tx_video_container_0.5451137289499458&vid=a32601vfv6a&width=677&height=380.8125&autoplay=false&allowFullScreen=true&chid=17&full=true&show1080p=false&isDebugIframe=false"], mb: "0px" },
+                { type: "text", content: "上方视频是该任务小节的其中一个分支选择路径的过程，整个流程并不复杂，就是<span style='color:#e50000;'>[接入]-[付款]-[断开连接]-[进入下一阶段]</span>的一个单线流程。但强尼·银手的出现，让我感觉背后的运作逻辑似乎并没这么简单。", mt: "0px", mb: "0px" },
+                { type: "text", content: "于是我便试试换个时机触发关于“艾芙琳”的询问：", mt: "20px", mb: "0px" },
+                { type: "text", content: "-主线任务 - 高级动物 - ◇ 在前台接入 （结束整个流程后再询问）", mt: "0px", mb: "0px" },
+                { type: "iframe", src: ["//v.qq.com/txp/iframe/player.html?origin=https%3A%2F%2Fmp.weixin.qq.com&containerId=js_tx_video_container_0.6075775731089889&vid=h3260ho83cv&width=677&height=380.8125&autoplay=false&allowFullScreen=true&chid=17&full=true&show1080p=false&isDebugIframe=false"], mb: "0px" },
+                { type: "text", content: "果然，强尼出现的这段插曲式小剧情是完全独立于对话流程的“彩蛋”。（佩服自己的敏锐）", mt: "0px", mb: "0px" },
+                { type: "text", content: "-“高级动物 - ◇ 在前台接入”对话流程结构", mt: "30px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/2077/32.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "为了搞清楚其背后的行为逻辑，我体验了所有的选项路线操作，梳理出该小剧场下的对话流程结构（见上图）。", mt: "0px", mb: "0px" },
+
+                { type: "text", content: "首先，这个小剧场的核心路线是唯一的，就是上图右边黄色线路，简化来说就是前面提到过的<span style='color:#e50000;'>[接入]-[付款]-[断开连接]-[进入下一阶段]</span>这样一个单线程。", mt: "0px", mb: "0px" },
+                { type: "text", content: "①处，本文Part2提到的原地折返的独立小对话，丰富对话的用途；", mt: "0px", mb: "0px" },
+                { type: "text", content: "②和③处，都是分岔再合并的节点，不影响本流程的走向，但会决定后续其他小剧场的一些变量。如②处决定的是下面剧情“[安全口令]”的用词，③决定的是将为你服务的性偶是谁。我们可以把这种对当前流程无意义，但影响后续其他剧情变量的做法，看做是延迟影响；", mt: "0px", mb: "0px" },                
+                { type: "text", content: "④处，为玩家暂时提供中断流程的出口，就像开局前的“准备按钮”，给玩家提供一定缓冲的机会。但为了使剧情继续发展下去，终归是要回到正轨的；", mt: "0px", mb: "0px" },                
+                { type: "text", content: "⑤彩蛋，先来说说它在这段小剧场的运作逻辑：玩家来这里的主要目的就是为了找到艾芙琳，所以只要玩家没有选择过这个“我要找艾芙琳·帕克”这个选项，那么后续每个可停顿的选择节点都提供机会给玩家去触发它。触发后，强尼就会出来逼叨。而只要触发过，后续的选择节点里这个选项也就不会再出现了。可以说这个就是“更多剧情”的Plus版。", mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/2077/33.jpg"], mt: "10px", mb: "0px" },
+                { type: "text", content: "这样的“插曲”安排就像排在马里奥大叔前面的管道口，只不过每个管道都通往同一个地方，而强尼在下面等着你进来。这个彩蛋的安排完全称得上是这段“无聊剧情”的“神来之笔”。\n虽然整个剧场的剧情安排是完全线性，要按照开发者设计好的节点去“强买强卖”点击“[付款]”的，但因为提供给了玩家足够多的情况变量以及随时插入都毫无违和感的“彩蛋”，让整个流程给玩家的感受是自然的，感觉完全是自己在主导推进剧情的发展。", mt: "0px", mb: "0px" },
+
+
+                { type: "title", content: "<span style='color:#e50000;'>结</span>", mt: "60px", mb: "6px"},  
+                { type: "text", content: "有一句话是这么形容好的交互的——“好的交互体验就是一个笑话，如果你要去解释一个笑话，那就并不是那么好了”。但作为从业者，要“编”出笑话，那必须去解构好的笑话并加以吸收。这篇文章更偏具体到落地的功能向的解构，我在整理的时候也是为了帮助自己梳理清楚是什么让我感觉「2077」的对话系统好，对于一般玩家来说大可不必这么费力气~因为蠢驴的对话系统，确实是个好的笑话。", mt: "0px", mb: "20px" },
+                { type: "text", content: "开放世界的故事就像一幅巨型拼图，游戏编剧把传统故事拆成碎片，散落在游戏世界中，玩家将这些故事的碎片收集起来。游戏开发者把框架搭建好，一定程度上控制节奏，并引导玩家把收集到的故事碎片拼接起来，让玩家享受这个故事叙述的过程。", mt: "0px", mb: "0px" },
+                { type: "text", content: "最后，送上「2077」中一个小支线任务中，玩家扮演的V对强尼·银手说的一句台词：", mt: "20px", mb: "0px" },
+                { type: "quote", content: "你看，想唤醒世界…首先得让世界感受到你。   ——V", mt: "6px", mb: "6px"},
+
+                { type: "title2", content: "参考文献与注释", mt: "80px", mb: "6px"},
+                { type: "text", content: "<span style='color:#e50000;'>[1]</span> Josh Sawyer. Choice Architecture, Player Expression, and Narrative Design in Fallout：New Veg . GDC 2012 .- https://gdcvault.com/play/1015758/Do-(Say)-The-Right-Thing", mt: "0px", mb: "0px" },
+                { type: "text", content: "<span style='color:#e50000;'>[2]</span> Marie-Laure Ryan. Avatars of Story（故事的变身）[M]. University of Minnesota Press. 2006, 97-98.", mt: "0px", mb: "0px" },
+                { type: "text", content: "<span style='color:#e50000;'>[3]</span> Chris Crawford. Chris Crawford On Interactive Storytelling（游戏大师Chris Crawford谈互动叙事）. 2015年第1版，97.", mt: "0px", mb: "40px" },
+
+
+
+
+            ]
+        };
+    </script>
+
+
+    <!-- ========================================== -->
+    <!-- 密碼驗證畫面 (Auth Screen)                  -->
+    <!-- ========================================== -->
+    <div id="auth-screen" class="fixed inset-0 z-[200] bg-[#fcfcfb] hidden flex-col items-center justify-center transition-opacity duration-500 opacity-100 p-6">
+        <div class="w-full max-w-sm px-4 text-center flex flex-col items-center">
+            
+            <!-- 動態注入的專案縮略圖與標題 -->
+            <div id="auth-project-preview" class="w-full mb-8 flex flex-col items-center text-center">
+                <!-- 由 JS 動態生成，防扒取 -->
+            </div>
+
+            <!-- 私密專案標籤 -->
+            <div class="flex items-center justify-center gap-2 mb-3 mt-2">
+                <iconify-icon icon="solar:lock-bold-duotone" width="24" height="24" class="text-[#e50000]"></iconify-icon>
+                <h2 class="text-xl font-bold text-[#e50000] tracking-tight">Private Project</h2>
+            </div>
+            
+            <p class="text-sm text-zinc-500 mb-8 font-medium">該作品未公開，請聯繫作者獲取密碼</p>
+
+            <!-- 密碼輸入區塊 -->
+            <div id="pin-container" class="relative w-full max-w-[240px] mx-auto">
+                <!-- 隱藏的實際輸入框 (用於呼叫行動端數字鍵盤及處理邏輯) -->
+                <input type="tel" id="hidden-pin" class="absolute inset-0 w-full h-full opacity-0 z-10 cursor-text pin-input-hidden" maxlength="4" pattern="[0-9]*" inputmode="numeric" autocomplete="off">
+                
+                <!-- 視覺化方塊 -->
+                <div class="flex justify-between gap-3 relative pointer-events-none">
+                    <div class="pin-box w-12 h-14 border-2 border-zinc-200 rounded-xl flex items-center justify-center text-2xl font-bold text-zinc-900 bg-white transition-colors duration-200 shadow-sm"></div>
+                    <div class="pin-box w-12 h-14 border-2 border-zinc-200 rounded-xl flex items-center justify-center text-2xl font-bold text-zinc-900 bg-white transition-colors duration-200 shadow-sm"></div>
+                    <div class="pin-box w-12 h-14 border-2 border-zinc-200 rounded-xl flex items-center justify-center text-2xl font-bold text-zinc-900 bg-white transition-colors duration-200 shadow-sm"></div>
+                    <div class="pin-box w-12 h-14 border-2 border-zinc-200 rounded-xl flex items-center justify-center text-2xl font-bold text-zinc-900 bg-white transition-colors duration-200 shadow-sm"></div>
+                </div>
+            </div>
+
+            <!-- 錯誤提示 -->
+            <p id="auth-error" class="text-[#e50000] text-sm font-semibold mt-6 opacity-0 transition-opacity duration-300">
+                密碼錯誤
+            </p>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- 實際專案內容 (Real Content)                -->
+    <!-- 初始設為 hidden，驗證後顯示                  -->
+    <!-- ========================================== -->
+    <div id="real-content" class="hidden opacity-0 transition-opacity duration-700 ease-out">
+        
+        <!-- 導航列：在首頁 iframe 中會被 JS 自動隱藏，僅在獨立訪問時顯示 -->
+        <nav id="project-nav" class="fixed top-0 left-0 w-full p-6 text-black flex items-center justify-between bg-white/90 backdrop-blur-md z-50 border-b border-zinc-100 transition-opacity duration-300">
+            <a href="../index.html" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#e50000] transition-colors bg-zinc-50 hover:bg-zinc-100 px-5 py-2.5 rounded-full shadow-sm border border-zinc-200">
+                &larr; Back to Home
+            </a>
+            <div class="font-bold text-xl uppercase tracking-tighter">FUNX.</div>
+        </nav>
+
+        <!-- 專案內容區塊 (加入 pt-28 為導航列預留固定空間) -->
+        <main class="w-full mx-auto pb-12 pt-28 transition-all duration-300" id="main-container">
+            
+            <!-- 標題區域 (清空，由JS動態寫入防讀取，並移除舊的 pt-32) -->
+            <header class="max-w-5xl mx-auto pb-12 px-6 md:px-10 text-center md:text-left" id="project-header">
+            </header>
+
+            <!-- Behance 風格長圖展示 (清空，由JS動態寫入防讀取) -->
+            <section id="project-content" class="w-full flex flex-col m-0 p-0 bg-zinc-50 border-t border-zinc-200">
+            </section>
+            
+        </main>
+
+        <!-- 統一 Footer：在 iframe 中同樣被隱藏 -->
+        <footer id="project-footer" class="bg-zinc-900 text-white py-12 px-6 text-center border-t border-zinc-800 transition-opacity duration-300 mt-20">
+            <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="text-sm text-zinc-500 font-medium uppercase tracking-wide">
+                    © 2026 FUNX. All rights reserved
+                </div>
+                <div class="flex gap-6 justify-center">
+                    <a href="https://www.behance.net/funxarts" target="_blank" class="hover:text-[#e50000] transition-colors font-semibold uppercase text-sm">Behance</a>
+                    <a href="https://www.artstation.com/funx" target="_blank" class="hover:text-[#e50000] transition-colors font-semibold uppercase text-sm">ArtStation</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- 實際內容結束 -->
+
+
+    <!-- 獨立的 Lightbox (燈箱效果) -->
+    <div id="template-lightbox" class="fixed inset-0 z-[300] bg-black/95 hidden opacity-0 transition-opacity duration-300 flex-col items-center justify-center cursor-zoom-out" onclick="closeTemplateLightbox()">
+        <button class="absolute top-4 right-4 md:top-8 md:right-8 z-[310] w-12 h-12 bg-white/10 hover:bg-[#e50000] hover:scale-110 rounded-full transition-all flex items-center justify-center shadow-lg border border-white/20 text-white">
+            <iconify-icon icon="solar:close-linear" width="24" height="24"></iconify-icon>
+        </button>
+        <img id="template-lb-img" class="max-w-[95vw] max-h-[95vh] object-contain transition-transform duration-300" src="" alt="Expanded Image">
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 邏輯控制腳本                                -->
+    <!-- ========================================== -->
+    <script>
+        // 嚴謹的 Iframe 判斷函式 (防止跨域存取引發 SecurityError)
+        // 移至全域作用域，確保外部的 initIframeStyles 也能夠成功呼叫
+        function checkInIframe() {
+            try {
+                return window.self !== window.top;
+            } catch (e) {
+                return true; // 若發生跨域錯誤，代表一定是在 iframe 內
+            }
+        }
+
+        // --- 1. 密碼驗證核心邏輯 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const authScreen = document.getElementById('auth-screen');
+            const realContent = document.getElementById('real-content');
+            const pinInput = document.getElementById('hidden-pin');
+            const pinBoxes = document.querySelectorAll('.pin-box');
+            const errorText = document.getElementById('auth-error');
+            const pinContainer = document.getElementById('pin-container');
+
+            // 渲染密碼頁面的縮略圖與標題
+            function renderAuthPreview() {
+                const previewContainer = document.getElementById('auth-project-preview');
+                const thumbUrl = PROJECT_DATA.thumbnail.join('');
+                
+                previewContainer.innerHTML = `
+                    <div class="w-full rounded-2xl overflow-hidden mb-6 shadow-sm border border-zinc-100 relative group bg-zinc-100">
+                        <img src="${thumbUrl}" alt="Thumbnail" class="w-full h-auto block object-contain">
+                    </div>
+                    <h3 class="text-2xl font-black text-zinc-900 tracking-tighter">${PROJECT_DATA.title}</h3>
+                `;
+            }
+
+            // 檢查是否需要顯示內容
+            function checkAuthStatus() {
+                if (atob(_CONF.s_lock) !== 'true') {
+                    revealContent();
+                    return;
+                }
+
+                const storageKey = `FUNX_AUTH_${_CONF.p_id}`;
+                const savedAuth = sessionStorage.getItem(storageKey);
+                
+                if (savedAuth) {
+                    try {
+                        const { timestamp } = JSON.parse(savedAuth);
+                        const now = new Date().getTime();
+                        const hours12 = 12 * 60 * 60 * 1000; // 12小時的毫秒數
+
+                        if (now - timestamp < hours12) {
+                            // 驗證通過（在12小時內且瀏覽器未關閉）
+                            revealContent();
+                            return;
+                        } else {
+                            // 已過期
+                            sessionStorage.removeItem(storageKey);
+                        }
+                    } catch (e) {
+                        sessionStorage.removeItem(storageKey);
+                    }
+                }
+
+                // 需要驗證，顯示密碼頁面
+                renderAuthPreview();
+                authScreen.classList.remove('hidden');
+                authScreen.classList.add('flex');
+                
+                // 點擊驗證畫面任意處聚焦輸入框，確保在手機上體驗順暢
+                authScreen.addEventListener('click', () => {
+                    if(!authScreen.classList.contains('hidden')) {
+                         pinInput.focus();
+                    }
+                });
+                pinInput.focus();
+            }
+
+            // 顯示實際內容並初始化 Iframe 樣式
+            function revealContent() {
+                // 1. 動態渲染真實內容 (防扒機制核心)
+                renderProtectedContent();
+
+                // 2. 顯示畫面
+                authScreen.classList.add('hidden');
+                realContent.classList.remove('hidden');
+                // 延遲一點點添加 opacity 產生淡入效果
+                setTimeout(() => {
+                    realContent.classList.remove('opacity-0');
+                    realContent.classList.add('opacity-100');
+                }, 50);
+                
+                initIframeStyles();
+            }
+
+            // --- 動態注入安全內容 ---
+            function renderProtectedContent() {
+                const header = document.getElementById('project-header');
+                const content = document.getElementById('project-content');
+                
+                // 避免重複渲染
+                if (header.innerHTML.trim() !== '') return;
+
+                // 套用大標題區域的自定義間距 (Inline Style 優先級會完美覆蓋預設的 Tailwind 響應式 Class)
+                if (PROJECT_DATA.headerSpacing) {
+                    if (PROJECT_DATA.headerSpacing.mt) header.style.paddingTop = PROJECT_DATA.headerSpacing.mt;
+                    if (PROJECT_DATA.headerSpacing.mb) header.style.paddingBottom = PROJECT_DATA.headerSpacing.mb;
+                }
+
+                // 套用全局文字樣式
+                const customFontSize = PROJECT_DATA.globalTextConfig?.fontSize ? `font-size: ${PROJECT_DATA.globalTextConfig.fontSize};` : '';
+                const customLineHeight = PROJECT_DATA.globalTextConfig?.lineHeight ? `line-height: ${PROJECT_DATA.globalTextConfig.lineHeight};` : '';
+                const globalTextStyle = (customFontSize || customLineHeight) ? `style="${customFontSize} ${customLineHeight}"` : '';
+                
+                // 動態保留預設的 Tailwind 響應式類別 (若未自定義，則套用預設值)
+                const baseTextClass = !customFontSize ? 'text-base md:text-lg' : '';
+                const baseLineClass = !customLineHeight ? 'leading-relaxed' : '';
+
+                header.innerHTML = `
+                    <h1 class="text-4xl md:text-6xl tracking-tighter font-black text-zinc-900 mb-6 drop-shadow-sm" id="project-title">${PROJECT_DATA.title}</h1>
+                    <p class="text-zinc-600 font-medium max-w-3xl mx-auto md:mx-0 whitespace-pre-line ${baseTextClass} ${baseLineClass}" id="project-desc" ${globalTextStyle}>${PROJECT_DATA.desc}</p>
+                `;
+
+                // 判斷目前是否處於 Iframe 浮窗內
+                const inIframe = checkInIframe();
+                
+                // 核心邏輯：只有在「開啟貼邊」且「處於 Iframe 內」，才真正強制滿版
+                // 若是單獨開啟網頁，則給予舒適的兩側留白與最大寬度適配
+                const shouldStretch = PROJECT_DATA.stretchToEdge && inIframe;
+
+                // 根據 blocks 陣列的 type 動態渲染對應的 HTML 結構
+                content.innerHTML = PROJECT_DATA.blocks.map((block, idx) => {
+                    // 升級間距系統：將使用 padding 來取代 margin，徹底杜絕 Margin 折疊(Collapse)產生的意外留白
+                    const defaultSpacing = block.type === 'text' ? '64px' : '0px'; // 若未填寫，文字區塊預設給 64px 留白
+                    const pt = block.mt !== undefined ? block.mt : defaultSpacing;
+                    const pb = block.mb !== undefined ? block.mb : defaultSpacing;
+                    const spacingStyle = `style="padding-top: ${pt}; padding-bottom: ${pb};"`;
+
+                    if (block.type === 'image') {
+                        // 渲染圖片：移除高度漸變動畫避免卡頓產生空白，高度限制改為 30vh 確保優雅加載
+                        const url = block.src.join('');
+                        const imgClass = shouldStretch ? 'w-full' : 'w-full max-w-[1440px]';
+                        
+                        const imgHTML = `
+                            <div class="relative w-full flex justify-center items-center bg-zinc-100/50 min-h-[30vh]">
+                                <!-- 優雅的載入動畫 (Spinner) -->
+                                <div class="absolute flex flex-col items-center justify-center transition-opacity duration-300">
+                                    <div class="w-8 h-8 border-2 border-zinc-300 border-t-[#e50000] rounded-full animate-spin"></div>
+                                </div>
+                                <!-- 真實圖片 (載入完成後自動淡入，並動態移除父層的最小高度與灰底) -->
+                                <img src="${url}" loading="lazy" decoding="async" 
+                                     onload="this.style.opacity='1'; this.previousElementSibling.style.opacity='0'; this.parentElement.classList.remove('min-h-[30vh]', 'bg-zinc-100/50'); setTimeout(() => this.previousElementSibling.remove(), 300);" 
+                                     style="opacity: 0; transition: opacity 0.6s ease-out;" 
+                                     class="${imgClass} relative z-10 h-auto block m-0 p-0 align-bottom object-cover cursor-zoom-in" 
+                                     alt="Project Image ${idx + 1}">
+                            </div>
+                        `;
+
+                        if (shouldStretch) {
+                            return `<div class="w-full m-0 p-0 flex justify-center" ${spacingStyle}>${imgHTML}</div>`;
+                        } else {
+                            return `<div class="w-full px-0 sm:px-6 md:px-12 lg:px-20 xl:px-32 flex justify-center bg-zinc-50" ${spacingStyle}>
+                                        ${imgHTML}
+                                    </div>`;
+                        }
+                    } else if (block.type === 'title') {
+                            return `<div class="w-full flex justify-center px-6 md:px-10" ${spacingStyle}>
+                                     <h2 class="w-full max-w-4xl text-2xl md:text-3xl font-bold text-zinc-900 m-0 p-0">
+                                        ${block.content}
+                                    </h2>
+                                    </div>`;
+
+                    } else if (block.type === 'title2') {
+                            return `<div class="w-full flex justify-center px-6 md:px-10" ${spacingStyle}>
+                                     <h2 class="w-full max-w-4xl text-1.5xl md:text-2xl font-bold text-zinc-900 m-0 p-0">
+                                        ${block.content}
+                                    </h2>
+                                    </div>`;
+                                            
+                    } else if (block.type === 'text') {
+                        // 渲染文字：加入 m-0 p-0 清除預設邊距，並套用全局字號與行距設定
+                        return `<div class="w-full flex justify-center px-6 md:px-10 m-0" ${spacingStyle}>
+                                    <p class="w-full max-w-4xl text-zinc-700 font-medium text-left whitespace-pre-line m-0 p-0 ${baseTextClass} ${baseLineClass}" ${globalTextStyle}>${block.content.trim()}</p>
+                                </div>`;
+
+                    } else if (block.type === 'quote') {
+                        return `<div class="w-full flex justify-center px-6 md:px-10" ${spacingStyle}>
+                                <div class="w-full max-w-3xl border-l-4 border-[#e50000] pl-5 py-2">
+            
+                                <p class="text-base md:text-lg italic text-zinc-800 leading-relaxed">
+                                    “${block.content}”
+                                </p>
+            
+                            ${block.author ? `
+                                    <p class="text-sm text-zinc-500 mt-3">
+                                        — ${block.author}
+                                   </p>
+                                ` : ''}
+
+                            </div>
+                        </div>`;
+
+                    } else if (block.type === 'iframe') {
+                        // 渲染外部影片 (嵌入代碼)
+                        const url = block.src.join('');
+                        if (shouldStretch) {
+                            return `<div class="w-full aspect-video bg-black m-0 p-0 flex" ${spacingStyle}>
+                                        <iframe src="${url}" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>`;
+                        } else {
+                            return `<div class="w-full px-0 sm:px-6 md:px-12 lg:px-20 xl:px-32 flex justify-center bg-zinc-50" ${spacingStyle}>
+                                        <div class="w-full max-w-[1440px] aspect-video bg-black m-0 p-0 flex overflow-hidden rounded shadow-sm">
+                                            <iframe src="${url}" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                        </div>
+                                    </div>`;
+                        }
+                        
+                    }
+                }).join('');
+
+                // 綁定圖片點擊燈箱事件
+                document.querySelectorAll('#project-content img').forEach(img => {
+                    img.onclick = () => openTemplateLightbox(img.src);
+                });
+            }
+
+            // 處理密碼輸入事件
+            pinInput.addEventListener('input', (e) => {
+                // 限制只能輸入數字
+                pinInput.value = pinInput.value.replace(/\D/g, '');
+                const val = pinInput.value;
+
+                // 更新視覺化方塊
+                pinBoxes.forEach((box, i) => {
+                    if (val[i]) {
+                        box.textContent = '*'; // 出於安全和極簡考慮，顯示星號或圓點
+                        box.classList.add('border-zinc-500'); // 輸入時邊框加深
+                    } else {
+                        box.textContent = '';
+                        box.classList.remove('border-zinc-500');
+                    }
+                });
+
+                // 隱藏錯誤提示
+                errorText.classList.add('opacity-0');
+
+                // 輸入滿4位數時自動驗證
+                if (val.length === 4) {
+                    verifyPin(val);
+                }
+            });
+
+            // 驗證邏輯
+            function verifyPin(val) {
+                if (val === atob(_CONF.p_key)) {
+                    // 密碼正確
+                    const storageKey = `FUNX_AUTH_${_CONF.p_id}`;
+                    sessionStorage.setItem(storageKey, JSON.stringify({ timestamp: new Date().getTime() }));
+                    
+                    // 輸入框變綠色/紅色反饋？(這裡選擇直接淡出進入)
+                    pinBoxes.forEach(box => {
+                        box.classList.remove('border-zinc-500', 'text-zinc-900');
+                        box.classList.add('border-green-500', 'text-green-500');
+                    });
+                    
+                    pinInput.blur();
+                    
+                    // 淡出 Auth 畫面並顯示內容
+                    setTimeout(() => {
+                        authScreen.classList.remove('opacity-100');
+                        authScreen.classList.add('opacity-0');
+                        setTimeout(() => {
+                            revealContent();
+                        }, 500); // 等待淡出動畫
+                    }, 300);
+
+                } else {
+                    // 密碼錯誤
+                    errorText.classList.remove('opacity-0');
+                    pinInput.value = ''; // 清空輸入
+                    
+                    // 執行震動動畫與紅色邊框
+                    pinBoxes.forEach(box => {
+                        box.textContent = '';
+                        box.classList.remove('border-zinc-500');
+                        box.classList.add('border-[#e50000]');
+                    });
+                    
+                    pinContainer.classList.add('animate-shake');
+                    
+                    setTimeout(() => {
+                        pinContainer.classList.remove('animate-shake');
+                        pinBoxes.forEach(box => box.classList.remove('border-[#e50000]'));
+                        pinInput.focus(); // 重新聚焦
+                    }, 500);
+                }
+            }
+
+            // 啟ড়ান্ত流程
+            checkAuthStatus();
+
+            // --- 3. 嚴格防拷貝與防下載邏輯 ---
+            if (atob(_CONF.s_copy) === 'true') {
+                // 加上 CSS 防選中樣式
+                document.body.classList.add('prevent-copy');
+
+                // 禁止右鍵選單
+                document.addEventListener('contextmenu', e => e.preventDefault());
+                
+                // 禁止拖曳圖片或內容
+                document.addEventListener('dragstart', e => e.preventDefault());
+                
+                // 禁止使用快捷鍵 (支援 Windows Ctrl 與 Mac Cmd)
+                document.addEventListener('keydown', e => {
+                    const isCmdOrCtrl = e.ctrlKey || e.metaKey;
+                    if (
+                        e.key === 'F12' || 
+                        (isCmdOrCtrl && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                        (isCmdOrCtrl && ['u', 's', 'c', 'p'].includes(e.key.toLowerCase()))
+                    ) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        });
+
+
+        // --- 2. 原始專案邏輯 (Lightbox 與 Iframe 判定) ---
+        function openTemplateLightbox(src) {
+            const lb = document.getElementById('template-lightbox');
+            const img = document.getElementById('template-lb-img');
+            img.src = src;
+            lb.classList.remove('hidden');
+            lb.classList.add('flex');
+            void lb.offsetWidth; // 觸發重繪
+            lb.classList.remove('opacity-0');
+            lb.classList.add('opacity-100');
+            
+            try {
+                if (window !== window.parent) {
+                    window.parent.document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = 'hidden';
+                }
+            } catch (e) {
+                // 防止跨域 (Cross-Origin) iframe 存取報錯
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeTemplateLightbox() {
+            const lb = document.getElementById('template-lightbox');
+            lb.classList.remove('opacity-100');
+            lb.classList.add('opacity-0');
+            setTimeout(() => {
+                lb.classList.remove('flex');
+                lb.classList.add('hidden');
+            }, 300);
+            
+            try {
+                if (window !== window.parent) {
+                    window.parent.document.body.style.overflow = '';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            } catch (e) {
+                // 防止跨域 (Cross-Origin) iframe 存取報錯
+                document.body.style.overflow = '';
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !document.getElementById('template-lightbox').classList.contains('hidden')) {
+                closeTemplateLightbox();
+            }
+        });
+
+        // Iframe 樣式適配
+        function initIframeStyles() {
+            if (checkInIframe()) {
+                document.getElementById('project-nav').style.display = 'none';
+                document.getElementById('project-footer').style.display = 'none';
+                
+                const mainContainer = document.getElementById('main-container');
+                const header = document.getElementById('project-header');
+                const title = document.getElementById('project-title');
+                
+                // Iframe 內不需要閃避導航列的空間，自動移除 pt-28
+                mainContainer.classList.remove('pb-12', 'pt-28');
+                header.classList.remove('pb-12');
+                header.classList.add('pt-4', 'pb-8');
+                
+                title.classList.remove('text-zinc-900');
+                title.classList.add('text-[#e50000]');
+            }
+        }
+    </script>
+</body>
+</html>

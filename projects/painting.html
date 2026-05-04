@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVA - Evangelion UI - FunX Portfolio</title>
+    <title>painting</title>
     
     <!-- 引入字體與圖標 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -74,7 +74,7 @@
         // 若要自訂其他密碼，請在瀏覽器按 F12 進入 Console (主控台)，
         // 輸入 btoa("你的密碼") 即可獲得編碼字串，填入下方 p_key 即可。
         const _CONF = {
-            s_lock: "dHJ1ZQ==",  // 一、密碼功能開關 (預設: dHJ1ZQ== 開啟)
+            s_lock: "ZmFsc2U=",  // 一、密碼功能開關 (預設: dHJ1ZQ== 開啟)
             p_key: "MjAyNg==",   // 二、自定義密碼 4位數
             p_id: "wasteland",      // 專案唯一標識符 (區分不同作品，不需編碼)
             s_copy: "ZmFsc2U="   // 三、防拷貝與防下載開關 (預設: ZmFsc2U= 關閉)
@@ -86,8 +86,8 @@
         // 這裡不直接把內容寫入HTML，而是透過JS動態生成。
         // ==========================================
         const PROJECT_DATA = {
-            title: "世界之外",
-            desc: "负责UED设计到2022年上线版本",
+            title: "早期绘制类&Live2D作品",
+            desc: "入行不久的时候绘制类练习",
             
             // 四、自定義大標題區域的上下間距 (支援 "px", "vh", "rem" 等單位)
             // 覺得上方太緊湊可以把 mt 調大。若想使用系統預設的自適應間距，請保持為空字串 ""
@@ -104,28 +104,23 @@
             stretchToEdge: true,
 
             // 縮略圖 (與主頁卡片保持一致，同樣採用陣列打斷防扒取)
-            thumbnail: ["../assets/images/works/126/thumbnail.jpg"],
+            thumbnail: ["../assets/images/works/painting/thumbnail.png"],
 
             // 【混合排版核心】
             // 透過 blocks 陣列，你可以自由組合「圖片 (image)」、「文字 (text)」與「外部影片 (iframe)」
             // 新增功能：你可以使用 `mt` (上間距) 與 `mb` (下間距) 來單獨自定義每個區塊的距離！支援 "px", "rem", "vw" 等單位。
             blocks: [
                 // 1. 圖片區塊 (預設無間距貼合)
-                { type: "image", src: ["../assets/images/works/126/01.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/02.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/03.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/04.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/05.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/06.jpg"], mt: "0px", mb: "0px" },                
-                { type: "image", src: ["../assets/images/works/126/card.gif"], mt: "0px", mb: "0px" },
-                { type: "iframe", src: ["//player.bilibili.com/player.html?isOutside=true&aid=116511020680328&bvid=BV1sqRcBEEBe&cid=38066455769&p=1"], mb: "10px" } ,
-                { type: "image", src: ["../assets/images/works/126/07.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/08.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/09.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/10.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/11.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/12.jpg"], mt: "0px", mb: "0px" },   
-                { type: "image", src: ["../assets/images/works/126/13.jpg"], mt: "0px", mb: "0px" },                         
+                { type: "iframe", src: ["https://player.bilibili.com/player.html?isOutside=true&aid=116516037069462&bvid=BV1esRqBAEco&cid=38085395885&p=1&autoplay=0"], mb: "0px" },                
+                { type: "image", src: ["../assets/images/works/painting/01.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/painting/02.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/painting/03.jpg"], mt: "0px", mb: "0px" },   
+                { type: "image", src: ["../assets/images/works/painting/04.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/painting/06.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/painting/07.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/painting/08.jpg"], mt: "0px", mb: "0px" },  
+                { type: "image", src: ["../assets/images/works/painting/09.jpg"], mt: "0px", mb: "0px" },  
+                { type: "iframe", src: ["https://v.qq.com/txp/iframe/player.html?vid=r0505oe0rj8"], mb: "0px" },                            
             ]
         };
     </script>

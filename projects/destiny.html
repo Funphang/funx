@@ -77,7 +77,7 @@
             s_lock: "dHJ1ZQ==",  // 一、密碼功能開關 (預設: dHJ1ZQ== 開啟)
             p_key: "MjAyNg==",   // 二、自定義密碼 4位數
             p_id: "wasteland",      // 專案唯一標識符 (區分不同作品，不需編碼)
-            s_copy: "ZmFsc2U="   // 三、防拷貝與防下載開關 (預設: ZmFsc2U= 關閉)
+            s_copy: "dHJ1ZQ=="   // 三、防拷貝與防下載開關 (預設: ZmFsc2U= 關閉)
         };
 
         // ==========================================
@@ -86,8 +86,8 @@
         // 這裡不直接把內容寫入HTML，而是透過JS動態生成。
         // ==========================================
         const PROJECT_DATA = {
-            title: "世界之外",
-            desc: "负责UED设计到2022年上线版本",
+            title: "Destiny:Rising",
+            desc: "负责前期立项风格设计与后期UED管理",
             
             // 四、自定義大標題區域的上下間距 (支援 "px", "vh", "rem" 等單位)
             // 覺得上方太緊湊可以把 mt 調大。若想使用系統預設的自適應間距，請保持為空字串 ""
@@ -104,28 +104,54 @@
             stretchToEdge: true,
 
             // 縮略圖 (與主頁卡片保持一致，同樣採用陣列打斷防扒取)
-            thumbnail: ["../assets/images/works/126/thumbnail.jpg"],
+            thumbnail: ["../assets/images/works/destiny/thumbnail.jpg"],
 
             // 【混合排版核心】
             // 透過 blocks 陣列，你可以自由組合「圖片 (image)」、「文字 (text)」與「外部影片 (iframe)」
             // 新增功能：你可以使用 `mt` (上間距) 與 `mb` (下間距) 來單獨自定義每個區塊的距離！支援 "px", "rem", "vw" 等單位。
             blocks: [
-                // 1. 圖片區塊 (預設無間距貼合)
-                { type: "image", src: ["../assets/images/works/126/01.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/02.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/03.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/04.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/05.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/06.jpg"], mt: "0px", mb: "0px" },                
-                { type: "image", src: ["../assets/images/works/126/card.gif"], mt: "0px", mb: "0px" },
-                { type: "iframe", src: ["//player.bilibili.com/player.html?isOutside=true&aid=116511020680328&bvid=BV1sqRcBEEBe&cid=38066455769&p=1"], mb: "10px" } ,
-                { type: "image", src: ["../assets/images/works/126/07.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/08.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/09.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/10.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/11.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/12.jpg"], mt: "0px", mb: "0px" },   
-                { type: "image", src: ["../assets/images/works/126/13.jpg"], mt: "0px", mb: "0px" },                         
+                { type: "text", content: "Displacement of human beings,The remaining ruins became the only refuge.", mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/destiny/98.jpg"], mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/destiny/10.jpg"], mt: "0px", mb: "0px" },  
+                { type: "image", src: ["../assets/images/works/destiny/11.jpg"], mt: "0px", mb: "0px" },                        
+                { type: "image", src: ["../assets/images/works/destiny/20.jpg"], mt: "0px", mb: "0px" },
+                { type: "iframe", src: ["//player.bilibili.com/player.html?isOutside=true&aid=116516540451733&bvid=BV1cuRqB5E1Q&cid=38088216548&p=1&autoplay=0"], mb: "10px" } ,
+                { type: "image", src: ["../assets/images/works/destiny/21.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/destiny/22.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/destiny/31.jpg"], mt: "0px", mb: "0px" },
+                { type: "iframe", src: ["//player.bilibili.com/player.html?isOutside=true&aid=116516574004385&bvid=BV17vRiBqEz4&cid=38088475158&p=1&autoplay=0"], mb: "10px" } ,
+                { type: "image", src: ["../assets/images/works/destiny/32.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/destiny/34.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/destiny/33.jpg"], mt: "0px", mb: "0px" },
+                { type: "iframe", src: ["//player.bilibili.com/player.html?isOutside=true&aid=116516523673539&bvid=BV1cgRqBCEJd&cid=38088150458&p=1&autoplay=0"], mb: "10px" } ,
+                { type: "title", content: "规范", mt: "60px", mb: "6px"},   
+                { type: "image", src: ["../assets/images/works/destiny/guide.jpg"], mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/destiny/guide0.jpg"], mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/destiny/guide1.jpg"], mt: "0px", mb: "0px" },  
+                { type: "image", src: ["../assets/images/works/destiny/guide2.jpg"], mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/destiny/guide3.jpg"], mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/destiny/guide4.jpg"], mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/destiny/guide5.jpg"], mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/destiny/guide6.jpg"], mt: "0px", mb: "0px" },                
+                { type: "title", content: "立项前风格预研", mt: "60px", mb: "6px"},    
+                { type: "text", content: "2018年", mt: "0px", mb: "0px" },                  
+                { type: "title2", content: "主界面与角色展示页面", mt: "40px", mb: "6px"},            
+                { type: "iframe", src: ["//player.bilibili.com/player.html?isOutside=true&aid=116516204842079&bvid=BV1xzRqBXEWQ&cid=38086248934&p=1&autoplay=0"], mb: "10px" } ,
+                { type: "image", src: ["../assets/images/works/destiny/97.jpg"], mt: "0px", mb: "0px" },                
+                { type: "image", src: ["../assets/images/works/destiny/96.jpg"], mt: "0px", mb: "0px" },  
+                { type: "image", src: ["../assets/images/works/destiny/95.jpg"], mt: "0px", mb: "0px" },  
+                { type: "title2", content: "机灵展开动画", mt: "40px", mb: "6px"},                                 
+                { type: "iframe", src: ["//player.bilibili.com/player.html?isOutside=true&aid=116516204839619&bvid=BV14zRqBXExm&cid=38086312949&p=1&autoplay=0"], mb: "10px" } , 
+                { type: "title2", content: "手机陀螺仪模拟 - Unity", mt: "40px", mb: "6px"},
+                { type: "text", content: "此为手机实机录屏", mt: "0px", mb: "0px" },                
+                { type: "iframe", src: ["//player.bilibili.com/player.html?isOutside=true&aid=116516204839664&bvid=BV14zRqBXE4T&cid=38086313848&p=1&autoplay=0"], mb: "10px" } , 
+                { type: "title2", content: "准星自定义 - in Unity", mt: "40px", mb: "6px"},
+                { type: "iframe", src: ["//player.bilibili.com/player.html?isOutside=true&aid=116516204839602&bvid=BV14zRqBXEt3&cid=38086312328&p=1&autoplay=0"], mb: "10px" } ,                                       
+                { type: "title2", content: "地图", mt: "40px", mb: "6px"},          
+                { type: "iframe", src: ["//player.bilibili.com/player.html?isOutside=true&aid=116516154510348&bvid=BV14BRqBWEMo&cid=38085984872&p=1&autoplay=0"], mb: "10px" } , 
+                { type: "image", src: ["../assets/images/works/destiny/map.jpg"], mt: "0px", mb: "0px" },                
+                { type: "image", src: ["../assets/images/works/destiny/大纹理3.gif"], mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/destiny/99.jpg"], mt: "0px", mb: "0px" },                         
             ]
         };
     </script>
