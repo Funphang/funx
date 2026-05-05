@@ -478,9 +478,11 @@
             </div>
 
             <!-- 所有项目卡片触发 Iframe Modal 载入独立页面 -->
-            <div class="columns-1 md:columns-2 lg:columns-5 gap-6 md:gap-8">
+            <!-- 修改点：使用 grid 替换 columns，统一使用 gap 控制间距 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-x-4 gap-y-8 md:gap-x-4 md:gap-y-10">
 
-                <a href="projects/destiny.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
+                <!-- 修改点：移除所有 a 标签上的 break-inside-avoid 和 mb-8 md:mb-12，加上 h-full 占满整行高度 -->
+                <a href="projects/destiny.html" class="group works-grid-item cursor-pointer block h-full">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="assets/images/works/destiny/thumbnail.jpg" alt="Destiny Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -499,29 +501,8 @@
                         Explore
                     </figcaption>
                 </a>
-                
 
-                <a href="projects/eva.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
-                    <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
-                        <img loading="lazy" src="assets/images/works/eva/thumbnail.jpg" alt="EVA Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
-                        <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
-                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
-                                <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-start pointer-events-none">
-                        <div>
-                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">EVA console game UI</h3>
-                            <p class="text-sm font-medium text-zinc-500">2020 / Fan Art</p>
-                        </div>
-                    </div>
-                    <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
-                        Explore
-                    </figcaption>
-                </a>
-
-                 <a href="projects/frame.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
+                 <a href="projects/frame.html" class="group works-grid-item cursor-pointer block h-full">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="assets/images/works/frame/thumbnail.jpg" alt="framework Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -541,9 +522,9 @@
                     </figcaption>
                 </a>
 
-                 <a href="projects/disorder.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
+                <a href="projects/2077.html" class="group works-grid-item cursor-pointer block h-full">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
-                        <img loading="lazy" src="assets/images/works/disorder/thumbnail.webp" alt="Disorder Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
+                        <img loading="lazy" src="assets/images/works/2077/thumbnail.jpg" alt="2077 Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
                             <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
                                 <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
@@ -552,18 +533,18 @@
                     </div>
                     <div class="flex justify-between items-start pointer-events-none">
                         <div>
-                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">Disorder</h3>
-                            <p class="text-sm font-medium text-zinc-500">2018 / UI Concept / 竞品分享</p>
+                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">波兰蠢驴式对话系统解构</h3>
+                            <p class="text-sm font-medium text-zinc-500">2021 / 文章</p>
                         </div>
                     </div>
                     <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
                         Explore
                     </figcaption>
                 </a>
-
-                 <a href="projects/91.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
+                                
+                <a href="projects/eva.html" class="group works-grid-item cursor-pointer block h-full">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
-                        <img loading="lazy" src="assets/images/works/91/thumbnail.webp" alt="Buildtopia" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
+                        <img loading="lazy" src="assets/images/works/eva/thumbnail.jpg" alt="EVA Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
                             <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
                                 <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
@@ -572,8 +553,8 @@
                     </div>
                     <div class="flex justify-between items-start pointer-events-none">
                         <div>
-                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">堡垒前线：破坏与创造</h3>
-                            <p class="text-sm font-medium text-zinc-500">2017-2018 / UI&UX </p>
+                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">EVA console game UI</h3>
+                            <p class="text-sm font-medium text-zinc-500">2020 / Fan Art</p>
                         </div>
                     </div>
                     <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
@@ -581,7 +562,7 @@
                     </figcaption>
                 </a>
 
-                <a href="projects/marvel.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
+                <a href="projects/marvel.html" class="group works-grid-item cursor-pointer block h-full">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="assets/images/works/marvel/thumbnail.png" alt="漫威争锋" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -601,9 +582,9 @@
                     </figcaption>
                 </a>
 
-                <a href="projects/wasteland.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
+                 <a href="projects/83.html" class="group works-grid-item cursor-pointer block h-full">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
-                        <img loading="lazy" src="assets/images/works/wasteland/thumbnail.webp" alt="Wasteland Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
+                        <img loading="lazy" src="assets/images/works/83/thumbnail.jpg" alt="荒野行动" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
                             <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
                                 <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
@@ -612,8 +593,8 @@
                     </div>
                     <div class="flex justify-between items-start pointer-events-none">
                         <div>
-                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">“废土”设定与精神内核</h3>
-                            <p class="text-sm font-medium text-zinc-500">2020 / 文章</p>
+                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">荒野行动</h3>
+                            <p class="text-sm font-medium text-zinc-500">2021 / 活动UI</p>
                         </div>
                     </div>
                     <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
@@ -621,9 +602,9 @@
                     </figcaption>
                 </a>
 
-                <a href="projects/2077.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
+                 <a href="projects/disorder.html" class="group works-grid-item cursor-pointer block h-full">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
-                        <img loading="lazy" src="assets/images/works/2077/thumbnail.jpg" alt="2077 Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
+                        <img loading="lazy" src="assets/images/works/disorder/thumbnail.webp" alt="Disorder Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
                             <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
                                 <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
@@ -632,16 +613,36 @@
                     </div>
                     <div class="flex justify-between items-start pointer-events-none">
                         <div>
-                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">波兰蠢驴式对话系统解构分析</h3>
-                            <p class="text-sm font-medium text-zinc-500">2021 / 文章</p>
+                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">Disorder</h3>
+                            <p class="text-sm font-medium text-zinc-500">2018 / UI Concept / 竞品分享</p>
                         </div>
                     </div>
                     <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
                         Explore
                     </figcaption>
                 </a>
-               
-                <a href="projects/126.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12"> 
+
+                 <a href="projects/91.html" class="group works-grid-item cursor-pointer block h-full">
+                    <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
+                        <img loading="lazy" src="assets/images/works/91/thumbnail.webp" alt="Buildtopia" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
+                        <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
+                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
+                                <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start pointer-events-none">
+                        <div>
+                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">堡垒前线：破坏与创造</h3>
+                            <p class="text-sm font-medium text-zinc-500">2017-2018 / UI&UX </p>
+                        </div>
+                    </div>
+                    <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
+                        Explore
+                    </figcaption>
+                </a>
+
+                <a href="projects/126.html" class="group works-grid-item cursor-pointer block h-full"> 
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="assets/images/works/126/thumbnail.jpg" alt="Fintech App" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -661,7 +662,27 @@
                     </figcaption>
                 </a>
 
-                <a href="projects/painting.html" class="group works-grid-item cursor-pointer block break-inside-avoid mb-8 md:mb-12">
+                <a href="projects/wasteland.html" class="group works-grid-item cursor-pointer block h-full">
+                    <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
+                        <img loading="lazy" src="assets/images/works/wasteland/thumbnail.webp" alt="Wasteland Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
+                        <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
+                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
+                                <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start pointer-events-none">
+                        <div>
+                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">“废土”设定与精神内核</h3>
+                            <p class="text-sm font-medium text-zinc-500">2020 / 文章</p>
+                        </div>
+                    </div>
+                    <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
+                        Explore
+                    </figcaption>
+                </a>
+
+                <a href="projects/painting.html" class="group works-grid-item cursor-pointer block h-full">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="assets/images/works/painting/thumbnail.webp" alt="2077 Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
                         <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
@@ -725,7 +746,7 @@
                     </div>
                 </div>
                 
-                <div class="flex flex-col justify-end items-start md:items-end h-full">
+                <div class="flex flex-col justify-end items-start md:items-end h-full mt-10 md:mt-0">
                     <div class="text-sm text-zinc-500 font-medium flex items-center gap-2 uppercase tracking-wide">
                         <span>© 2026 FUNX.</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-f-red/80"></div>
@@ -1035,7 +1056,7 @@
                         vec3 bgColor = vec3(252.0/255.0, 252.0/255.0, 251.0/255.0);
                         
                         vec3 color1 = vec3(255.0/255.0, 236.0/255.0, 235.0/255.0); 
-                        vec3 color2 = vec3(255.0/255.0, 235.0/254.0, 244.0/255.0); 
+                        vec3 color2 = vec3(255.0/255.0, 235.0/255.0, 244.0/255.0); 
                         float colorBlend = sin(uTime * 0.3) * 0.5 + 0.5; 
                         vec3 targetColor = mix(color1, color2, colorBlend);
                         
@@ -1213,7 +1234,9 @@
                 loader.style.opacity = '1';
                 
                 window.updateModalNav(index);
-                setTimeout(() => { iframe.src = project.url; }, 200);
+                setTimeout(() => { 
+                    iframe.src = project.url; 
+                }, 200);
             };
 
             window.openProjectModal = function(index) {
@@ -1362,7 +1385,7 @@
             const contactAnimArea = document.getElementById('contact-animation-area');
             const pressureTitle = document.getElementById('text-pressure-title');
             if (pressureContainer && pressureTitle && contactAnimArea) {
-                const text = "FunX Game Arts";
+                const text = "FunX UI/UX DESIGN";
                 const chars = text.split('');
                 const spans = [];
 
