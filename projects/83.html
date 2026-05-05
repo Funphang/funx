@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVA - Evangelion UI - FunX Portfolio</title>
+    <title>knifeout</title>
     
     <!-- 引入字體與圖標 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -77,7 +77,7 @@
             s_lock: "dHJ1ZQ==",  // 一、密碼功能開關 (預設: dHJ1ZQ== 開啟)
             p_key: "MjAyNg==",   // 二、自定義密碼 4位數
             p_id: "wasteland",      // 專案唯一標識符 (區分不同作品，不需編碼)
-            s_copy: "ZmFsc2U="   // 三、防拷貝與防下載開關 (預設: ZmFsc2U= 關閉)
+            s_copy: "dHJ1ZQ=="   // 三、防拷貝與防下載開關 (預設: ZmFsc2U= 關閉)
         };
 
         // ==========================================
@@ -86,8 +86,8 @@
         // 這裡不直接把內容寫入HTML，而是透過JS動態生成。
         // ==========================================
         const PROJECT_DATA = {
-            title: "世界之外",
-            desc: "负责UED设计到2022年上线版本",
+            title: "荒野行动-活动类",
+            desc: "优化活动系统设计与资源策略，在保证体验质量的前提下降低项目投入成本",
             
             // 四、自定義大標題區域的上下間距 (支援 "px", "vh", "rem" 等單位)
             // 覺得上方太緊湊可以把 mt 調大。若想使用系統預設的自適應間距，請保持為空字串 ""
@@ -104,28 +104,34 @@
             stretchToEdge: true,
 
             // 縮略圖 (與主頁卡片保持一致，同樣採用陣列打斷防扒取)
-            thumbnail: ["../assets/images/works/126/thumbnail.jpg"],
+            thumbnail: ["../assets/images/works/83/thumbnail.jpg"],
 
             // 【混合排版核心】
             // 透過 blocks 陣列，你可以自由組合「圖片 (image)」、「文字 (text)」與「外部影片 (iframe)」
             // 新增功能：你可以使用 `mt` (上間距) 與 `mb` (下間距) 來單獨自定義每個區塊的距離！支援 "px", "rem", "vw" 等單位。
             blocks: [
-                // 1. 圖片區塊 (預設無間距貼合)
-                { type: "image", src: ["../assets/images/works/126/01.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/02.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/03.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/04.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/05.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/06.jpg"], mt: "0px", mb: "0px" },                
-                { type: "image", src: ["../assets/images/works/126/card.gif"], mt: "0px", mb: "0px" },
-                { type: "iframe", src: ["//player.bilibili.com/player.html?isOutside=true&aid=116511020680328&bvid=BV1sqRcBEEBe&cid=38066455769&p=1&autoplay=0"], mb: "10px" } ,
-                { type: "image", src: ["../assets/images/works/126/07.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/08.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/09.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/10.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/11.jpg"], mt: "0px", mb: "0px" },
-                { type: "image", src: ["../assets/images/works/126/12.jpg"], mt: "0px", mb: "0px" },   
-                { type: "image", src: ["../assets/images/works/126/13.jpg"], mt: "0px", mb: "0px" },                         
+
+                { type: "image", src: ["../assets/images/works/83/ux.jpg"], mt: "0px", mb: "0px" }, 
+                { type: "title", content: "活动设计规范", mt: "20px", mb: "6px"},
+                { type: "image", src: ["../assets/images/works/83/guide01.jpg"], mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/83/guide02.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/83/guide03.jpg"], mt: "0px", mb: "0px" },
+
+                { type: "title", content: "EVA联动", mt: "50px", mb: "6px"},
+                { type: "image", src: ["../assets/images/works/83/eva04.jpg"], mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/83/guide04.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/83/eva01.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/83/eva02.jpg"], mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/83/eva03.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/83/eva05.jpg"], mt: "0px", mb: "0px" },
+
+                { type: "title", content: "狂欢月", mt: "50px", mb: "6px"},
+                { type: "image", src: ["../assets/images/works/83/k02.jpg"], mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/83/k01.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/83/k03.jpg"], mt: "0px", mb: "0px" },
+                { type: "image", src: ["../assets/images/works/83/k04.jpg"], mt: "0px", mb: "0px" }, 
+                { type: "image", src: ["../assets/images/works/83/k05.jpg"], mt: "0px", mb: "0px" },
+                           
             ]
         };
     </script>
