@@ -410,6 +410,42 @@
                         </div>
                     </div>
 
+
+                    <div class="pt-16 border-t border-zinc-300 w-full" id="mentorship-section">
+                        <h3 class="text-sm tracking-widest font-bold text-zinc-500 uppercase mb-6 drop-shadow-sm">Guest Lecturer & Industry Mentor</h3>
+                        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-8">
+                            <!-- Left: Text Info -->
+                            <div class="flex flex-col gap-2 flex-1">
+                                <div class="flex flex-col md:flex-row md:items-center gap-4 mb-2">
+                                    <h4 class="text-xl md:text-2xl font-bold text-zinc-900 drop-shadow-sm">
+                                        广东工业大学 艺术与设计学院
+                                    </h4>
+                                    <span class="text-sm font-semibold uppercase tracking-widest px-4 py-1.5 border border-zinc-200 rounded-full bg-white/70 backdrop-blur-md shadow-sm inline-block w-fit text-zinc-600">2021 — 2022</span>
+                                </div>
+                                <p class="text-base text-zinc-700 font-medium leading-relaxed drop-shadow-sm max-w-2xl">
+                                    担任<span class="text-f-red font-bold">课程客座讲师</span>，将大厂 UI/UX 工业化设计管线引入高校课堂；同时作为校友成长导师，为毕业生提供作品集辅导与职业规划，赋能年轻设计力量。
+                                </p>
+                            </div>
+                            
+                            <!-- Right: A4 Images Gallery -->
+                            <div class="shrink-0 flex gap-4 md:gap-6 mt-4 lg:mt-0">
+                                <div class="group relative aspect-[1/1.414] w-[90px] md:w-[115px] rounded-lg overflow-hidden border border-zinc-200 shadow-md cursor-pointer bg-white" onclick="openLightbox(0)">
+                                    <img src="assets/images/projects/ap1.webp" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Certificate 1">
+                                    <div class="absolute inset-0 bg-zinc-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-sm">
+                                        <iconify-icon icon="solar:magnifer-zoom-in-linear" class="text-white text-2xl md:text-3xl"></iconify-icon>
+                                    </div>
+                                </div>
+                                <div class="group relative aspect-[1/1.414] w-[90px] md:w-[115px] rounded-lg overflow-hidden border border-zinc-200 shadow-md cursor-pointer bg-white" onclick="openLightbox(1)">
+                                    <img src="assets/images/projects/ap2.webp" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Certificate 2">
+                                    <div class="absolute inset-0 bg-zinc-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-sm">
+                                        <iconify-icon icon="solar:magnifer-zoom-in-linear" class="text-white text-2xl md:text-3xl"></iconify-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="pt-16 border-t border-zinc-300 w-full" id="toolkit-section">
                         <h3 class="text-sm tracking-widest font-bold text-zinc-500 uppercase mb-6 drop-shadow-sm">Software Toolkit</h3>
                         <p class="text-base text-zinc-800 font-bold leading-relaxed mb-1 max-w-2xl drop-shadow-sm">
@@ -718,6 +754,26 @@
                     </figcaption>
                 </a>
 
+                <a href="projects/ps4.html" class="group works-grid-item cursor-pointer block h-full">
+                    <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
+                        <img loading="lazy" src="assets/images/works/ps4/thumbnail.webp" alt="PS4 Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
+                        <div class="absolute inset-0 bg-zinc-900/40 opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100 backdrop-blur-sm flex items-center justify-center">
+                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-f-red text-white flex items-center justify-center scale-50 opacity-0 transition-all duration-500 ease-fluid group-hover:scale-100 group-hover:opacity-100 shadow-[0_0_30px_rgba(229,0,0,0.4)]">
+                                <iconify-icon icon="solar:magnifer-linear" width="32"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start pointer-events-none">
+                        <div>
+                            <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-f-red transition-colors duration-300">PS4手柄操作分析</h3>
+                            <p class="text-sm font-medium text-zinc-500">2019 / 分析报告</p>
+                        </div>
+                    </div>
+                    <figcaption class="tilted-card-caption bg-f-red text-white px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest shadow-2xl opacity-0">
+                        Explore
+                    </figcaption>
+                </a>                
+
                 <a href="projects/wasteland.html" class="group works-grid-item cursor-pointer block h-full">
                     <div class="tilted-card-inner relative w-full overflow-hidden rounded-2xl bg-zinc-100 mb-4 md:mb-6">
                         <img loading="lazy" src="assets/images/works/wasteland/thumbnail.webp" alt="Wasteland Project" class="w-full h-auto block transition-transform duration-[1.5s] ease-fluid group-hover:scale-105">
@@ -862,6 +918,32 @@
                     <span id="next-project-name" class="text-sm md:text-base font-bold text-zinc-900 group-hover:text-f-red transition-colors truncate w-full">Project Name</span>
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- 【 Lightbox 圖片預覽 - 支援任意點擊關閉與切換 】 -->
+    <div id="lightbox-modal" class="fixed inset-0 z-[200] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center" onclick="closeLightbox(event)">
+        <!-- 背景點擊關閉 -->
+        <div class="absolute inset-0 bg-zinc-900/95 backdrop-blur-md z-0 cursor-pointer"></div>
+        
+        <!-- 右上角關閉按鈕 -->
+        <button onclick="closeLightbox(event, true)" aria-label="Close" class="fixed top-4 right-4 md:top-8 md:right-8 z-[210] w-10 h-10 md:w-12 md:h-12 bg-white/10 hover:bg-[#e50000] hover:scale-110 rounded-full transition-all flex items-center justify-center shadow-lg cursor-pointer text-white backdrop-blur-md border border-white/20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+
+        <!-- 上一張按鈕 -->
+        <button onclick="changeLightboxImage(-1, event)" class="fixed left-2 md:left-8 top-1/2 -translate-y-1/2 z-[210] w-12 h-12 md:w-16 md:h-16 bg-white/5 hover:bg-[#e50000] hover:scale-110 rounded-full transition-all flex items-center justify-center shadow-lg cursor-pointer text-white backdrop-blur-md border border-white/10">
+            <iconify-icon icon="solar:alt-arrow-left-linear" width="32"></iconify-icon>
+        </button>
+
+        <!-- 下一張按鈕 -->
+        <button onclick="changeLightboxImage(1, event)" class="fixed right-2 md:right-8 top-1/2 -translate-y-1/2 z-[210] w-12 h-12 md:w-16 md:h-16 bg-white/5 hover:bg-[#e50000] hover:scale-110 rounded-full transition-all flex items-center justify-center shadow-lg cursor-pointer text-white backdrop-blur-md border border-white/10">
+            <iconify-icon icon="solar:alt-arrow-right-linear" width="32"></iconify-icon>
+        </button>
+
+        <!-- 圖片容器 (點擊本身也支援關閉) -->
+        <div class="relative z-[205] w-full h-full flex items-center justify-center pointer-events-none p-4 md:p-12" onclick="closeLightbox(event, true)">
+            <img id="lightbox-img" src="" class="max-w-[90vw] max-h-[90vh] object-contain rounded-md shadow-[0_0_50px_rgba(0,0,0,0.5)] transition-all duration-300 scale-95 opacity-0 pointer-events-auto cursor-pointer" alt="Preview Image" onclick="closeLightbox(event, true)">
         </div>
     </div>
 
@@ -1362,7 +1444,69 @@
                 if (e.key === 'Escape' && !document.getElementById('project-modal').classList.contains('hidden')) {
                     window.closeModal();
                 }
+                // Lightbox Esc 关闭
+                if (e.key === 'Escape' && !document.getElementById('lightbox-modal').classList.contains('hidden')) {
+                    window.closeLightbox(null, true);
+                }
+                // Lightbox 左右方向键切换
+                if (!document.getElementById('lightbox-modal').classList.contains('hidden')) {
+                    if (e.key === 'ArrowLeft') window.changeLightboxImage(-1, null);
+                    if (e.key === 'ArrowRight') window.changeLightboxImage(1, null);
+                }
             });
+
+            // ==========================================
+            // Lightbox Modal 控制邏輯
+            // ==========================================
+            const lbImages = ['assets/images/projects/ap1.webp', 'assets/images/projects/ap2.webp'];
+            let currentLbIndex = 0;
+            const lbModal = document.getElementById('lightbox-modal');
+            const lbImg = document.getElementById('lightbox-img');
+
+            window.openLightbox = function(index) {
+                currentLbIndex = index;
+                lbImg.src = lbImages[currentLbIndex];
+                
+                lbModal.classList.remove('hidden');
+                void lbModal.offsetWidth; // 強制重繪
+                lbModal.classList.remove('opacity-0');
+                lbModal.classList.add('opacity-100');
+                
+                lbImg.classList.remove('scale-95', 'opacity-0');
+                lbImg.classList.add('scale-100', 'opacity-100');
+                
+                document.documentElement.classList.add('lock-scroll');
+                document.body.classList.add('lock-scroll');
+            };
+
+            window.closeLightbox = function(e, force = false) {
+                // 如果是點擊到切換按鈕，阻止關閉事件
+                if (!force && e && e.target.closest('button')) return;
+
+                lbImg.classList.remove('scale-100', 'opacity-100');
+                lbImg.classList.add('scale-95', 'opacity-0');
+                
+                lbModal.classList.remove('opacity-100');
+                lbModal.classList.add('opacity-0');
+                
+                setTimeout(() => {
+                    lbModal.classList.add('hidden');
+                    lbImg.src = '';
+                    // 確保不影響原有的 Iframe Modal 滾動狀態
+                    if (!window.isModalOpen) {
+                        document.documentElement.classList.remove('lock-scroll');
+                        document.body.classList.remove('lock-scroll');
+                    }
+                }, 300);
+            };
+
+            window.changeLightboxImage = function(dir, e) {
+                if (e) e.stopPropagation();
+                currentLbIndex = (currentLbIndex + dir + lbImages.length) % lbImages.length;
+                
+                // 直接切換圖片來源，移除延遲和 CSS 類別操作
+                lbImg.src = lbImages[currentLbIndex];
+            };
 
             // ==========================================
             // Logo Loop Animation
